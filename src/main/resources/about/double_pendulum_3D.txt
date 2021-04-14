@@ -1,0 +1,28 @@
+A program to creatively visualize the fibonacci sequence in 3D.
+
+Made By Hans Zuidervaart.
+
+Flower Patterns and Fibonacci Numbers
+
+Why is it that the number of petals in a flower is often one of the following numbers: 3, 5, 8, 13, 21, 34 or 55? 
+For example, the lily has three petals, buttercups have five of them, the chicory has 21 of them, the daisy has often 34 or 55 petals, etc. 
+Furthermore, when one observes the heads of sunflowers, one notices two series of curves, one winding in one sense and one in another; 
+the number of spirals not being the same in each sense. 
+Why is the number of spirals in general either 21 and 34, either 34 and 55, either 55 and 89, or 89 and 144? The same for pinecones : 
+why do they have either 8 spirals from one side and 13 from the other, or either 5 spirals from one side and 8 from the other? 
+Finally, why is the number of diagonals of a pineapple also 8 in one direction and 13 in the other?
+
+Are these numbers the product of chance? No! They all belong to the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, etc. 
+(where each number is obtained from the sum of the two preceding). 
+A more abstract way of putting it is that the Fibonacci numbers fn are given by the formula f1 = 1, f2 = 2, f3 = 3, f4 = 5 
+and generally f n+2 = fn+1 + fn . For a long time, it had been noticed that these numbers were important in nature, 
+but only relatively recently that one understands why. It is a question of efficiency during the growth process of plants (see below).
+
+The explanation is linked to another famous number, the golden ratio, itself intimately linked to the spiral form of certain types of shell. 
+Let's mention also that in the case of the sunflower, the pineapple and of the pinecone, 
+the correspondence with the Fibonacci numbers is very exact, while in the case of the number of flower petals, 
+it is only verified on average (and in certain cases, the number is doubled since the petals are arranged on two levels).
+
+Let's underline also that although Fibonacci historically introduced these numbers in 1202 
+in attempting to model the growth of populations of rabbits, this does not at all correspond to reality! On the contrary, 
+as we have just seen, his numbers play really a fundamental role in the context of the growth of plants

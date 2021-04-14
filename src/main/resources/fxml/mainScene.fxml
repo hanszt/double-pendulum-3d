@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="hzt.controller.scene.MainSceneController">
+
+    <MenuBar prefHeight="0.0" prefWidth="602.0" VBox.vgrow="NEVER">
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" onAction="#newInstance" text="New instance…"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#quitInstance" text="Quit instance"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Exit"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About"/>
+        </Menu>
+    </MenuBar>
+    <AnchorPane VBox.vgrow="ALWAYS">
+        <SplitPane dividerPositions="0.30846325167037864, 0.77728285077951" layoutX="201.0" layoutY="165.0"
+                   nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane maxWidth="300" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                <tabs>
+                    <Tab text="Animation">
+                        <content>
+                            <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="644.0"
+                                        prefWidth="261.0">
+                                <children>
+                                    <VBox maxWidth="320.0" prefHeight="644.0" prefWidth="564.0" spacing="4.0"
+                                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <padding>
+                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                                        </padding>
+                                        <Label text="Animated Attribute:"/>
+                                        <ComboBox fx:id="traceModeCombobox"
+                                                  onAction="#traceModeComboboxAction" prefWidth="300.0"
+                                                  promptText="Turn fraction"/>
+                                        <Label text="Choose animation settings"/>
+                                        <HBox prefWidth="1000.0">
+                                            <VBox prefWidth="150.0" spacing="4.0">
+                                                <padding>
+                                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                                                </padding>
+                                                <Button mnemonicParsing="false" onAction="#resetButtonAction"
+                                                        prefWidth="1000.0" text="Reset"/>
+                                                <Button mnemonicParsing="false" onAction="#goldenRatioButtonAction"
+                                                        prefWidth="1000.0" text="Golden ratio"/>
+                                                <Button mnemonicParsing="false" onAction="#recenterButtonAction"
+                                                        prefWidth="1000.0" text="Recenter"/>
+                                                <ToggleButton layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
+                                                              onAction="#pauseSimButtonAction" prefWidth="1000.0"
+                                                              text="Pause"/>
+                                            </VBox>
+                                            <VBox prefWidth="150.0" spacing="4.0">
+                                                <padding>
+                                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                                                </padding>
+                                                <Button mnemonicParsing="false" onAction="#newInstance"
+                                                        prefWidth="1000.0" text="New instance"/>
+                                                <Button mnemonicParsing="false" onAction="#distributionButtonAction"
+                                                        prefWidth="1000.0" text="Sphere"/>
+                                                <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
+                                                              prefWidth="1000.0" text="Show axis"/>
+
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                    <Tab fx:id="appearanceTab" text="Appearance"/>
+                </tabs>
+            </TabPane>
+            <SplitPane dividerPositions="0.6864784546805349" orientation="VERTICAL">
+                <AnchorPane fx:id="animationPane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="360.0"/>
+                <TabPane maxHeight="220" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab text="Fibonacci settings">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <VBox>
+                                                <padding>
+                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                </padding>
+                                                <Label text="Number of seeds"/>
+                                                <Slider fx:id="numberOfObjectsSlider" max="10000"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Flower size"/>
+                                                <Slider fx:id="sizeSlider" min="1" max="1000"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Seed size"/>
+                                                <Slider fx:id="seedSizeSlider" max="10"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox>
+                                                <padding>
+                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                </padding>
+
+                                                <Label text="Turn fraction"/>
+                                                <Slider fx:id="turnFractionSlider" min="1.5" max="2"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Distribution"/>
+                                                <Slider fx:id="distributionSlider" min="-8" max="4"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Highlighting"/>
+                                                <Slider fx:id="highlightingSlider"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox layoutX="10.0" layoutY="10.0">
+                                                <padding>
+                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                </padding>
+                                            </VBox>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Animation settings">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <VBox>
+                                                <padding>
+                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                </padding>
+                                                <Label text="animation speed slider"/>
+                                                <Slider fx:id="animationIncrementSlider" prefWidth="3000.0"/>
+                                            </VBox>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Camera Controls">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <HBox maxHeight="180" minHeight="0.0" prefHeight="354.0" prefWidth="430.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <VBox prefWidth="3000.0">
+                                                    <padding>
+                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <Label text="Camera speed"/>
+                                                        <Slider fx:id="cameraMaxVelocitySlider" max="200"
+                                                                showTickLabels="true" showTickMarks="true" value="20"/>
+                                                        <Label text="Camera Acceleration"/>
+                                                        <Slider fx:id="cameraMaxAccelerationSlider" max="200.0"
+                                                                showTickLabels="true" showTickMarks="true"/>
+                                                        <Label layoutX="15.0" layoutY="70.0"
+                                                               text="Camera field of view"/>
+                                                        <Slider fx:id="cameraFieldOfViewSlider" layoutX="15.0"
+                                                                layoutY="87.0" min="5" max="175" showTickLabels="true"
+                                                                showTickMarks="true"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </SplitPane>
+
+            <TabPane maxWidth="250" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                <tabs>
+                    <Tab fx:id="statisticsTab" text="Statistics"/>
+                </tabs>
+            </TabPane>
+        </SplitPane>
+    </AnchorPane>
+</VBox>
