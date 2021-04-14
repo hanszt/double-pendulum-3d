@@ -62,8 +62,8 @@
                                                 </padding>
                                                 <Button mnemonicParsing="false" onAction="#newInstance"
                                                         prefWidth="1000.0" text="New instance"/>
-                                                <Button mnemonicParsing="false" onAction="#distributionButtonAction"
-                                                        prefWidth="1000.0" text="Sphere"/>
+                                                <Button mnemonicParsing="false" onAction="#updateButtonAction"
+                                                        prefWidth="1000.0" text="Update"/>
                                                 <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
                                                               prefWidth="1000.0" text="Show axis"/>
 

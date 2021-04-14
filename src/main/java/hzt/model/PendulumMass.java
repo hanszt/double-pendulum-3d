@@ -45,6 +45,7 @@ public class PendulumMass {
     public Point2D getPositionXY() {
         return new Point2D(cylinder.getTranslateX(), cylinder.getTranslateY());
     }
+
     public void setPosition(double x, double y) {
         cylinder.setTranslateX(x);
         cylinder.setTranslateY(y);
@@ -72,5 +73,15 @@ public class PendulumMass {
 
     public DoubleProperty massProperty() {
         return mass;
+    }
+
+    @Override
+    public String toString() {
+        return "PendulumMass{" +
+                "cylinder=" + cylinder +
+                ", phongMaterial=" + phongMaterial +
+                ", density=" + density +
+                ", mass=" + mass +
+                '}';
     }
 }

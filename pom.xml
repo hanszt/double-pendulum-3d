@@ -11,6 +11,8 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <openjfx.version>11</openjfx.version>
+        <log4j.version>2.13.3</log4j.version>
     </properties>
 
     <dependencies>
@@ -35,34 +37,23 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11</version>
+            <version>${openjfx.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>${openjfx.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.6.1</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
 
@@ -109,19 +100,6 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
-<!--                    VM args: attempt to resolve them in maven-->
-                    <compilerArgs>
-                        <arg>--add-exports=javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.controls/com.sun.javafx.scene.control.behavior=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.controls/com.sun.javafx.scene.control=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.controls/com.sun.javafx.scene.control.inputmap=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.base/com.sun.javafx.collections=org.controlsfx.controls</arg>
-                        <arg>--add-exports=javafx.base/com.sun.javafx.runtime=org.controlsfx.controls</arg>
-                        <arg>--add-opens=javafx.controls/javafx.scene.control.skin=org.controlsfx.controls</arg>
-                        <arg>--add-opens=javafx.graphics/javafx.scene=org.controlsfx.controls</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
 
@@ -130,7 +108,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>org.openjfx.App</mainClass>
+                    <mainClass>hzt.view.Launcher</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -63,10 +62,9 @@ public class StatisticsController extends FXMLController {
 
     private static final String TWO_DEC_DOUBLE = "%-4.2f";
 
-    public void updateGlobalStatistics(Duration runTimeSim, double animationIncrement) {
+    public void updateGlobalStatistics(Duration runTimeSim) {
         frameRateStatsLabel.setText(format(TWO_DEC_DOUBLE + " f/s", statisticsService.getSimpleFrameRateMeter().getFrameRate()));
         runTimeLabel.setText(format("%-4.3f seconds", runTimeSim.toSeconds()));
-        animationIncrementLabel.setText(format("%-4.2e increment/s", animationIncrement));
     }
 
     public void updateGroupStatistics(DoublePendulum doublePendulum, IMouseControlService iMouseControlService) {

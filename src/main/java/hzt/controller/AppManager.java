@@ -3,8 +3,8 @@ package hzt.controller;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.time.LocalTime;
@@ -28,35 +28,35 @@ public class AppManager {
     }
 
     public void start() {
-        String startingMessage = String.format("Starting instance %d of %s at %s...%n",
+        LOGGER.info(this::startingMessage);
+        sceneManager.setupScene(Scene.MAIN_SCENE);
+        configureStage(stage);
+        stage.show();
+        LOGGER.info(() -> String.format("instance %d started%n", instance));
+    }
+
+    private String startingMessage() {
+        return String.format("Starting instance %d of %s at %s...%n",
                 instance, TITLE, sceneManager.getCurSceneController()
                         .getStartTimeScene()
                         .format(DateTimeFormatter.ofPattern("hh:mm:ss")));
-        LOGGER.info(startingMessage);
-        sceneManager.setupScene(Scene.MAIN_SCENE);
-        configureStage(stage);
-
-        stage.show();
-        String startedMessage = String.format("instance %d started%n", instance);
-        LOGGER.info(startedMessage);
     }
 
     public void configureStage(Stage stage) {
         stage.setTitle(String.format("%s (%d)", TITLE, instance));
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
-        stage.setOnCloseRequest(e -> printClosingText());
+        stage.setOnCloseRequest(e -> LOGGER.info(this::closingText));
         InputStream inputStream = getClass().getResourceAsStream("../../images/icon3.png");
         if (inputStream != null) stage.getIcons().add(new Image(inputStream));
     }
 
-    private void printClosingText() {
+    private String closingText() {
         LocalTime startTimeSim = sceneManager.getCurSceneController().getStartTimeScene();
         LocalTime stopTimeSim = LocalTime.now();
         Duration runTimeSim = Duration.millis((stopTimeSim.toNanoOfDay() - startTimeSim.toNanoOfDay()) / 1e6);
-        String message = String.format("%s%nAnimation Runtime of instance %d: %.2f seconds%n%s%n", CLOSING_MESSAGE,
+        return String.format("%s%nAnimation Runtime of instance %d: %.2f seconds%n%s%n", CLOSING_MESSAGE,
                 instance, runTimeSim.toSeconds(), DOTTED_LINE);
-        LOGGER.info(message);
     }
 
 }

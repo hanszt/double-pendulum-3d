@@ -23,8 +23,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -137,7 +137,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureDoublePendulum(DoublePendulum doublePendulum) {
-
+        doublePendulum.printParams();
     }
 
     private EventHandler<ActionEvent> animationLoopEventHandler() {
@@ -145,10 +145,9 @@ public class MainSceneController extends SceneController {
     }
 
     private void updateStatisticsLoop(ActionEvent loopEvent) {
-        double animationIncrement = animationIncrementSlider.getValue() / INIT_FRAME_RATE;
         Duration runTimeSim = Duration.millis((LocalTime.now().toNanoOfDay() - startTimeScene.toNanoOfDay()) / 1e6);
         statisticsController.updateGroupStatistics(doublePendulum, subSceneRootMouseControlService);
-        statisticsController.updateGlobalStatistics(runTimeSim, animationIncrement);
+        statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
 
@@ -184,8 +183,8 @@ public class MainSceneController extends SceneController {
     }
 
     @FXML
-    private void distributionButtonAction() {
-
+    private void updateButtonAction() {
+        doublePendulum.update();
     }
 
     @FXML

@@ -4,9 +4,9 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import lombok.Getter;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Properties;
@@ -18,7 +18,7 @@ public abstract class AppConstants {
     private static final Logger LOGGER = LogManager.getLogger(AppConstants.class);
     private static final Properties PROPS = configProperties();
 
-    public static final int INIT_FRAME_RATE = 30; // f/s
+    public static final int INIT_FRAME_RATE = 1; // f/s
     public static final Duration INIT_FRAME_DURATION = Duration.seconds(1. / INIT_FRAME_RATE); // s/f
 
     public static final Color INIT_BG_COLOR = NAVY;
@@ -98,13 +98,11 @@ public abstract class AppConstants {
         try (InputStream stream = new BufferedInputStream(new FileInputStream(file))) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.warn(pathName + " not found...");
+            LOGGER.warn(() -> pathName + " not found...");
         }
         return properties;
     }
 
-
-    @Getter
     public enum Scene {
 
         MAIN_SCENE("mainScene.fxml"),
@@ -120,6 +118,9 @@ public abstract class AppConstants {
             return this.name().charAt(0) + this.name().substring(1).toLowerCase().replace("_", " ");
         }
 
+        public String getFxmlFileName() {
+            return fxmlFileName;
+        }
     }
 
 }

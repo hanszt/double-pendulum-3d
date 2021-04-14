@@ -4,8 +4,8 @@ import hzt.controller.scene.AboutSceneController;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import javafx.stage.Stage;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -43,8 +43,7 @@ public class SceneManager {
         curSceneController = sceneControllerMap.get(scene);
         stage.setScene(curSceneController.getScene());
         if (!curSceneController.isSetup()) {
-            String message = "setting up " + scene.formattedName() + "...";
-            LOGGER.info(message);
+            LOGGER.info(() -> "setting up " + scene.formattedName() + "...");
             curSceneController.setup();
         }
     }

@@ -1,8 +1,8 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
