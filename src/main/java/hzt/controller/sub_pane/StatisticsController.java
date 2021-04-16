@@ -3,11 +3,11 @@ package hzt.controller.sub_pane;
 import hzt.controller.FXMLController;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
-import hzt.service.IMouseControlService;
 import hzt.service.IStatisticsService;
 import hzt.service.MouseControlService;
 import hzt.service.StatisticsService;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
@@ -20,19 +20,42 @@ public class StatisticsController extends FXMLController {
     private final IStatisticsService statisticsService = new StatisticsService();
 
     @FXML
+    private Label upperMassXLabel;
+    @FXML
+    private Label upperMassYLabel;
+    @FXML
+    private Label lowerMassXLabel;
+    @FXML
+    private Label lowerMassYLabel;
+    @FXML
+    private Label angle1Label;
+    @FXML
+    private Label angle2Label;
+    @FXML
+    private Label vAngular1Label;
+    @FXML
+    private Label vAngular2Label;
+    @FXML
+    private Label aAngular1Label;
+    @FXML
+    private Label aAngular2Label;
+    @FXML
+    private Label frictionLabel;
+
+    @FXML
     private Label frameRateStatsLabel;
     @FXML
     private Label runTimeLabel;
     @FXML
-    private Label animationIncrementLabel;
+    private Label upperPendulumLengthLabel;
     @FXML
-    private Label groupSizeLabel;
+    private Label lowerPendulumLengthLabel;
     @FXML
-    private Label highlightingLabel;
+    private Label upperMassLabel;
     @FXML
-    private Label turnFractionLabel;
+    private Label lowerMassLabel;
     @FXML
-    private Label distributionLabel;
+    private Label traceSizeLabel;
     @FXML
     private Label positionXLabel;
     @FXML
@@ -52,8 +75,6 @@ public class StatisticsController extends FXMLController {
     @FXML
     private Label velocityCameraLabel;
     @FXML
-    private Label accelerationCameraLabel;
-    @FXML
     private Label fieldOfViewCameraLabel;
 
     public StatisticsController() throws IOException {
@@ -67,9 +88,13 @@ public class StatisticsController extends FXMLController {
         runTimeLabel.setText(format("%-4.3f seconds", runTimeSim.toSeconds()));
     }
 
-    public void updateGroupStatistics(DoublePendulum doublePendulum, IMouseControlService iMouseControlService) {
+    public void updateGroupStatistics(DoublePendulum doublePendulum, MouseControlService mouseControlService) {
+        updatePendulumPropertyStatistics(doublePendulum);
+        updatePendulumPositionStatistics(doublePendulum);
+        updatePendulumAngleStatistics(doublePendulum);
+        frictionLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getFriction()));
+        traceSizeLabel.setText(format("%d", doublePendulum.traceSize()));
 
-        MouseControlService mouseControlService = (MouseControlService) iMouseControlService;
         positionXLabel.setText(format(TWO_DEC_DOUBLE, mouseControlService.getTargetTranslateX()));
         positionYLabel.setText(format(TWO_DEC_DOUBLE, mouseControlService.getTargetTranslateY()));
         positionZLabel.setText(format(TWO_DEC_DOUBLE, mouseControlService.getTargetTranslateZ()));
@@ -78,13 +103,37 @@ public class StatisticsController extends FXMLController {
         rotationYLabel.setText(format(TWO_DEC_DOUBLE + " deg", mouseControlService.getAngleY()));
     }
 
+    private void updatePendulumAngleStatistics(DoublePendulum doublePendulum) {
+        angle1Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getAngle1Deg()));
+        angle2Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getAngle2Deg()));
+        vAngular1Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getVAngular1deg()));
+        vAngular2Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getVAngular2Deg()));
+        aAngular1Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getAAngular1Deg()));
+        aAngular2Label.setText(format(TWO_DEC_DOUBLE, doublePendulum.getAAngular2Deg()));
+    }
+
+    private void updatePendulumPropertyStatistics(DoublePendulum doublePendulum) {
+        upperPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getUpperArmLength()));
+        lowerPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getLowerArmLength()));
+        upperMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getUpperCylinder().getMass()));
+        lowerMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getLowerCylinder().getMass()));
+    }
+
+    private void updatePendulumPositionStatistics(DoublePendulum doublePendulum) {
+        Point2D upperMassPosition = doublePendulum.getUpperCylinder().getPositionXY();
+        upperMassXLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getX()));
+        upperMassYLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getY()));
+        Point2D lowerMassPosition = doublePendulum.getLowerCylinder().getPositionXY();
+        lowerMassXLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
+        lowerMassYLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
+    }
+
     public void updateCameraPlatformStatistics(MovableCameraPlatform cameraPlatform) {
         positionCameraXLabel.setText(format(TWO_DEC_DOUBLE, cameraPlatform.getTranslateX()));
         positionCameraYLabel.setText(format(TWO_DEC_DOUBLE, cameraPlatform.getTranslateY()));
         positionCameraZLabel.setText(format(TWO_DEC_DOUBLE, cameraPlatform.getTranslateZ()));
 
         velocityCameraLabel.setText(format(TWO_DEC_DOUBLE + " /s", cameraPlatform.getVelocity()));
-        accelerationCameraLabel.setText(format(TWO_DEC_DOUBLE + " /s^2", cameraPlatform.getAcceleration()));
         fieldOfViewCameraLabel.setText(format(TWO_DEC_DOUBLE + " deg", cameraPlatform.getCamera().getFieldOfView()));
     }
 

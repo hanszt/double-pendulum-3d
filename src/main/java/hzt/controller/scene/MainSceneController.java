@@ -23,8 +23,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -35,7 +33,10 @@ import static hzt.model.AppConstants.Scene.MAIN_SCENE;
 
 public class MainSceneController extends SceneController {
 
-    private static final Logger LOGGER = LogManager.getLogger(MainSceneController.class);
+    @FXML
+    private Slider vAngular2Slider;
+    @FXML
+    private Slider vAngular1Slider;
 
     @FXML
     private Tab appearanceTab;
@@ -48,19 +49,19 @@ public class MainSceneController extends SceneController {
     @FXML
     private ToggleButton showAxisButton;
     @FXML
-    private Slider distributionSlider;
+    private Slider lowerPendulumLengthSlider;
     @FXML
-    private Slider numberOfObjectsSlider;
+    private Slider upperMassSlider;
     @FXML
-    private Slider seedSizeSlider;
+    private Slider angle1Slider;
     @FXML
-    private Slider turnFractionSlider;
+    private Slider lowerMassSlider;
     @FXML
-    private Slider highlightingSlider;
+    private Slider angle2Slider;
     @FXML
-    private Slider sizeSlider;
+    private Slider upperPendulumLengthSlider;
     @FXML
-    private Slider animationIncrementSlider;
+    private Slider frictionSlider;
     @FXML
     private Slider cameraMaxVelocitySlider;
     @FXML
@@ -71,7 +72,7 @@ public class MainSceneController extends SceneController {
     private final Group subSceneRoot = new Group();
     private final Group root = new Group();
     private final DoublePendulum doublePendulum = new DoublePendulum();
-    
+
     private final IMouseControlService subSceneRootMouseControlService = new MouseControlService(root);
     private final StatisticsController statisticsController = new StatisticsController();
     private final AppearanceController appearanceController = new AppearanceController(this, doublePendulum);
@@ -107,8 +108,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureAppearanceController() {
-        appearanceController.configureColorPickers(
-                doublePendulum.massColorProperty(), doublePendulum.armColorProperty());
+        appearanceController.configureColorPickers();
         appearanceController.configureStageControlButtons(sceneManager.getStage());
     }
 
@@ -137,7 +137,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureDoublePendulum(DoublePendulum doublePendulum) {
-        doublePendulum.printParams();
+
     }
 
     private EventHandler<ActionEvent> animationLoopEventHandler() {
@@ -146,25 +146,45 @@ public class MainSceneController extends SceneController {
 
     private void updateStatisticsLoop(ActionEvent loopEvent) {
         Duration runTimeSim = Duration.millis((LocalTime.now().toNanoOfDay() - startTimeScene.toNanoOfDay()) / 1e6);
-        statisticsController.updateGroupStatistics(doublePendulum, subSceneRootMouseControlService);
+        statisticsController.updateGroupStatistics(doublePendulum, (MouseControlService) subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
 
     private void configureSliders() {
-        turnFractionSlider.valueProperty().addListener((o,c,n) -> updateSim());
-        distributionSlider.valueProperty().addListener((o, c, n) -> updateSim());
-        sizeSlider.valueProperty().addListener((o, c, n) -> updateSim());
-        highlightingSlider.valueProperty().addListener((o, c, n) -> updateSim());
-        cameraMaxAccelerationSlider.setDisable(true);
+        doublePendulum.getUpperCylinder().massProperty().bind(upperMassSlider.valueProperty());
+        doublePendulum.getLowerCylinder().massProperty().bind(lowerMassSlider.valueProperty());
+        doublePendulum.upperArmLengthProperty().bind(upperPendulumLengthSlider.valueProperty());
+        doublePendulum.lowerArmLengthProperty().bind(lowerPendulumLengthSlider.valueProperty());
+        doublePendulum.angle1Property().bindBidirectional(angle1Slider.valueProperty());
+        doublePendulum.angle2Property().bindBidirectional(angle2Slider.valueProperty());
+        doublePendulum.vAngular1Property().bindBidirectional(vAngular1Slider.valueProperty());
+        doublePendulum.vAngular2Property().bindBidirectional(vAngular2Slider.valueProperty());
+        doublePendulum.frictionProperty().bind(frictionSlider.valueProperty());
     }
 
-    private void updateSim() {
-        doublePendulum.update();
-        statisticsController.updateGroupStatistics(doublePendulum, subSceneRootMouseControlService);
-    }
+    private static final double DEFAULT_MASS = 10;
+    private static final double DEFAULT_ARM_LENGTH = 50;
+    private static final double INIT_FRICTION = .02;
+    private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4;
+    private static final double INIT_ANGLE2 = 90; //deg
 
     private void setInitControlValues() {
+        upperMassSlider.setValue(DEFAULT_MASS);
+        lowerMassSlider.setValue(DEFAULT_MASS);
+        upperPendulumLengthSlider.setValue(DEFAULT_ARM_LENGTH);
+        lowerPendulumLengthSlider.setValue(DEFAULT_ARM_LENGTH);
+        angle1Slider.setMin(-Math.PI);
+        angle1Slider.setValue(Math.toRadians(INIT_ANGLE2));
+        angle1Slider.setMax(Math.PI);
+        angle2Slider.setMin(-Math.PI);
+        angle2Slider.setValue(Math.toRadians(INIT_ANGLE2));
+        angle2Slider.setMax(Math.PI);
+        vAngular1Slider.setMin(-MAX_ANGULAR_VELOCITY);
+        vAngular1Slider.setMax(MAX_ANGULAR_VELOCITY);
+        vAngular2Slider.setMin(-MAX_ANGULAR_VELOCITY);
+        vAngular2Slider.setMax(MAX_ANGULAR_VELOCITY);
+        frictionSlider.setValue(INIT_FRICTION);
         cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
         cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
     }
@@ -183,12 +203,12 @@ public class MainSceneController extends SceneController {
     }
 
     @FXML
-    private void updateButtonAction() {
-        doublePendulum.update();
+    private void clearTraceButtonAction() {
+        doublePendulum.clearTrace();
     }
 
     @FXML
-    private void goldenRatioButtonAction() {
+    private void followDrawSpotButtonAction() {
 
     }
 
@@ -202,7 +222,7 @@ public class MainSceneController extends SceneController {
 
     @FXML
     private void traceModeComboboxAction() {
-
+        //this will execute code when the traceMode combobox is changed by user
     }
 
     @FXML

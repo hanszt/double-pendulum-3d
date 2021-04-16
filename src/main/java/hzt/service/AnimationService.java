@@ -31,7 +31,7 @@ public class AnimationService implements IAnimationService {
         animationTimeline.getKeyFrames().add(new KeyFrame(INIT_FRAME_DURATION, "Animation keyframe", animationLoop));
         statisticsTimeline.getKeyFrames().add(new KeyFrame(INIT_FRAME_DURATION, "Statistics keyframe", statisticsLoop));
         if (start) {
-//            animationTimeline.play();
+            animationTimeline.play();
             statisticsTimeline.play();
         }
     }

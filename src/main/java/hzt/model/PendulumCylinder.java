@@ -8,38 +8,41 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.transform.Rotate;
 
-public class PendulumMass {
+import static java.lang.Math.pow;
+
+public class PendulumCylinder {
 
     private final Cylinder cylinder;
     private final PhongMaterial phongMaterial = new PhongMaterial();
 
-    private final DoubleProperty density = new SimpleDoubleProperty();
     private final DoubleProperty mass = new SimpleDoubleProperty();
 
-    public PendulumMass() {
+    public PendulumCylinder() {
         this(new Cylinder());
     }
-    
-    public PendulumMass(Cylinder cylinder) {
-        this(cylinder, 1);
-    }
 
-    public PendulumMass(Cylinder cylinder, double density) {
+    public PendulumCylinder(Cylinder cylinder) {
         this.cylinder = cylinder;
-        this.density.set(density);
         configureComponents();
     }
 
+    private static final int DEFAULT_MASS_WIDTH = 10;
+
     private void configureComponents() {
-        bindWeightToCalculatedByDensityAndVolume();
+        bindRadiusToMass();
+        cylinder.setHeight(DEFAULT_MASS_WIDTH);
         cylinder.setMaterial(phongMaterial);
+        cylinder.setRotationAxis(Rotate.X_AXIS);
+        cylinder.setRotate(90);
     }
 
-    private void bindWeightToCalculatedByDensityAndVolume() {
-        DoubleProperty height = cylinder.heightProperty();
-        DoubleProperty radius = cylinder.radiusProperty();
-        mass.bind(density.multiply(Math.PI).multiply(radius).multiply(radius).multiply(height));
+    private static final double CYLINDER_SIZE_FACTOR = 10;
+
+    private void bindRadiusToMass() {
+        mass.addListener((o, c, n) ->
+                cylinder.setRadius(pow(n.doubleValue() / CYLINDER_SIZE_FACTOR * cylinder.getHeight(), 1./2)));
     }
 
     public Point2D getPositionXY() {
@@ -59,12 +62,8 @@ public class PendulumMass {
         return phongMaterial.diffuseColorProperty();
     }
 
-    public double getDensity() {
-        return density.get();
-    }
-
-    public DoubleProperty densityProperty() {
-        return density;
+    public Cylinder getCylinder() {
+        return cylinder;
     }
 
     public double getMass() {
@@ -77,10 +76,9 @@ public class PendulumMass {
 
     @Override
     public String toString() {
-        return "PendulumMass{" +
+        return "PendulumCylinder{" +
                 "cylinder=" + cylinder +
                 ", phongMaterial=" + phongMaterial +
-                ", density=" + density +
                 ", mass=" + mass +
                 '}';
     }

@@ -10,7 +10,6 @@ import hzt.service.BackgroundService;
 import hzt.service.IBackgroundService;
 import hzt.service.IThemeService;
 import hzt.service.ThemeService;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,7 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -35,6 +33,8 @@ import static java.lang.Boolean.*;
 public class AppearanceController extends FXMLController {
 
     @FXML
+    private ColorPicker traceColorPicker;
+    @FXML
     private ToggleButton opacityStageButton;
     @FXML
     private ComboBox<Resource> backgroundCombobox;
@@ -45,9 +45,9 @@ public class AppearanceController extends FXMLController {
     @FXML
     private ColorPicker backgroundColorPicker;
     @FXML
-    private ColorPicker highlightingColorPicker;
+    private ColorPicker pendulumColorPicker;
     @FXML
-    private ColorPicker seedColorPicker;
+    private ColorPicker pendulumMassColorPicker;
 
     private final IThemeService themeService = new ThemeService();
     private final IBackgroundService backgroundService = new BackgroundService();
@@ -61,13 +61,14 @@ public class AppearanceController extends FXMLController {
         configureComboBoxes();
     }
 
-    public void configureColorPickers(
-            ObjectProperty<Color> seedColorProperty, ObjectProperty<Color> highlightingColorProperty) {
+    public void configureColorPickers() {
         backgroundColorPicker.setValue(INIT_BG_COLOR);
-        seedColorPicker.setValue(INIT_HINGE_COLOR);
-        highlightingColorPicker.setValue(INIT_ARM_COLOR);
-        seedColorProperty.bind(seedColorPicker.valueProperty());
-        highlightingColorProperty.bind(highlightingColorPicker.valueProperty());
+        pendulumMassColorPicker.setValue(INIT_HINGE_COLOR);
+        pendulumColorPicker.setValue(INIT_ARM_COLOR);
+        traceColorPicker.setValue(INIT_TRACE_COLOR);
+        doublePendulum.massColorProperty().bind(pendulumMassColorPicker.valueProperty());
+        doublePendulum.armColorProperty().bind(pendulumColorPicker.valueProperty());
+        doublePendulum.traceColorProperty().bind(traceColorPicker.valueProperty());
     }
 
     private void configureComboBoxes() {
@@ -132,7 +133,7 @@ public class AppearanceController extends FXMLController {
     }
 
     @FXML
-    private void seedColorPickerAction() {
+    private void pendulumMassColorPickerAction() {
         doublePendulum.update();
     }
 

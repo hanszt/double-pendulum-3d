@@ -15,27 +15,39 @@
         <VBox prefWidth="100.0">
             <Label text="Framerate:"/>
             <Label text="Runtime:"/>
-            <Label text="Increment:"/>
             <Label/>
         </VBox>
         <VBox layoutX="10.0" layoutY="10.0">
             <Label fx:id="frameRateStatsLabel" text="NaN"/>
             <Label fx:id="runTimeLabel" text="NaN"/>
-            <Label fx:id="animationIncrementLabel" text="NaN"/>
             <Label/>
         </VBox>
     </HBox>
-    <Label text="Fibonacci statistics:">
+    <Label text="Pendulum statistics:">
         <font>
             <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
     <HBox>
         <VBox prefWidth="100.0">
-            <Label text="Group size: "/>
-            <Label text="Highlighting: "/>
-            <Label text="Turn fraction: "/>
-            <Label text="Distribution: "/>
+            <Label text="Upper length: "/>
+            <Label text="Lower length: "/>
+            <Label text="Upper mass: "/>
+            <Label text="Lower mass: "/>
+            <Label text="Upper mass x: "/>
+            <Label text="Upper mass y: "/>
+            <Label text="Lower mass x: "/>
+            <Label text="Lower mass y: "/>
+
+            <Label text="Angle 1: "/>
+            <Label text="Angle 2: "/>
+            <Label text="V angular 1: "/>
+            <Label text="V angular 2: "/>
+            <Label text="A angular 1: "/>
+            <Label text="A angular 2: "/>
+            <Label text="Trace size:"/>
+            <Label/>
+            <Label text="Friction: "/>
 
             <Label text="Position x:"/>
             <Label text="Position y:"/>
@@ -45,10 +57,24 @@
             <Label text="Rotation y:"/>
         </VBox>
         <VBox layoutX="10.0" layoutY="10.0">
-            <Label fx:id="groupSizeLabel"/>
-            <Label fx:id="highlightingLabel"/>
-            <Label fx:id="turnFractionLabel"/>
-            <Label fx:id="distributionLabel"/>
+            <Label fx:id="upperPendulumLengthLabel"/>
+            <Label fx:id="lowerPendulumLengthLabel"/>
+            <Label fx:id="upperMassLabel"/>
+            <Label fx:id="lowerMassLabel"/>
+            <Label fx:id="upperMassXLabel"/>
+            <Label fx:id="upperMassYLabel"/>
+            <Label fx:id="lowerMassXLabel"/>
+            <Label fx:id="lowerMassYLabel"/>
+
+            <Label fx:id="angle1Label"/>
+            <Label fx:id="angle2Label"/>
+            <Label fx:id="vAngular1Label"/>
+            <Label fx:id="vAngular2Label"/>
+            <Label fx:id="aAngular1Label"/>
+            <Label fx:id="aAngular2Label"/>
+            <Label fx:id="traceSizeLabel"/>
+            <Label/>
+            <Label fx:id="frictionLabel"/>
 
             <Label fx:id="positionXLabel"/>
             <Label fx:id="positionYLabel"/>
@@ -72,7 +98,6 @@
                     <Label text="Position z:"/>
 
                     <Label text="Velocity:"/>
-                    <Label text="Acceleration:"/>
                     <Label text="Field of view: "/>
                 </children>
             </VBox>
@@ -83,7 +108,6 @@
                     <Label fx:id="positionCameraZLabel"/>
 
                     <Label fx:id="velocityCameraLabel"/>
-                    <Label fx:id="accelerationCameraLabel"/>
                     <Label fx:id="fieldOfViewCameraLabel"/>
                 </children>
             </VBox>

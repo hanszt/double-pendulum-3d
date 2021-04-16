@@ -36,10 +36,10 @@
                                         <padding>
                                             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
                                         </padding>
-                                        <Label text="Animated Attribute:"/>
+                                        <Label text="Trace mode:"/>
                                         <ComboBox fx:id="traceModeCombobox"
                                                   onAction="#traceModeComboboxAction" prefWidth="300.0"
-                                                  promptText="Turn fraction"/>
+                                                  promptText="Trace mode"/>
                                         <Label text="Choose animation settings"/>
                                         <HBox prefWidth="1000.0">
                                             <VBox prefWidth="150.0" spacing="4.0">
@@ -48,8 +48,8 @@
                                                 </padding>
                                                 <Button mnemonicParsing="false" onAction="#resetButtonAction"
                                                         prefWidth="1000.0" text="Reset"/>
-                                                <Button mnemonicParsing="false" onAction="#goldenRatioButtonAction"
-                                                        prefWidth="1000.0" text="Golden ratio"/>
+                                                <Button mnemonicParsing="false" onAction="#followDrawSpotButtonAction"
+                                                        prefWidth="1000.0" text="Follow draw spot"/>
                                                 <Button mnemonicParsing="false" onAction="#recenterButtonAction"
                                                         prefWidth="1000.0" text="Recenter"/>
                                                 <ToggleButton layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
@@ -62,8 +62,8 @@
                                                 </padding>
                                                 <Button mnemonicParsing="false" onAction="#newInstance"
                                                         prefWidth="1000.0" text="New instance"/>
-                                                <Button mnemonicParsing="false" onAction="#updateButtonAction"
-                                                        prefWidth="1000.0" text="Update"/>
+                                                <Button mnemonicParsing="false" onAction="#clearTraceButtonAction"
+                                                        prefWidth="1000.0" text="Clear trace"/>
                                                 <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
                                                               prefWidth="1000.0" text="Show axis"/>
 
@@ -77,11 +77,11 @@
                     <Tab fx:id="appearanceTab" text="Appearance"/>
                 </tabs>
             </TabPane>
-            <SplitPane dividerPositions="0.6864784546805349" orientation="VERTICAL">
+            <SplitPane dividerPositions="0.6264784546805349" orientation="VERTICAL">
                 <AnchorPane fx:id="animationPane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="360.0"/>
-                <TabPane maxHeight="220" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane maxHeight="260" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab text="Fibonacci settings">
+                        <Tab text="Pendulum settings">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -92,14 +92,17 @@
                                                 <padding>
                                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                                 </padding>
-                                                <Label text="Number of seeds"/>
-                                                <Slider fx:id="numberOfObjectsSlider" max="10000"
+                                                <Label text="Upper Mass"/>
+                                                <Slider fx:id="upperMassSlider" min="1" max="500"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Flower size"/>
-                                                <Slider fx:id="sizeSlider" min="1" max="1000"
+                                                <Label text="Upper pendulum length"/>
+                                                <Slider fx:id="upperPendulumLengthSlider" min="1" max="200"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Seed size"/>
-                                                <Slider fx:id="seedSizeSlider" max="10"
+                                                <Label text="Angle 1"/>
+                                                <Slider fx:id="angle1Slider"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Angular Velocity 1"/>
+                                                <Slider fx:id="vAngular1Slider"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
                                             </VBox>
                                             <VBox>
@@ -107,14 +110,17 @@
                                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                                 </padding>
 
-                                                <Label text="Turn fraction"/>
-                                                <Slider fx:id="turnFractionSlider" min="1.5" max="2"
+                                                <Label text="Lower mass"/>
+                                                <Slider fx:id="lowerMassSlider" min="1" max="500"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Distribution"/>
-                                                <Slider fx:id="distributionSlider" min="-8" max="4"
+                                                <Label text="Lower pendulum length"/>
+                                                <Slider fx:id="lowerPendulumLengthSlider" min="1" max="200"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Highlighting"/>
-                                                <Slider fx:id="highlightingSlider"
+                                                <Label text="Angle 2"/>
+                                                <Slider fx:id="angle2Slider"
+                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                <Label text="Angular velocity 2"/>
+                                                <Slider fx:id="vAngular2Slider"
                                                         prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
                                             </VBox>
                                             <VBox layoutX="10.0" layoutY="10.0">
@@ -127,7 +133,7 @@
                                 </AnchorPane>
                             </content>
                         </Tab>
-                        <Tab text="Animation settings">
+                        <Tab text="Environment settings">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
@@ -138,8 +144,8 @@
                                                 <padding>
                                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                                 </padding>
-                                                <Label text="animation speed slider"/>
-                                                <Slider fx:id="animationIncrementSlider" prefWidth="3000.0"/>
+                                                <Label text="Friction slider"/>
+                                                <Slider fx:id="frictionSlider" max="1" prefWidth="3000.0"/>
                                             </VBox>
                                         </HBox>
                                     </children>

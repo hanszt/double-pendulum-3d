@@ -18,12 +18,13 @@ public abstract class AppConstants {
     private static final Logger LOGGER = LogManager.getLogger(AppConstants.class);
     private static final Properties PROPS = configProperties();
 
-    public static final int INIT_FRAME_RATE = 1; // f/s
+    public static final int INIT_FRAME_RATE = 30; // f/s
     public static final Duration INIT_FRAME_DURATION = Duration.seconds(1. / INIT_FRAME_RATE); // s/f
 
     public static final Color INIT_BG_COLOR = NAVY;
     public static final Color INIT_HINGE_COLOR = ORANGE;
     public static final Color INIT_ARM_COLOR = RED;
+    public static final Color INIT_TRACE_COLOR = GREEN;
 
     public static final Translate INIT_CAMERA_PLATFORM_TRANSLATION = new Translate(0, 0, -500);
     public static final double INIT_CAMERA_FOV = 30;

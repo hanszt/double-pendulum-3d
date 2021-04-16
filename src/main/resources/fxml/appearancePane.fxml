@@ -43,8 +43,8 @@
             <ColorPicker fx:id="backgroundColorPicker"
                          onAction="#backgroundColorPickerAction" prefHeight="30"
                          prefWidth="1000.0"/>
-            <Label text="Height light color"/>
-            <ColorPicker fx:id="highlightingColorPicker"
+            <Label text="Pendulum color"/>
+            <ColorPicker fx:id="pendulumColorPicker"
                          onAction="#heightLightColorPickerAction" prefHeight="30"
                          prefWidth="1000.0"/>
         </VBox>
@@ -52,9 +52,13 @@
             <padding>
                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
             </padding>
-            <Label text="Seed color"/>
-            <ColorPicker fx:id="seedColorPicker"
-                         onAction="#seedColorPickerAction" prefHeight="30"
+            <Label text="Pendulum mass color"/>
+            <ColorPicker fx:id="pendulumMassColorPicker"
+                         onAction="#pendulumMassColorPickerAction" prefHeight="30"
+                         prefWidth="1000.0"/>
+            <Label text="Trace color"/>
+            <ColorPicker fx:id="traceColorPicker"
+                         prefHeight="30"
                          prefWidth="1000.0"/>
         </VBox>
     </HBox>
