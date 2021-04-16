@@ -92,7 +92,7 @@ public class StatisticsController extends FXMLController {
         updatePendulumPropertyStatistics(doublePendulum);
         updatePendulumPositionStatistics(doublePendulum);
         updatePendulumAngleStatistics(doublePendulum);
-        frictionLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getFriction()));
+        frictionLabel.setText(format("%-4.3f", doublePendulum.getFriction()));
         traceSizeLabel.setText(format("%d", doublePendulum.traceSize()));
 
         positionXLabel.setText(format(TWO_DEC_DOUBLE, mouseControlService.getTargetTranslateX()));

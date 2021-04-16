@@ -165,7 +165,7 @@ public class MainSceneController extends SceneController {
 
     private static final double DEFAULT_MASS = 10;
     private static final double DEFAULT_ARM_LENGTH = 50;
-    private static final double INIT_FRICTION = .02;
+    private static final double INIT_FRICTION = .002;
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4;
     private static final double INIT_ANGLE2 = 90; //deg
 
