@@ -1,12 +1,14 @@
 package hzt.model;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-public class Connection extends Cylinder {
+public class Link extends Cylinder {
 
     private final Rotate rotateZ = new Rotate();
 
@@ -18,7 +20,7 @@ public class Connection extends Cylinder {
     private final DoubleProperty endY = new SimpleDoubleProperty();
     private final DoubleProperty endZ = new SimpleDoubleProperty();
 
-    public Connection() {
+    public Link() {
         super();
         rotateZ.setAxis(Rotate.Z_AXIS);
         getTransforms().addAll(rotateZ);
@@ -27,10 +29,12 @@ public class Connection extends Cylinder {
     }
 
     private void bindRotationBasedOnStartAndEnd() {
-        DoubleProperty xDistance = new SimpleDoubleProperty();
-        xDistance.bind(startX.subtract(endX));
-        DoubleProperty yDistance = new SimpleDoubleProperty();
-        yDistance.bind(startY.subtract(endY));
+        DoubleProperty xDistance = bindOperation(startX.subtract(endX));
+        DoubleProperty yDistance = bindOperation(startY.subtract(endY));
+        DoubleProperty xDistanceSquared = bindOperation(xDistance.multiply(xDistance));
+        DoubleProperty yDistanceSquared = bindOperation(yDistance.multiply(yDistance));
+        DoubleProperty lengthSquared = bindOperation(xDistanceSquared.add(yDistanceSquared));
+        lengthSquared.addListener((observableValue, number, t1) -> setHeight(Math.sqrt(lengthSquared.get())));
         endX.addListener((o, c, n) -> rotate(xDistance, yDistance));
         endY.addListener((o, c, n) -> rotate(xDistance, yDistance));
     }
@@ -40,6 +44,12 @@ public class Connection extends Cylinder {
     private void rotate(DoubleProperty distance1, DoubleProperty distance2) {
         double angle = Math.toDegrees(Math.atan(distance2.get() / distance1.get()));
         rotateZ.setAngle(angle + RIGHT_ANGLE);
+    }
+
+    private DoubleProperty bindOperation(DoubleBinding doubleBinding) {
+        DoubleProperty doubleProperty = new SimpleDoubleProperty();
+        doubleProperty.bind(doubleBinding);
+        return doubleProperty;
     }
 
     private void bindPositionBasedOnStartAndEnd() {
@@ -65,6 +75,14 @@ public class Connection extends Cylinder {
         endX.bind(endNode.translateXProperty());
         endY.bind(endNode.translateYProperty());
         endZ.bind(endNode.translateZProperty());
+    }
+
+    public void defineStartAndEndpoint(Point2D startPoint, Point2D endPoint) {
+        startX.set(startPoint.getX());
+        startY.set(startPoint.getY());
+
+        endX.set(endPoint.getX());
+        endY.set(endPoint.getY());
     }
 
 }

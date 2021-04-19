@@ -3,7 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<VBox maxHeight="-5000.0" maxWidth="-5000.0" minHeight="-5000.0" minWidth="-5000.0"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="hzt.controller.scene.MainSceneController">
 
@@ -94,16 +94,16 @@
                                                 </padding>
                                                 <Label text="Upper Mass"/>
                                                 <Slider fx:id="upperMassSlider" min="1" max="500"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Upper pendulum length"/>
                                                 <Slider fx:id="upperPendulumLengthSlider" min="1" max="200"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Angle 1"/>
                                                 <Slider fx:id="angle1Slider"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Angular Velocity 1"/>
                                                 <Slider fx:id="vAngular1Slider"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                             </VBox>
                                             <VBox>
                                                 <padding>
@@ -112,16 +112,16 @@
 
                                                 <Label text="Lower mass"/>
                                                 <Slider fx:id="lowerMassSlider" min="1" max="500"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Lower pendulum length"/>
                                                 <Slider fx:id="lowerPendulumLengthSlider" min="1" max="200"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Angle 2"/>
                                                 <Slider fx:id="angle2Slider"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                                 <Label text="Angular velocity 2"/>
                                                 <Slider fx:id="vAngular2Slider"
-                                                        prefWidth="3000.0" showTickLabels="true" showTickMarks="true"/>
+                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
                                             </VBox>
                                             <VBox layoutX="10.0" layoutY="10.0">
                                                 <padding>
@@ -145,7 +145,10 @@
                                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                                 </padding>
                                                 <Label text="Friction slider"/>
-                                                <Slider fx:id="frictionSlider" max="1" prefWidth="3000.0"/>
+                                                <Slider fx:id="frictionSlider" max="1" prefWidth="5000.0"/>
+                                                <Label text="trace length slider"/>
+                                                <Slider fx:id="traceLengthSlider" max="5000" prefWidth="5000.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
                                             </VBox>
                                         </HBox>
                                     </children>
@@ -160,7 +163,7 @@
                                               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                                               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <VBox prefWidth="3000.0">
+                                                <VBox prefWidth="5000.0">
                                                     <padding>
                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                                                     </padding>

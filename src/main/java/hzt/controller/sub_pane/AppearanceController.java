@@ -5,6 +5,7 @@ import hzt.controller.SceneManager;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import hzt.model.DoublePendulum;
+import hzt.model.TraceXY;
 import hzt.model.appearance.Resource;
 import hzt.service.BackgroundService;
 import hzt.service.IBackgroundService;
@@ -66,9 +67,16 @@ public class AppearanceController extends FXMLController {
         pendulumMassColorPicker.setValue(INIT_HINGE_COLOR);
         pendulumColorPicker.setValue(INIT_ARM_COLOR);
         traceColorPicker.setValue(INIT_TRACE_COLOR);
+        bindColorProperties(doublePendulum);
+    }
+
+    private void bindColorProperties(DoublePendulum doublePendulum) {
         doublePendulum.massColorProperty().bind(pendulumMassColorPicker.valueProperty());
         doublePendulum.armColorProperty().bind(pendulumColorPicker.valueProperty());
-        doublePendulum.traceColorProperty().bind(traceColorPicker.valueProperty());
+    }
+
+    public void bindTraceColorToTraceColorPicker(TraceXY traceXY) {
+        traceXY.colorProperty().bind(traceColorPicker.valueProperty());
     }
 
     private void configureComboBoxes() {
@@ -146,5 +154,4 @@ public class AppearanceController extends FXMLController {
     protected FXMLController getBean() {
         return this;
     }
-
 }

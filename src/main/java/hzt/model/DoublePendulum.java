@@ -4,16 +4,13 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-
-import java.net.ConnectException;
 
 import static hzt.model.AppConstants.G;
 import static java.lang.Math.*;
@@ -22,13 +19,13 @@ import static java.lang.Math.PI;
 public class DoublePendulum extends Group {
 
     private final Cylinder anchor;
-    private final PendulumCylinder upperCylinder;
-    private final PendulumCylinder lowerCylinder;
+    private final PendulumCylinder upperPendulum;
+    private final PendulumCylinder lowerPendulum;
     private final PhongMaterial armMaterial = new PhongMaterial();
-    private final Connection upperArm;
-    private final Connection lowerArm;
+    private final Link upperArm;
+    private final Link lowerArm;
 
-    private final Trace trace;
+    private final ObjectProperty<TraceType> traceType = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Color> massColor = new SimpleObjectProperty<>();
 
@@ -43,15 +40,15 @@ public class DoublePendulum extends Group {
 
     public DoublePendulum() {
         this.anchor = new Cylinder();
-        this.upperCylinder = new PendulumCylinder();
-        this.lowerCylinder = new PendulumCylinder();
-        this.upperArm = new Connection();
-        this.lowerArm = new Connection();
-        this.trace = new Trace();
-        this.getChildren().addAll(anchor, trace, upperArm, lowerArm);
-        upperCylinder.addWeightToFxGroup(this);
-        lowerCylinder.addWeightToFxGroup(this);
+        this.upperPendulum = new PendulumCylinder();
+        this.lowerPendulum = new PendulumCylinder();
+        this.upperArm = new Link();
+        this.lowerArm = new Link();
+        this.getChildren().addAll(anchor, upperArm, lowerArm);
+        upperPendulum.addWeightToFxGroup(this);
+        lowerPendulum.addWeightToFxGroup(this);
         configureComponents();
+        traceType.addListener(this::traceTypeChanged);
     }
 
     private void configureComponents() {
@@ -62,8 +59,8 @@ public class DoublePendulum extends Group {
     }
 
     private void configureArms() {
-        upperArm.defineStartAndEndpoint(anchor, upperCylinder.getCylinder());
-        lowerArm.defineStartAndEndpoint(upperCylinder.getCylinder(), lowerCylinder.getCylinder());
+        upperArm.defineStartAndEndpoint(anchor, upperPendulum.getCylinder());
+        lowerArm.defineStartAndEndpoint(upperPendulum.getCylinder(), lowerPendulum.getCylinder());
         upperArm.setMaterial(armMaterial);
         lowerArm.setMaterial(armMaterial);
     }
@@ -81,8 +78,8 @@ public class DoublePendulum extends Group {
     }
 
     private void bindColorProperties() {
-        upperCylinder.diffuseColorProperty().bind(massColor);
-        lowerCylinder.diffuseColorProperty().bind(massColor);
+        upperPendulum.diffuseColorProperty().bind(massColor);
+        lowerPendulum.diffuseColorProperty().bind(massColor);
 
     }
 
@@ -92,48 +89,36 @@ public class DoublePendulum extends Group {
         calculateAngleVars();
         setBoundToAngles();
         updatePendulumPosition();
-        updateTrace();
+        traceType.get().getTraceXY().update(lowerPendulum.getPositionXY());
         simulateFriction();
     }
 
-    private static final int MAX_TRACE_LENGTH = 5000;
-
-    private void updateTrace() {
-        Point2D point2D = lowerCylinder.getPositionXY();
-        Sphere sphere = new Sphere();
-        sphere.setTranslateX(point2D.getX());
-        sphere.setTranslateY(point2D.getY());
-        sphere.setTranslateZ(anchor.getHeight());
-        trace.add(sphere);
-        if (trace.size() > MAX_TRACE_LENGTH) trace.removeFirst();
-    }
-
     private void updatePendulumPosition() {
-        upperCylinder.setPosition(sin(angle1.get()) * upperArm.getHeight(), cos(angle1.get()) * upperArm.getHeight());
+        upperPendulum.setPosition(sin(angle1.get()) * upperArm.getHeight(), cos(angle1.get()) * upperArm.getHeight());
         Point2D posLowerMassWithRespectToUpperMass =
                 new Point2D(sin(angle2.get()) * lowerArm.getHeight(), cos(angle2.get()) * lowerArm.getHeight());
-        Point2D positionUpperMass = upperCylinder.getPositionXY();
-        lowerCylinder.setPosition(positionUpperMass.getX() + posLowerMassWithRespectToUpperMass.getX(),
+        Point2D positionUpperMass = upperPendulum.getPositionXY();
+        lowerPendulum.setPosition(positionUpperMass.getX() + posLowerMassWithRespectToUpperMass.getX(),
                 positionUpperMass.getY() + posLowerMassWithRespectToUpperMass.getY());
     }
 
     private void calculateAngularAcc1() {
-        double num1 = -G * (2 * upperCylinder.getMass() + lowerCylinder.getMass()) * sin(angle1.get());
-        double num2 = -lowerCylinder.getMass() * G * sin(angle1.get() - 2 * angle2.get());
-        double num3 = -2 * sin(angle1.get() - angle2.get()) * lowerCylinder.getMass();
+        double num1 = -G * (2 * upperPendulum.getMass() + lowerPendulum.getMass()) * sin(angle1.get());
+        double num2 = -lowerPendulum.getMass() * G * sin(angle1.get() - 2 * angle2.get());
+        double num3 = -2 * sin(angle1.get() - angle2.get()) * lowerPendulum.getMass();
         double num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() + vAngular1.get() * vAngular1.get() *
                 upperArm.getHeight() * cos(angle1.get() - angle2.get());
-        double den = upperArm.getHeight() * (2 * upperCylinder.getMass() * lowerCylinder.getMass() - lowerCylinder.getMass() *
+        double den = upperArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
                 cos(2 * angle1.get() - 2 * angle2.get()));
         aAngular1.set((num1 + num2 + num3 * num4) / den);
     }
 
     private void calculateAngularAcc2() {
         double num1 = 2 * sin(angle1.get() - angle2.get());
-        double num2 = vAngular1.get() * vAngular1.get() * upperArm.getHeight() * (upperCylinder.getMass() + lowerCylinder.getMass());
-        double num3 = G * (upperCylinder.getMass() + lowerCylinder.getMass()) * cos(angle1.get());
-        double num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() * lowerCylinder.getMass() * cos(angle1.get() - angle2.get());
-        double den = lowerArm.getHeight() * (2 * upperCylinder.getMass() * lowerCylinder.getMass() - lowerCylinder.getMass() *
+        double num2 = vAngular1.get() * vAngular1.get() * upperArm.getHeight() * (upperPendulum.getMass() + lowerPendulum.getMass());
+        double num3 = G * (upperPendulum.getMass() + lowerPendulum.getMass()) * cos(angle1.get());
+        double num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() * lowerPendulum.getMass() * cos(angle1.get() - angle2.get());
+        double den = lowerArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
                 cos(2 * angle1.get() - 2 * angle2.get()));
         aAngular2.set((num1 * (num2 + num3 + num4)) / den);
     }
@@ -165,15 +150,11 @@ public class DoublePendulum extends Group {
     }
 
     public void clearTrace() {
-        trace.clear();
+        traceType.get().getTraceXY().clear();
     }
 
     public int traceSize() {
-        return trace.size();
-    }
-
-    public ObjectProperty<Color> traceColorProperty() {
-        return trace.colorProperty();
+        return traceType.get().traceSize();
     }
 
     public DoubleProperty upperArmLengthProperty() {
@@ -200,12 +181,12 @@ public class DoublePendulum extends Group {
         return armMaterial.diffuseColorProperty();
     }
 
-    public PendulumCylinder getUpperCylinder() {
-        return upperCylinder;
+    public PendulumCylinder getUpperPendulum() {
+        return upperPendulum;
     }
 
-    public PendulumCylinder getLowerCylinder() {
-        return lowerCylinder;
+    public PendulumCylinder getLowerPendulum() {
+        return lowerPendulum;
     }
 
     public double getAngle1Deg() {
@@ -254,5 +235,21 @@ public class DoublePendulum extends Group {
 
     public DoubleProperty frictionProperty() {
         return friction;
+    }
+
+    public ObjectProperty<TraceType> traceTypeProperty() {
+        return traceType;
+    }
+
+    private void traceTypeChanged(ObservableValue<? extends TraceType> o, TraceType c, TraceType n) {
+        if (c != null) {
+            TraceXY curTrace = c.getTraceXY();
+            curTrace.clear();
+            getChildren().remove(curTrace);
+        }
+        TraceXY newTrace = n.getTraceXY();
+        newTrace.setTranslateZ(anchor.getHeight());
+
+        getChildren().add(newTrace);
     }
 }

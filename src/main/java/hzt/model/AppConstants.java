@@ -58,7 +58,7 @@ public abstract class AppConstants {
         STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
     }
 
-    private static double parsedDoubleProp(String property, double defaultVal) {
+    public static double parsedDoubleProp(String property, double defaultVal) {
         double value = defaultVal;
         String propertyVal = PROPS.getProperty(property);
         try {
@@ -70,7 +70,7 @@ public abstract class AppConstants {
         return value;
     }
 
-    private static int parsedIntProp(String property, int defaultVal) {
+    public static int parsedIntProp(String property, int defaultVal) {
         int value = defaultVal;
         String propertyVal = PROPS.getProperty(property);
         try {
