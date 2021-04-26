@@ -3,6 +3,7 @@ package hzt.controller.main_scene;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StatisticsServiceTest {
 
@@ -23,6 +24,7 @@ class StatisticsServiceTest {
         //act
 
         //assert
+        assertTrue(true);
     }
 
 }

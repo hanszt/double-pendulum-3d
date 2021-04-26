@@ -60,8 +60,8 @@ public class ThemeService implements IThemeService {
         if (styleSheetUrl != null) {
             LOGGER.debug(styleSheetUrl);
             this.styleSheet.set(styleSheetUrl.toExternalForm());
-            LOGGER.debug(styleSheetUrl.toExternalForm());
-        } else LOGGER.error("stylesheet of " + theme.getName() + " could not be loaded...");
+            LOGGER.debug(styleSheetUrl::toExternalForm);
+        } else LOGGER.error(() -> "stylesheet of " + theme.getName() + " could not be loaded...");
     }
 
     public StringProperty styleSheetProperty() {

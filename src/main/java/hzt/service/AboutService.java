@@ -50,7 +50,7 @@ public class AboutService implements IAboutService {
                 inputList.add(input.nextLine());
             }
         } catch (FileNotFoundException e) {
-            LOGGER.error("File with path " + path + " not found...");
+            LOGGER.error(() -> "File with path " + path + " not found...");
         }
         return inputList;
     }

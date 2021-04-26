@@ -215,7 +215,7 @@ public class MainSceneController extends SceneController {
 
     @FXML
     private void followDrawSpotButtonAction() {
-
+        //this method should enable/disable follow draw spot
     }
 
     @FXML
