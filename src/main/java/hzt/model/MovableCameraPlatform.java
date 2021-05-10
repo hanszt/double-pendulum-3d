@@ -20,11 +20,9 @@ public class MovableCameraPlatform extends Group {
     private final DoubleProperty maxAcceleration = new SimpleDoubleProperty();
 
     private double velocity;
-    private final double acceleration;
 
     public MovableCameraPlatform() {
         super();
-        acceleration = 0;
         translation3DKeyFilter.userInputVectorSizeProperty().bindBidirectional(maxVelocityProperty());
         setInitCameraConfig();
         this.getChildren().add(camera);
@@ -67,10 +65,6 @@ public class MovableCameraPlatform extends Group {
 
     public double getVelocity() {
         return velocity;
-    }
-
-    public double getAcceleration() {
-        return acceleration;
     }
 
     public DoubleProperty maxVelocityProperty() {

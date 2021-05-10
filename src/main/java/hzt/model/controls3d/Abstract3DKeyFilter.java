@@ -11,12 +11,12 @@ public abstract class Abstract3DKeyFilter {
 
     private static final double INIT_USER_INPUT_VECTOR_SIZE = 100;
 
-    KeyCode negXKeyCode;
-    KeyCode posXKeycode;
-    KeyCode negYKeyCode;
-    KeyCode posYKeyCode;
-    KeyCode negZKeyCode;
-    KeyCode posZKeyCode;
+    final KeyCode negXKeyCode;
+    final KeyCode posXKeycode;
+    final KeyCode negYKeyCode;
+    final KeyCode posYKeyCode;
+    final KeyCode negZKeyCode;
+    final KeyCode posZKeyCode;
 
     private boolean xNegPressed;
     private boolean xPosPressed;
@@ -81,14 +81,6 @@ public abstract class Abstract3DKeyFilter {
     abstract boolean releasedAction(Point3D point3D);
 
     abstract void allReleasedAction(boolean allReleased);
-
-    public void resetKeyPressed() {
-        xNegPressed = xPosPressed = yNegPressed = yPosPressed = zNegPressed = zPosPressed = false;
-    }
-
-    public double getUserInputVectorSize() {
-        return userInputVectorSize.get();
-    }
 
     public DoubleProperty userInputVectorSizeProperty() {
         return userInputVectorSize;
