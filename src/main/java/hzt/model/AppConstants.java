@@ -13,7 +13,10 @@ import java.util.Properties;
 
 import static javafx.scene.paint.Color.*;
 
-public abstract class AppConstants {
+public class AppConstants {
+
+    private AppConstants() {
+    }
 
     private static final Logger LOGGER = LogManager.getLogger(AppConstants.class);
     private static final Properties PROPS = configProperties();
@@ -21,7 +24,7 @@ public abstract class AppConstants {
     public static final int INIT_FRAME_RATE = 30; // f/s
     public static final Duration INIT_FRAME_DURATION = Duration.seconds(1. / INIT_FRAME_RATE); // s/f
 
-    public static final Color INIT_BG_COLOR = NAVY;
+    public static final Color INIT_BG_COLOR = WHEAT;
     public static final Color INIT_HINGE_COLOR = ORANGE;
     public static final Color INIT_ARM_COLOR = RED;
     public static final Color INIT_TRACE_COLOR = GREEN;
@@ -43,7 +46,6 @@ public abstract class AppConstants {
 
     public static final double INIT_WORLD_TO_CAMERA_ANGLE_X;
     public static final double INIT_WORLD_TO_CAMERA_ANGLE_Y;
-    public static final double STAGE_OPACITY;
 
     static {
         int sceneWidthProp = parsedIntProp("init_scene_width", 1200);
@@ -55,7 +57,6 @@ public abstract class AppConstants {
         INIT_ANIMATION_PANE_DIMENSION = new Dimension2D(animationPaneWidthProp, animationPaneHeightProp);
         INIT_WORLD_TO_CAMERA_ANGLE_X = parsedDoubleProp("init_angle_x", 0);
         INIT_WORLD_TO_CAMERA_ANGLE_Y = parsedDoubleProp("init_angle_y", 0);
-        STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
     }
 
     public static double parsedDoubleProp(String property, double defaultVal) {

@@ -3,12 +3,14 @@ package hzt.controller.scene;
 import hzt.controller.SceneManager;
 import hzt.controller.sub_pane.AppearanceController;
 import hzt.controller.sub_pane.StatisticsController;
-import hzt.model.*;
+import hzt.model.CoordinateSystem3D;
+import hzt.model.CylinderCoordinateSystem3D;
+import hzt.model.DoublePendulum;
+import hzt.model.MovableCameraPlatform;
 import hzt.service.AnimationService;
 import hzt.service.IAnimationService;
 import hzt.service.IMouseControlService;
 import hzt.service.MouseControlService;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +28,8 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static hzt.model.AppConstants.*;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
@@ -33,12 +37,13 @@ import static hzt.model.AppConstants.Scene.MAIN_SCENE;
 
 public class MainSceneController extends SceneController {
 
-    @FXML
-    private Slider traceLengthSlider;
-    @FXML
-    private Slider vAngular2Slider;
-    @FXML
-    private Slider vAngular1Slider;
+    private static final double INIT_MASS_1 = parsedDoubleProp("init_mass1", 10);
+    private static final double INIT_MASS_2 = parsedDoubleProp("init_mass2", 100);
+    private static final double INIT_UPPER_ARM_LENGTH = parsedDoubleProp("init_upper_arm_length", 100);
+    private static final double INIT_LOWER_ARM_LENGTH = parsedDoubleProp("init_lower_arm_length", 100);
+    private static final double INIT_ANGLE_1 = parsedDoubleProp("init_angle1", 30);
+    private static final double INIT_ANGLE_2 = parsedDoubleProp("init_angle2", 30);
+    public static final double DELTA_ANGLE_1 = parsedDoubleProp("delta_angle1", 0.1);
 
     @FXML
     private Tab appearanceTab;
@@ -47,7 +52,7 @@ public class MainSceneController extends SceneController {
     @FXML
     private AnchorPane animationPane;
     @FXML
-    private ComboBox<TraceType> traceModeCombobox;
+    private ComboBox<String> traceModeCombobox;
     @FXML
     private ToggleButton showAxisButton;
     @FXML
@@ -70,19 +75,28 @@ public class MainSceneController extends SceneController {
     private Slider cameraMaxAccelerationSlider;
     @FXML
     private Slider cameraFieldOfViewSlider;
+    @FXML
+    private Slider maxTraceLengthSlider;
+    @FXML
+    private Slider vAngular2Slider;
+    @FXML
+    private Slider vAngular1Slider;
 
     private final Group subSceneRoot = new Group();
     private final Group root = new Group();
-    private final DoublePendulum doublePendulum = new DoublePendulum();
+    private final Deque<DoublePendulum> doublePendulums = buildDoublePendulums();
+    private final DoublePendulum frontDoublePendulum = doublePendulums.peek();
+
     private final CoordinateSystem3D coordinateSystem3D = new CylinderCoordinateSystem3D();
 
     private final IMouseControlService subSceneRootMouseControlService = new MouseControlService(root);
-    private final StatisticsController statisticsController = new StatisticsController();
-    private final AppearanceController appearanceController = new AppearanceController(this, doublePendulum);
 
+    private final StatisticsController statisticsController = new StatisticsController();
+    private final AppearanceController appearanceController = new AppearanceController(this, doublePendulums);
     private final IAnimationService animationService = new AnimationService();
 
     private final SubScene subScene3D = new SubScene(subSceneRoot, 0, 0, true, SceneAntialiasing.BALANCED);
+
     private final MovableCameraPlatform cameraPlatform = new MovableCameraPlatform();
 
     public MainSceneController(SceneManager sceneManager) throws IOException {
@@ -102,12 +116,36 @@ public class MainSceneController extends SceneController {
         setInitControlValues();
         configureComboBoxes();
         configureAppearanceController();
-        configureDoublePendulum(doublePendulum);
+        configureDoublePendulums();
+        configureSelectedDoublePendulum(frontDoublePendulum);
         subSceneRootMouseControlService.initMouseControl(animationPane);
         subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
-        root.getChildren().addAll(coordinateSystem3D, doublePendulum);
+        root.getChildren().add(coordinateSystem3D);
+        doublePendulums.forEach(doublePendulum -> root.getChildren().add(doublePendulum));
         coordinateSystem3D.visibleProperty().bind(showAxisButton.selectedProperty());
         animationService.addLoopHandlersToTimelines(true, animationLoopEventHandler(), this::updateStatisticsLoop);
+    }
+
+    private static final double Z_SPACING = 30;
+
+    private Deque<DoublePendulum> buildDoublePendulums() {
+        Deque<DoublePendulum> doublePendulumSet = new ArrayDeque<>();
+        int amount = parsedIntProp("number_of_pendulums", 1);
+        amount = amount > 0 ? amount : 1;
+        for (int i = 0; i < amount; i++) {
+            DoublePendulum doublePendulum = new DoublePendulum();
+            doublePendulum.setTranslateZ(i * Z_SPACING);
+            doublePendulumSet.add(doublePendulum);
+        }
+        return doublePendulumSet;
+    }
+
+    private void configureDoublePendulums() {
+        int counter = 0;
+        for (DoublePendulum doublePendulum : doublePendulums) {
+            configureDoublePendulum(doublePendulum, counter * DELTA_ANGLE_1);
+            counter++;
+        }
     }
 
     private void configureAppearanceController() {
@@ -136,61 +174,66 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureComboBoxes() {
-        TraceType ballTraceType = new TraceType("Ball trace", new BallTrace());
-        traceModeCombobox.getItems().addAll(ballTraceType, new TraceType("Linked trace", new LinkTrace()));
-        traceModeCombobox.getItems().forEach(this::configureTraces);
-        traceModeCombobox.setValue(ballTraceType);
+        traceModeCombobox.getItems().addAll(DoublePendulum.BALL_TRACE, DoublePendulum.LINK_TRACE, DoublePendulum.NO_TRACE);
+        traceModeCombobox.setValue(DoublePendulum.BALL_TRACE);
     }
 
-    private void configureTraces(TraceType item) {
-        item.getTraceXY().lengthProperty().bind(traceLengthSlider.valueProperty());
-        appearanceController.bindTraceColorToTraceColorPicker(item.getTraceXY());
+    private void configureDoublePendulum(DoublePendulum doublePendulum, double deltaAngle) {
+        setDoublePendulumParams(doublePendulum, deltaAngle);
+        doublePendulum.frictionProperty().bind(frictionSlider.valueProperty());
+        doublePendulum.traceTypeProperty().bind(traceModeCombobox.valueProperty());
+        doublePendulum.traceTypes().forEach(trace -> trace.maxLengthProperty().bind(maxTraceLengthSlider.valueProperty()));
+        doublePendulum.traceTypes().forEach(appearanceController::bindTraceColorToTraceColorPicker);
     }
 
-    private void configureDoublePendulum(DoublePendulum doublePendulum) {
+    private void setDoublePendulumParams(DoublePendulum doublePendulum, double deltaAngle) {
+        doublePendulum.reset();
         doublePendulum.getUpperPendulum().massProperty().bind(upperMassSlider.valueProperty());
         doublePendulum.getLowerPendulum().massProperty().bind(lowerMassSlider.valueProperty());
         doublePendulum.upperArmLengthProperty().bind(upperPendulumLengthSlider.valueProperty());
         doublePendulum.lowerArmLengthProperty().bind(lowerPendulumLengthSlider.valueProperty());
+        doublePendulum.angle1Property().set(Math.toRadians(INIT_ANGLE_1 + deltaAngle));
+        doublePendulum.angle2Property().set(Math.toRadians(INIT_ANGLE_2));
+    }
+
+    private void configureSelectedDoublePendulum(DoublePendulum doublePendulum) {
         doublePendulum.angle1Property().bindBidirectional(angle1Slider.valueProperty());
         doublePendulum.angle2Property().bindBidirectional(angle2Slider.valueProperty());
         doublePendulum.vAngular1Property().bindBidirectional(vAngular1Slider.valueProperty());
         doublePendulum.vAngular2Property().bindBidirectional(vAngular2Slider.valueProperty());
-        doublePendulum.frictionProperty().bind(frictionSlider.valueProperty());
-        doublePendulum.traceTypeProperty().bind(traceModeCombobox.valueProperty());
     }
 
     private EventHandler<ActionEvent> animationLoopEventHandler() {
-        return loop -> animationService.run(doublePendulum, cameraPlatform);
+        return loop -> animationService.run(doublePendulums, cameraPlatform);
     }
 
     private void updateStatisticsLoop(ActionEvent loopEvent) {
         Duration runTimeSim = Duration.millis((LocalTime.now().toNanoOfDay() - startTimeScene.toNanoOfDay()) / 1e6);
-        statisticsController.updateGroupStatistics(doublePendulum, (MouseControlService) subSceneRootMouseControlService);
+        statisticsController.updateGroupStatistics(frontDoublePendulum, subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
 
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4;
-    private static final int INIT_TRACE_LENGTH = 5000;
+    private static final int INIT_TRACE_LENGTH = 500;
 
     private void setInitControlValues() {
-        upperMassSlider.setValue(parsedDoubleProp("init_mass1", 10));
-        lowerMassSlider.setValue(parsedDoubleProp("init_mass2", 100));
-        upperPendulumLengthSlider.setValue(parsedDoubleProp("init_upper_arm_length", 100));
-        lowerPendulumLengthSlider.setValue(parsedDoubleProp("init_lower_arm_length", 100));
+        upperMassSlider.setValue(INIT_MASS_1);
+        lowerMassSlider.setValue(INIT_MASS_2);
+        upperPendulumLengthSlider.setValue(INIT_UPPER_ARM_LENGTH);
+        lowerPendulumLengthSlider.setValue(INIT_LOWER_ARM_LENGTH);
         angle1Slider.setMin(-Math.PI);
-        angle1Slider.setValue(Math.toRadians(parsedDoubleProp("init_angle1", 30)));
+        angle1Slider.setValue(Math.toRadians(INIT_ANGLE_1));
         angle1Slider.setMax(Math.PI);
         angle2Slider.setMin(-Math.PI);
-        angle2Slider.setValue(Math.toRadians(parsedDoubleProp("init_angle2", 30)));
+        angle2Slider.setValue(Math.toRadians(INIT_ANGLE_2));
         angle2Slider.setMax(Math.PI);
         vAngular1Slider.setMin(-MAX_ANGULAR_VELOCITY);
         vAngular1Slider.setMax(MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMin(-MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMax(MAX_ANGULAR_VELOCITY);
         frictionSlider.setValue(parsedDoubleProp("init_friction", .002));
-        traceLengthSlider.setValue(INIT_TRACE_LENGTH);
+        maxTraceLengthSlider.setValue(INIT_TRACE_LENGTH);
         cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
         cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
     }
@@ -205,12 +248,19 @@ public class MainSceneController extends SceneController {
     @FXML
     private void resetButtonAction() {
         setInitControlValues();
-       doublePendulum.reset();
+        int counter = 0;
+        for (DoublePendulum doublePendulum : doublePendulums) {
+            if (!doublePendulum.equals(frontDoublePendulum)) {
+                setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
+            }
+            counter++;
+        }
+        doublePendulums.forEach(DoublePendulum::reset);
     }
 
     @FXML
     private void clearTraceButtonAction() {
-        doublePendulum.clearTrace();
+        doublePendulums.forEach(DoublePendulum::clearTrace);
     }
 
     @FXML
@@ -224,11 +274,6 @@ public class MainSceneController extends SceneController {
         cameraPlatform.getCamera().setFieldOfView(INIT_CAMERA_FOV);
         subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
         subSceneRootMouseControlService.setTargetTranslation(Point3D.ZERO);
-    }
-
-    @FXML
-    private void traceModeComboboxAction() {
-        //this will execute code when the traceMode combobox is changed by user
     }
 
     @FXML

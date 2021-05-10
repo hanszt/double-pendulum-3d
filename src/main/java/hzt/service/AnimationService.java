@@ -7,6 +7,8 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+import java.util.Collection;
+
 import static hzt.model.AppConstants.INIT_FRAME_DURATION;
 import static javafx.animation.Animation.INDEFINITE;
 
@@ -36,8 +38,8 @@ public class AnimationService implements IAnimationService {
         }
     }
 
-    public void run(DoublePendulum doublePendulum, MovableCameraPlatform cameraPlatform) {
-        doublePendulum.update();
+    public void run(Collection<DoublePendulum> doublePendulums, MovableCameraPlatform cameraPlatform) {
+        doublePendulums.forEach(DoublePendulum::update);
         cameraPlatform.update(animationTimeline.getCycleDuration());
     }
 

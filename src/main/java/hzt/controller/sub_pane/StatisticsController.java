@@ -3,8 +3,8 @@ package hzt.controller.sub_pane;
 import hzt.controller.FXMLController;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
+import hzt.service.IMouseControlService;
 import hzt.service.IStatisticsService;
-import hzt.service.MouseControlService;
 import hzt.service.StatisticsService;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -88,7 +88,7 @@ public class StatisticsController extends FXMLController {
         runTimeLabel.setText(format("%-4.3f seconds", runTimeSim.toSeconds()));
     }
 
-    public void updateGroupStatistics(DoublePendulum doublePendulum, MouseControlService mouseControlService) {
+    public void updateGroupStatistics(DoublePendulum doublePendulum, IMouseControlService mouseControlService) {
         updatePendulumPropertyStatistics(doublePendulum);
         updatePendulumPositionStatistics(doublePendulum);
         updatePendulumAngleStatistics(doublePendulum);

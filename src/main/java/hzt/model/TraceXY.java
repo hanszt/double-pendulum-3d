@@ -15,7 +15,7 @@ public abstract class TraceXY extends Group {
 
     private final PhongMaterial material = new PhongMaterial();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
-    final DoubleProperty length = new SimpleDoubleProperty();
+    final DoubleProperty maxLength = new SimpleDoubleProperty();
 
     protected TraceXY() {
         material.diffuseColorProperty().bind(color);
@@ -43,7 +43,7 @@ public abstract class TraceXY extends Group {
     }
 
     private void updateTraceLength() {
-        while (size() > length.get()) removeFirst();
+        while (size() > maxLength.get()) removeFirst();
     }
 
     public void removeFirst() {
@@ -56,7 +56,7 @@ public abstract class TraceXY extends Group {
 
     public abstract void clear();
 
-    public DoubleProperty lengthProperty() {
-        return length;
+    public DoubleProperty maxLengthProperty() {
+        return maxLength;
     }
 }

@@ -11,4 +11,13 @@ public interface IMouseControlService {
 
     void setTargetTranslation(Point3D point);
 
+    double getTargetTranslateX();
+
+    double getTargetTranslateY();
+
+    double getTargetTranslateZ();
+
+    double getAngleX();
+
+    double getAngleY();
 }

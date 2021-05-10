@@ -12,11 +12,18 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import static hzt.model.AppConstants.G;
 import static java.lang.Math.*;
-import static java.lang.Math.PI;
 
 public class DoublePendulum extends Group {
+
+    public static final String BALL_TRACE = "Ball trace";
+    public static final String LINK_TRACE = "Linked trace";
+    public static final String NO_TRACE = "No trace";
 
     private final Cylinder anchor;
     private final PendulumCylinder upperPendulum;
@@ -25,7 +32,8 @@ public class DoublePendulum extends Group {
     private final Link upperArm;
     private final Link lowerArm;
 
-    private final ObjectProperty<TraceType> traceType = new SimpleObjectProperty<>();
+    private final Map<String, TraceXY> traceTypeMap = new HashMap<>();
+    private final ObjectProperty<String> traceType = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Color> massColor = new SimpleObjectProperty<>();
 
@@ -40,6 +48,9 @@ public class DoublePendulum extends Group {
 
     public DoublePendulum() {
         this.anchor = new Cylinder();
+        traceTypeMap.put(BALL_TRACE, new BallTrace());
+        traceTypeMap.put(LINK_TRACE, new LinkTrace());
+        traceTypeMap.put(NO_TRACE, noTrace());
         this.upperPendulum = new PendulumCylinder();
         this.lowerPendulum = new PendulumCylinder();
         this.upperArm = new Link();
@@ -49,6 +60,33 @@ public class DoublePendulum extends Group {
         lowerPendulum.addWeightToFxGroup(this);
         configureComponents();
         traceType.addListener(this::traceTypeChanged);
+    }
+
+    private TraceXY noTrace() {
+        return new TraceXY() {
+            @Override
+            void updateTrace(Point2D pointXY) {
+                //nothing to update...
+            }
+
+            @Override
+            public void clear() {
+                // nothing to clear...
+            }
+        };
+    }
+
+    private void traceTypeChanged(ObservableValue<? extends String> o, String c, String n) {
+        TraceXY curTrace = traceTypeMap.get(c);
+        if (curTrace != null) {
+            curTrace.clear();
+            getChildren().remove(curTrace);
+        }
+        TraceXY newTrace = traceTypeMap.get(n);
+        if (newTrace != null) {
+            newTrace.setTranslateZ(anchor.getHeight());
+            getChildren().add(newTrace);
+        }
     }
 
     private void configureComponents() {
@@ -80,7 +118,6 @@ public class DoublePendulum extends Group {
     private void bindColorProperties() {
         upperPendulum.diffuseColorProperty().bind(massColor);
         lowerPendulum.diffuseColorProperty().bind(massColor);
-
     }
 
     public void update() {
@@ -89,7 +126,7 @@ public class DoublePendulum extends Group {
         calculateAngleVars();
         setBoundToAngles();
         updatePendulumPosition();
-        traceType.get().getTraceXY().update(lowerPendulum.getPositionXY());
+        traceTypeMap.get(traceType.get()).update(lowerPendulum.getPositionXY());
         simulateFriction();
     }
 
@@ -150,11 +187,11 @@ public class DoublePendulum extends Group {
     }
 
     public void clearTrace() {
-        traceType.get().getTraceXY().clear();
+        traceTypeMap.values().forEach(TraceXY::clear);
     }
 
     public int traceSize() {
-        return traceType.get().traceSize();
+        return traceTypeMap.get(traceType.get()).size();
     }
 
     public DoubleProperty upperArmLengthProperty() {
@@ -237,19 +274,12 @@ public class DoublePendulum extends Group {
         return friction;
     }
 
-    public ObjectProperty<TraceType> traceTypeProperty() {
+    public ObjectProperty<String> traceTypeProperty() {
         return traceType;
     }
 
-    private void traceTypeChanged(ObservableValue<? extends TraceType> o, TraceType c, TraceType n) {
-        if (c != null) {
-            TraceXY curTrace = c.getTraceXY();
-            curTrace.clear();
-            getChildren().remove(curTrace);
-        }
-        TraceXY newTrace = n.getTraceXY();
-        newTrace.setTranslateZ(anchor.getHeight());
-
-        getChildren().add(newTrace);
+    public Collection<TraceXY> traceTypes() {
+        return traceTypeMap.values();
     }
+
 }

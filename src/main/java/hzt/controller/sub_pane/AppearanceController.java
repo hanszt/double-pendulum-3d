@@ -53,12 +53,12 @@ public class AppearanceController extends FXMLController {
     private final IThemeService themeService = new ThemeService();
     private final IBackgroundService backgroundService = new BackgroundService();
     private final MainSceneController mainSceneController;
-    private final DoublePendulum doublePendulum;
+    private final Collection<DoublePendulum> doublePendulums;
 
-    public AppearanceController(MainSceneController mainSceneController, DoublePendulum doublePendulum) throws IOException {
+    public AppearanceController(MainSceneController mainSceneController, Collection<DoublePendulum> doublePendulums) throws IOException {
         super("appearancePane.fxml");
         this.mainSceneController = mainSceneController;
-        this.doublePendulum = doublePendulum;
+        this.doublePendulums = doublePendulums;
         configureComboBoxes();
     }
 
@@ -67,7 +67,7 @@ public class AppearanceController extends FXMLController {
         pendulumMassColorPicker.setValue(INIT_HINGE_COLOR);
         pendulumColorPicker.setValue(INIT_ARM_COLOR);
         traceColorPicker.setValue(INIT_TRACE_COLOR);
-        bindColorProperties(doublePendulum);
+        doublePendulums.forEach(this::bindColorProperties);
     }
 
     private void bindColorProperties(DoublePendulum doublePendulum) {
@@ -112,8 +112,10 @@ public class AppearanceController extends FXMLController {
         }
     }
 
+    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
+
     private void bindStageOpacityToOpacityButton(Stage stage) {
-        opacityStageButton.selectedProperty().addListener((o, c, n) -> stage.setOpacity(TRUE.equals(n) ? .8 : 1));
+        opacityStageButton.selectedProperty().addListener((o, c, n) -> stage.setOpacity(TRUE.equals(n) ? STAGE_OPACITY : 1));
     }
 
     @FXML
@@ -142,12 +144,12 @@ public class AppearanceController extends FXMLController {
 
     @FXML
     private void pendulumMassColorPickerAction() {
-        doublePendulum.update();
+        doublePendulums.forEach(DoublePendulum::update);
     }
 
     @FXML
     private void heightLightColorPickerAction() {
-        doublePendulum.update();
+        doublePendulums.forEach(DoublePendulum::update);
     }
 
     @Override
