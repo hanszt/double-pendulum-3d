@@ -1,6 +1,8 @@
 package hzt.model;
 
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
@@ -8,26 +10,31 @@ import javafx.scene.transform.Rotate;
 
 public class CylinderCoordinateSystem3D extends CoordinateSystem3D {
 
+    private static final int AXIS_LENGTH = 500;
+    private static final int AXIS_RADIUS = 1;
+
     public CylinderCoordinateSystem3D() {
-        PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.DARKRED);
-        redMaterial.setSpecularColor(Color.RED);
-        PhongMaterial greenMaterial = new PhongMaterial();
-        greenMaterial.setDiffuseColor(Color.DARKGREEN);
-        greenMaterial.setSpecularColor(Color.GREEN);
-        PhongMaterial blueMaterial = new PhongMaterial();
-        blueMaterial.setDiffuseColor(Color.DARKBLUE);
-        blueMaterial.setSpecularColor(Color.BLUE);
-        Shape3D xAxis = new Cylinder(1, 500);
-        xAxis.setRotationAxis(Rotate.Z_AXIS);
-        xAxis.setRotate(90);
-        xAxis.setMaterial(redMaterial);
-        Shape3D yAxis = new Cylinder(1, 500);
-        yAxis.setMaterial(greenMaterial);
-        Shape3D zAxis = new Cylinder(1, 500);
-        zAxis.setRotationAxis(Rotate.X_AXIS);
-        zAxis.setRotate(90);
-        zAxis.setMaterial(blueMaterial);
+        var redMaterial = getMaterial(Color.DARKRED, Color.RED);
+        var greenMaterial = getMaterial(Color.DARKGREEN, Color.GREEN);
+        var blueMaterial = getMaterial(Color.DARKBLUE, Color.BLUE);
+        var xAxis = buildAxis(redMaterial, Rotate.Z_AXIS);
+        var yAxis = buildAxis(greenMaterial, Rotate.Y_AXIS);
+        var zAxis = buildAxis(blueMaterial, Rotate.X_AXIS);
         getChildren().addAll(xAxis, yAxis, zAxis);
+    }
+
+    private Shape3D buildAxis(Material material, Point3D rotationAxis) {
+        var axis = new Cylinder(AXIS_RADIUS, AXIS_LENGTH);
+        axis.setRotationAxis(rotationAxis);
+        axis.setRotate(90);
+        axis.setMaterial(material);
+        return axis;
+    }
+
+    private Material getMaterial(Color diffuseColor, Color specularColor) {
+        var redMaterial = new PhongMaterial();
+        redMaterial.setDiffuseColor(diffuseColor);
+        redMaterial.setSpecularColor(specularColor);
+        return redMaterial;
     }
 }

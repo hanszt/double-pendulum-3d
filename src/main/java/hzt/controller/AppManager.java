@@ -6,7 +6,6 @@ import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -47,14 +46,14 @@ public class AppManager {
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
         stage.setOnCloseRequest(e -> LOGGER.info(this::closingText));
-        InputStream inputStream = getClass().getResourceAsStream("../../images/icon3.png");
+        var inputStream = getClass().getResourceAsStream("../../images/icon3.png");
         if (inputStream != null) stage.getIcons().add(new Image(inputStream));
     }
 
     private String closingText() {
-        LocalTime startTimeSim = sceneManager.getCurSceneController().getStartTimeScene();
-        LocalTime stopTimeSim = LocalTime.now();
-        Duration runTimeSim = Duration.millis((stopTimeSim.toNanoOfDay() - startTimeSim.toNanoOfDay()) / 1e6);
+        var startTimeSim = sceneManager.getCurSceneController().getStartTimeScene();
+        var stopTimeSim = LocalTime.now();
+        var runTimeSim = Duration.millis((stopTimeSim.toNanoOfDay() - startTimeSim.toNanoOfDay()) / 1e6);
         return String.format("%s%nAnimation Runtime of instance %d: %.2f seconds%n%s%n", CLOSING_MESSAGE,
                 instance, runTimeSim.toSeconds(), DOTTED_LINE);
     }

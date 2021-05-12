@@ -45,7 +45,7 @@ public abstract class SceneController extends FXMLController {
     }
 
     public boolean isSetup() {
-        boolean temp = setup;
+        var temp = setup;
         setup = true;
         return temp;
     }

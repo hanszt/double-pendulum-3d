@@ -34,7 +34,6 @@ public class AboutSceneController extends SceneController {
         textComboBox.setValue(textComboBox.getItems().get(0));
     }
 
-
     @FXML
     public void goBack() {
         sceneManager.setupScene(MAIN_SCENE);

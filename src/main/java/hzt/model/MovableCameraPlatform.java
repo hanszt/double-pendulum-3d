@@ -38,8 +38,8 @@ public class MovableCameraPlatform extends Group {
     }
 
     private void updateTranslation(Duration deltaDuration) {
-        double deltaTSeconds = deltaDuration.toSeconds();
-        Point3D velocityVector = translation3DKeyFilter.getUserInputVector();
+        var deltaTSeconds = deltaDuration.toSeconds();
+        var velocityVector = translation3DKeyFilter.getUserInputVector();
         velocity = velocityVector.magnitude();
         var position = new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
         position = position.add(velocityVector.multiply(deltaTSeconds));

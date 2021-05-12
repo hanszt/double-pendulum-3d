@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static hzt.model.AppConstants.*;
@@ -130,11 +131,11 @@ public class MainSceneController extends SceneController {
     private static final double Z_SPACING = 30;
 
     private Deque<DoublePendulum> buildDoublePendulums() {
-        Deque<DoublePendulum> doublePendulumSet = new ArrayDeque<>();
         var amount = parsedIntProp("number_of_pendulums", 1);
         amount = amount > 0 ? amount : 1;
-        IntStream.range(0, amount).forEach(i -> doublePendulumSet.add(createDoublePendulum(i)));
-        return doublePendulumSet;
+        return IntStream.range(0, amount)
+                .mapToObj(this::createDoublePendulum)
+                .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
     private DoublePendulum createDoublePendulum(int index) {
@@ -257,7 +258,7 @@ public class MainSceneController extends SceneController {
 
     private void setParamsDoublePendulumsExclusiveFront() {
         var counter = 0;
-        for (DoublePendulum doublePendulum : doublePendulums) {
+        for (var doublePendulum : doublePendulums) {
             if (!doublePendulum.equals(frontDoublePendulum)) {
                 setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
             }

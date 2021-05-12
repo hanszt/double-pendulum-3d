@@ -71,7 +71,7 @@ public abstract class Abstract3DKeyFilter {
             if (e.getCode() == negYKeyCode) yNegPressed = releasedAction(Y_POS_DIR.multiply(-userInputVectorSize.get()));
             if (e.getCode() == posZKeyCode) zPosPressed = releasedAction(Z_POS_DIR.multiply(userInputVectorSize.get()));
             if (e.getCode() == negZKeyCode) zNegPressed = releasedAction(Z_POS_DIR.multiply(-userInputVectorSize.get()));
-            boolean allReleased = !xNegPressed && !xPosPressed && !yNegPressed && !yPosPressed && !zNegPressed && !zPosPressed;
+            var allReleased = !xNegPressed && !xPosPressed && !yNegPressed && !yPosPressed && !zNegPressed && !zPosPressed;
             allReleasedAction(allReleased);
         };
     }

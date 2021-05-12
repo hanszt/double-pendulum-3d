@@ -11,7 +11,6 @@ import hzt.service.IBackgroundService;
 import hzt.service.IThemeService;
 import hzt.service.ThemeService;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
@@ -89,9 +88,9 @@ public class AppearanceController extends FXMLController {
 
     public void changeStyle(ObservableValue<? extends String> o, String c, String newVal) {
         var sceneManager = mainSceneController.getSceneManager();
-        Collection<SceneController> sceneControllers = sceneManager.getSceneControllerMap().values();
+        var sceneControllers = sceneManager.getSceneControllerMap().values();
         for (SceneController sceneController : sceneControllers) {
-            ObservableList<String> styleSheets = sceneController.getScene().getStylesheets();
+            var styleSheets = sceneController.getScene().getStylesheets();
             styleSheets.removeIf(filter -> !styleSheets.isEmpty());
             if (newVal != null) styleSheets.add(newVal);
         }
@@ -118,11 +117,11 @@ public class AppearanceController extends FXMLController {
 
     @FXML
     private void backgroundComboBoxAction() {
-        String path = backgroundCombobox.getValue().getPathToResource();
+        var path = backgroundCombobox.getValue().getPathToResource();
         if (path != null) {
             var inputStream = backgroundService.getClass().getResourceAsStream(path);
             var image = new Image(inputStream);
-            AnchorPane animationPane = mainSceneController.getAnimationPane();
+            var animationPane = mainSceneController.getAnimationPane();
             var background = new Background(new BackgroundImage(image,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
