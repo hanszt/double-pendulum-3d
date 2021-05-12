@@ -29,8 +29,8 @@ public class MouseControlService implements IMouseControlService{
     }
 
     public void initMouseControl(Node reference) {
-        Rotate xRotate = new Rotate(0, Rotate.X_AXIS);
-        Rotate yRotate = new Rotate(0, Rotate.Y_AXIS);
+        var xRotate = new Rotate(0, Rotate.X_AXIS);
+        var yRotate = new Rotate(0, Rotate.Y_AXIS);
         target.getTransforms().addAll(xRotate, yRotate);
 
         xRotate.angleProperty().bind(angleX);

@@ -84,8 +84,8 @@ public class AppConstants {
     }
 
     private static Dimension2D determineMinStageDimension() {
-        int defaultMinStageWidth = 750;
-        int defaultMinStageHeight = 500;
+        var defaultMinStageWidth = 750;
+        var defaultMinStageHeight = 500;
         double minStageWidth = INIT_SCENE_DIMENSION.getWidth() < defaultMinStageWidth ?
                 INIT_SCENE_DIMENSION.getWidth() : defaultMinStageWidth;
         double minStageHeight = INIT_SCENE_DIMENSION.getHeight() < defaultMinStageHeight ?
@@ -94,9 +94,9 @@ public class AppConstants {
     }
 
     private static Properties configProperties() {
-        Properties properties = new Properties();
-        String pathName = "src/main/resources/app.properties";
-        File file = new File(pathName);
+        var properties = new Properties();
+        var pathName = "src/main/resources/app.properties";
+        var file = new File(pathName);
         try (InputStream stream = new BufferedInputStream(new FileInputStream(file))) {
             properties.load(stream);
         } catch (IOException e) {

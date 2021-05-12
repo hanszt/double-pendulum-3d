@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +24,9 @@ public class BackgroundService implements IBackgroundService {
     private Set<Resource> scanForResourceImages() {
         Set<Resource> set = new HashSet<>();
         set.add(NO_PICTURE);
-        URL url = getClass().getResource(RELATIVE_BG_IMAGES_RESOURCE_DIR);
+        var url = getClass().getResource(RELATIVE_BG_IMAGES_RESOURCE_DIR);
         if (url != null) {
-            File styleDirectory = new File(url.getFile());
+            var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
                 String[] fileNames = styleDirectory.list();
                 for (String fileName : fileNames) {

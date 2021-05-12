@@ -22,7 +22,7 @@ public class Resource {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Resource resource = (Resource) o;
+        var resource = (Resource) o;
         return Objects.equals(name, resource.name);
     }
 

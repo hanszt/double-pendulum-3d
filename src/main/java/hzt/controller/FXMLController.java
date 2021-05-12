@@ -12,7 +12,7 @@ public abstract class FXMLController {
     private final Parent root;
 
     protected FXMLController(String fxmlFileName) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
+        var loader = new FXMLLoader();
 
         //to be able to pass arguments to the constructor, it's necessary to specify the controller in the controller factory of the loader
         loader.setControllerFactory(c -> getBean());

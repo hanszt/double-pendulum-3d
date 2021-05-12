@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,9 +30,9 @@ public class ThemeService implements IThemeService {
 
     private Set<Resource> scanForThemeStyleSheets() {
         Set<Resource> themeSet = new HashSet<>(Set.of(DEFAULT_THEME, DARK_THEME));
-        URL url = getClass().getResource(RELATIVE_STYLE_SHEET_RESOURCE_DIR);
+        var url = getClass().getResource(RELATIVE_STYLE_SHEET_RESOURCE_DIR);
         if (url != null) {
-            File styleDirectory = new File(url.getFile());
+            var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
                 String[] fileNames = styleDirectory.list();
                 for (String fileName : fileNames) {
@@ -55,7 +54,7 @@ public class ThemeService implements IThemeService {
     }
 
     private void loadThemeStyleSheet(Resource theme) {
-        URL styleSheetUrl = getClass()
+        var styleSheetUrl = getClass()
                 .getResource(RELATIVE_STYLE_SHEET_RESOURCE_DIR + "/" + theme.getFileName());
         if (styleSheetUrl != null) {
             LOGGER.debug(styleSheetUrl);

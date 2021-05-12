@@ -11,12 +11,12 @@ public class LinkTrace extends TraceXY {
     @Override
     void updateTrace(Point2D pointXY) {
         if (prevPointXY != null) {
-            Link link = new Link();
-            Sphere startSphere = new Sphere();
+            var link = new Link();
+            var startSphere = new Sphere();
             startSphere.setTranslateX(pointXY.getX());
             startSphere.setTranslateY(pointXY.getY());
             link.defineStartAndEndpoint(prevPointXY, pointXY);
-            Group group = new Group(link, startSphere);
+            var group = new Group(link, startSphere);
             add(group);
         }
         prevPointXY = pointXY;

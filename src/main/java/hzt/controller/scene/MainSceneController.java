@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.stream.IntStream;
 
 import static hzt.model.AppConstants.*;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
@@ -130,18 +131,20 @@ public class MainSceneController extends SceneController {
 
     private Deque<DoublePendulum> buildDoublePendulums() {
         Deque<DoublePendulum> doublePendulumSet = new ArrayDeque<>();
-        int amount = parsedIntProp("number_of_pendulums", 1);
+        var amount = parsedIntProp("number_of_pendulums", 1);
         amount = amount > 0 ? amount : 1;
-        for (int i = 0; i < amount; i++) {
-            DoublePendulum doublePendulum = new DoublePendulum();
-            doublePendulum.setTranslateZ(i * Z_SPACING);
-            doublePendulumSet.add(doublePendulum);
-        }
+        IntStream.range(0, amount).forEach(i -> doublePendulumSet.add(createDoublePendulum(i)));
         return doublePendulumSet;
     }
 
+    private DoublePendulum createDoublePendulum(int index) {
+        var doublePendulum = new DoublePendulum();
+        doublePendulum.setTranslateZ(index * Z_SPACING);
+        return doublePendulum;
+    }
+
     private void configureDoublePendulums() {
-        int counter = 0;
+        var counter = 0;
         for (DoublePendulum doublePendulum : doublePendulums) {
             configureDoublePendulum(doublePendulum, counter * DELTA_ANGLE_1);
             counter++;
@@ -208,7 +211,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void updateStatisticsLoop(ActionEvent loopEvent) {
-        Duration runTimeSim = Duration.millis((LocalTime.now().toNanoOfDay() - startTimeScene.toNanoOfDay()) / 1e6);
+        var runTimeSim = Duration.millis((LocalTime.now().toNanoOfDay() - startTimeScene.toNanoOfDay()) / 1e6);
         statisticsController.updateGroupStatistics(frontDoublePendulum, subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
@@ -248,14 +251,18 @@ public class MainSceneController extends SceneController {
     @FXML
     private void resetButtonAction() {
         setInitControlValues();
-        int counter = 0;
+        setParamsDoublePendulumsExclusiveFront();
+        doublePendulums.forEach(DoublePendulum::reset);
+    }
+
+    private void setParamsDoublePendulumsExclusiveFront() {
+        var counter = 0;
         for (DoublePendulum doublePendulum : doublePendulums) {
             if (!doublePendulum.equals(frontDoublePendulum)) {
                 setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
             }
             counter++;
         }
-        doublePendulums.forEach(DoublePendulum::reset);
     }
 
     @FXML
@@ -263,6 +270,7 @@ public class MainSceneController extends SceneController {
         doublePendulums.forEach(DoublePendulum::clearTrace);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @FXML
     private void followDrawSpotButtonAction() {
         //this method should enable/disable follow draw spot

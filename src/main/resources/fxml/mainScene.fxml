@@ -24,176 +24,150 @@
                    nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" AnchorPane.bottomAnchor="0.0"
                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <TabPane maxWidth="300" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                <tabs>
-                    <Tab text="Animation">
-                        <content>
-                            <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="644.0"
-                                        prefWidth="261.0">
-                                <children>
-                                    <VBox maxWidth="320.0" prefHeight="644.0" prefWidth="564.0" spacing="4.0"
-                                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                        <padding>
-                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
-                                        </padding>
-                                        <Label text="Trace mode:"/>
-                                        <ComboBox fx:id="traceModeCombobox" prefWidth="300.0"
-                                                  promptText="Trace mode"/>
-                                        <Label text="Choose animation settings"/>
-                                        <HBox prefWidth="1000.0">
-                                            <VBox prefWidth="150.0" spacing="4.0">
-                                                <padding>
-                                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
-                                                </padding>
-                                                <Button mnemonicParsing="false" onAction="#resetButtonAction"
-                                                        prefWidth="1000.0" text="Reset"/>
-                                                <Button mnemonicParsing="false" onAction="#followDrawSpotButtonAction"
-                                                        prefWidth="1000.0" text="Follow draw spot"/>
-                                                <Button mnemonicParsing="false" onAction="#recenterButtonAction"
-                                                        prefWidth="1000.0" text="Recenter"/>
-                                                <ToggleButton layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
-                                                              onAction="#pauseSimButtonAction" prefWidth="1000.0"
-                                                              text="Pause"/>
-                                            </VBox>
-                                            <VBox prefWidth="150.0" spacing="4.0">
-                                                <padding>
-                                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
-                                                </padding>
-                                                <Button mnemonicParsing="false" onAction="#newInstance"
-                                                        prefWidth="1000.0" text="New instance"/>
-                                                <Button mnemonicParsing="false" onAction="#clearTraceButtonAction"
-                                                        prefWidth="1000.0" text="Clear trace"/>
-                                                <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
-                                                              prefWidth="1000.0" text="Show axis"/>
+                <Tab text="Animation">
+                    <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="644.0"
+                                prefWidth="261.0">
+                        <VBox maxWidth="320.0" prefHeight="644.0" prefWidth="564.0" spacing="4.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <padding>
+                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                            </padding>
+                            <Label text="Trace mode:"/>
+                            <ComboBox fx:id="traceModeCombobox" prefWidth="300.0"
+                                      promptText="Trace mode"/>
+                            <Label text="Choose animation settings"/>
+                            <HBox prefWidth="1000.0">
+                                <VBox prefWidth="150.0" spacing="4.0">
+                                    <padding>
+                                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                                    </padding>
+                                    <Button mnemonicParsing="false" onAction="#resetButtonAction"
+                                            prefWidth="1000.0" text="Reset"/>
+                                    <Button mnemonicParsing="false" onAction="#followDrawSpotButtonAction"
+                                            prefWidth="1000.0" text="Follow draw spot"/>
+                                    <Button mnemonicParsing="false" onAction="#recenterButtonAction"
+                                            prefWidth="1000.0" text="Recenter"/>
+                                    <ToggleButton layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
+                                                  onAction="#pauseSimButtonAction" prefWidth="1000.0"
+                                                  text="Pause"/>
+                                </VBox>
+                                <VBox prefWidth="150.0" spacing="4.0">
+                                    <padding>
+                                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0"/>
+                                    </padding>
+                                    <Button mnemonicParsing="false" onAction="#newInstance"
+                                            prefWidth="1000.0" text="New instance"/>
+                                    <Button mnemonicParsing="false" onAction="#clearTraceButtonAction"
+                                            prefWidth="1000.0" text="Clear trace"/>
+                                    <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
+                                                  prefWidth="1000.0" text="Show axis"/>
 
-                                            </VBox>
-                                        </HBox>
-                                    </VBox>
-                                </children>
-                            </AnchorPane>
-                        </content>
-                    </Tab>
-                    <Tab fx:id="appearanceTab" text="Appearance"/>
-                </tabs>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </AnchorPane>
+                </Tab>
+                <Tab fx:id="appearanceTab" text="Appearance"/>
             </TabPane>
             <SplitPane dividerPositions="0.6264784546805349" orientation="VERTICAL">
                 <AnchorPane fx:id="animationPane" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="360.0"/>
                 <TabPane maxHeight="260" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                        <Tab text="Pendulum settings">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
-                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <VBox>
-                                                <padding>
-                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                </padding>
-                                                <Label text="Upper Mass"/>
-                                                <Slider fx:id="upperMassSlider" min="1" max="500"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Upper pendulum length"/>
-                                                <Slider fx:id="upperPendulumLengthSlider" min="1" max="200"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Angle 1"/>
-                                                <Slider fx:id="angle1Slider"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Angular Velocity 1"/>
-                                                <Slider fx:id="vAngular1Slider"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                            </VBox>
-                                            <VBox>
-                                                <padding>
-                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                </padding>
+                    <Tab text="Pendulum settings">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                    <Label text="Upper Mass"/>
+                                    <Slider fx:id="upperMassSlider" min="1" max="500"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Upper pendulum length"/>
+                                    <Slider fx:id="upperPendulumLengthSlider" min="1" max="200"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Angle 1"/>
+                                    <Slider fx:id="angle1Slider"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Angular Velocity 1"/>
+                                    <Slider fx:id="vAngular1Slider"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                </VBox>
+                                <VBox>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
 
-                                                <Label text="Lower mass"/>
-                                                <Slider fx:id="lowerMassSlider" min="1" max="500"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Lower pendulum length"/>
-                                                <Slider fx:id="lowerPendulumLengthSlider" min="1" max="200"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Angle 2"/>
-                                                <Slider fx:id="angle2Slider"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                                <Label text="Angular velocity 2"/>
-                                                <Slider fx:id="vAngular2Slider"
-                                                        prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
-                                            </VBox>
-                                            <VBox layoutX="10.0" layoutY="10.0">
-                                                <padding>
-                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                </padding>
-                                            </VBox>
-                                        </HBox>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Environment settings">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
-                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <VBox>
-                                                <padding>
-                                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                </padding>
-                                                <Label text="Friction slider"/>
-                                                <Slider fx:id="frictionSlider" max=".2" prefWidth="5000.0"/>
-                                                <Label text="trace length slider"/>
-                                                <Slider fx:id="maxTraceLengthSlider" max="5000" prefWidth="5000.0"
-                                                        showTickLabels="true" showTickMarks="true"/>
-                                            </VBox>
-                                        </HBox>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Camera Controls">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <HBox maxHeight="180" minHeight="0.0" prefHeight="354.0" prefWidth="430.0"
-                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <children>
-                                                <VBox prefWidth="5000.0">
-                                                    <padding>
-                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                                                    </padding>
-                                                    <children>
-                                                        <Label text="Camera speed"/>
-                                                        <Slider fx:id="cameraMaxVelocitySlider" max="200"
-                                                                showTickLabels="true" showTickMarks="true" value="20"/>
-                                                        <Label text="Camera Acceleration"/>
-                                                        <Slider fx:id="cameraMaxAccelerationSlider" max="200.0"
-                                                                showTickLabels="true" showTickMarks="true"/>
-                                                        <Label layoutX="15.0" layoutY="70.0"
-                                                               text="Camera field of view"/>
-                                                        <Slider fx:id="cameraFieldOfViewSlider" layoutX="15.0"
-                                                                layoutY="87.0" min="5" max="175" showTickLabels="true"
-                                                                showTickMarks="true"/>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                    </tabs>
+                                    <Label text="Lower mass"/>
+                                    <Slider fx:id="lowerMassSlider" min="1" max="500"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Lower pendulum length"/>
+                                    <Slider fx:id="lowerPendulumLengthSlider" min="1" max="200"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Angle 2"/>
+                                    <Slider fx:id="angle2Slider"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Angular velocity 2"/>
+                                    <Slider fx:id="vAngular2Slider"
+                                            prefWidth="5000.0" showTickLabels="true" showTickMarks="true"/>
+                                </VBox>
+                                <VBox layoutX="10.0" layoutY="10.0">
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                </VBox>
+                            </HBox>
+                        </AnchorPane>
+                    </Tab>
+                    <Tab text="Environment settings">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <HBox maxHeight="180" minHeight="180" prefHeight="128.0" prefWidth="415.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox>
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                    <Label text="Friction slider"/>
+                                    <Slider fx:id="frictionSlider" max=".2" prefWidth="5000.0"/>
+                                    <Label text="trace length slider"/>
+                                    <Slider fx:id="maxTraceLengthSlider" max="1000" prefWidth="5000.0"
+                                            showTickLabels="true" showTickMarks="true"/>
+                                </VBox>
+                            </HBox>
+                        </AnchorPane>
+                    </Tab>
+                    <Tab text="Camera Controls">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <HBox maxHeight="180" minHeight="0.0" prefHeight="354.0" prefWidth="430.0"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox prefWidth="5000.0">
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </padding>
+                                    <Label text="Camera speed"/>
+                                    <Slider fx:id="cameraMaxVelocitySlider" max="200"
+                                            showTickLabels="true" showTickMarks="true" value="20"/>
+                                    <Label text="Camera Acceleration"/>
+                                    <Slider fx:id="cameraMaxAccelerationSlider" max="200.0"
+                                            showTickLabels="true" showTickMarks="true"/>
+                                    <Label layoutX="15.0" layoutY="70.0"
+                                           text="Camera field of view"/>
+                                    <Slider fx:id="cameraFieldOfViewSlider" layoutX="15.0"
+                                            layoutY="87.0" min="5" max="175" showTickLabels="true"
+                                            showTickMarks="true"/>
+                                </VBox>
+                            </HBox>
+                        </AnchorPane>
+                    </Tab>
                 </TabPane>
             </SplitPane>
 
             <TabPane maxWidth="250" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                <tabs>
-                    <Tab fx:id="statisticsTab" text="Statistics"/>
-                </tabs>
+                <Tab fx:id="statisticsTab" text="Statistics"/>
             </TabPane>
         </SplitPane>
     </AnchorPane>

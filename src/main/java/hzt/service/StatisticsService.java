@@ -36,8 +36,8 @@ public class StatisticsService implements IStatisticsService {
             frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
             if (frameTimeIndex == 0) arrayFilled = true;
             if (arrayFilled) {
-                long elapsedNanos = now - oldFrameTime;
-                long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
+                var elapsedNanos = now - oldFrameTime;
+                var elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
                 frameRate = 1e9 / elapsedNanosPerFrame;
             }
         }

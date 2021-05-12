@@ -41,7 +41,7 @@ public class MovableCameraPlatform extends Group {
         double deltaTSeconds = deltaDuration.toSeconds();
         Point3D velocityVector = translation3DKeyFilter.getUserInputVector();
         velocity = velocityVector.magnitude();
-        Point3D position = new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
+        var position = new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
         position = position.add(velocityVector.multiply(deltaTSeconds));
         setTranslateX(position.getX());
         setTranslateY(position.getY());

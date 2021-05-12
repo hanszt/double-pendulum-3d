@@ -1,7 +1,6 @@
 package hzt.controller.sub_pane;
 
 import hzt.controller.FXMLController;
-import hzt.controller.SceneManager;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import hzt.model.DoublePendulum;
@@ -25,7 +24,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 
 import static hzt.model.AppConstants.*;
@@ -90,7 +88,7 @@ public class AppearanceController extends FXMLController {
     }
 
     public void changeStyle(ObservableValue<? extends String> o, String c, String newVal) {
-        SceneManager sceneManager = mainSceneController.getSceneManager();
+        var sceneManager = mainSceneController.getSceneManager();
         Collection<SceneController> sceneControllers = sceneManager.getSceneControllerMap().values();
         for (SceneController sceneController : sceneControllers) {
             ObservableList<String> styleSheets = sceneController.getScene().getStylesheets();
@@ -122,10 +120,10 @@ public class AppearanceController extends FXMLController {
     private void backgroundComboBoxAction() {
         String path = backgroundCombobox.getValue().getPathToResource();
         if (path != null) {
-            InputStream inputStream = backgroundService.getClass().getResourceAsStream(path);
-            Image image = new Image(inputStream);
+            var inputStream = backgroundService.getClass().getResourceAsStream(path);
+            var image = new Image(inputStream);
             AnchorPane animationPane = mainSceneController.getAnimationPane();
-            Background background = new Background(new BackgroundImage(image,
+            var background = new Background(new BackgroundImage(image,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,

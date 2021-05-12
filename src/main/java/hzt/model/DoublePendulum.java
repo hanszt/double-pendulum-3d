@@ -110,7 +110,7 @@ public class DoublePendulum extends Group {
         anchor.setRotate(90);
         anchor.setRadius(2);
         anchor.setHeight(DEFAULT_ANCHOR_WIDTH);
-        PhongMaterial material = new PhongMaterial();
+        var material = new PhongMaterial();
         material.diffuseColorProperty().bind(massColor);
         anchor.setMaterial(material);
     }
@@ -132,30 +132,30 @@ public class DoublePendulum extends Group {
 
     private void updatePendulumPosition() {
         upperPendulum.setPosition(sin(angle1.get()) * upperArm.getHeight(), cos(angle1.get()) * upperArm.getHeight());
-        Point2D posLowerMassWithRespectToUpperMass =
+        var posLowerMassWithRespectToUpperMass =
                 new Point2D(sin(angle2.get()) * lowerArm.getHeight(), cos(angle2.get()) * lowerArm.getHeight());
-        Point2D positionUpperMass = upperPendulum.getPositionXY();
+        var positionUpperMass = upperPendulum.getPositionXY();
         lowerPendulum.setPosition(positionUpperMass.getX() + posLowerMassWithRespectToUpperMass.getX(),
                 positionUpperMass.getY() + posLowerMassWithRespectToUpperMass.getY());
     }
 
     private void calculateAngularAcc1() {
-        double num1 = -G * (2 * upperPendulum.getMass() + lowerPendulum.getMass()) * sin(angle1.get());
-        double num2 = -lowerPendulum.getMass() * G * sin(angle1.get() - 2 * angle2.get());
-        double num3 = -2 * sin(angle1.get() - angle2.get()) * lowerPendulum.getMass();
-        double num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() + vAngular1.get() * vAngular1.get() *
+        var num1 = -G * (2 * upperPendulum.getMass() + lowerPendulum.getMass()) * sin(angle1.get());
+        var num2 = -lowerPendulum.getMass() * G * sin(angle1.get() - 2 * angle2.get());
+        var num3 = -2 * sin(angle1.get() - angle2.get()) * lowerPendulum.getMass();
+        var num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() + vAngular1.get() * vAngular1.get() *
                 upperArm.getHeight() * cos(angle1.get() - angle2.get());
-        double den = upperArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
+        var den = upperArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
                 cos(2 * angle1.get() - 2 * angle2.get()));
         aAngular1.set((num1 + num2 + num3 * num4) / den);
     }
 
     private void calculateAngularAcc2() {
-        double num1 = 2 * sin(angle1.get() - angle2.get());
-        double num2 = vAngular1.get() * vAngular1.get() * upperArm.getHeight() * (upperPendulum.getMass() + lowerPendulum.getMass());
-        double num3 = G * (upperPendulum.getMass() + lowerPendulum.getMass()) * cos(angle1.get());
-        double num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() * lowerPendulum.getMass() * cos(angle1.get() - angle2.get());
-        double den = lowerArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
+        var num1 = 2 * sin(angle1.get() - angle2.get());
+        var num2 = vAngular1.get() * vAngular1.get() * upperArm.getHeight() * (upperPendulum.getMass() + lowerPendulum.getMass());
+        var num3 = G * (upperPendulum.getMass() + lowerPendulum.getMass()) * cos(angle1.get());
+        var num4 = vAngular2.get() * vAngular2.get() * lowerArm.getHeight() * lowerPendulum.getMass() * cos(angle1.get() - angle2.get());
+        var den = lowerArm.getHeight() * (2 * upperPendulum.getMass() * lowerPendulum.getMass() - lowerPendulum.getMass() *
                 cos(2 * angle1.get() - 2 * angle2.get()));
         aAngular2.set((num1 * (num2 + num3 + num4)) / den);
     }
