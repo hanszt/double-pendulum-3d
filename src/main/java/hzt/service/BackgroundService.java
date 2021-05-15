@@ -1,6 +1,7 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
+import hzt.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,9 +29,9 @@ public class BackgroundService implements IBackgroundService {
         if (url != null) {
             var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
-                String[] fileNames = styleDirectory.list();
-                for (String fileName : fileNames) {
-                    String name = extractName(fileName);
+                var fileNames = styleDirectory.list();
+                for (var fileName : fileNames) {
+                    var name = extractName(fileName);
                     set.add(new Resource(name, fileName, RELATIVE_BG_IMAGES_RESOURCE_DIR + "/" + fileName));
                 }
             }
@@ -39,12 +40,12 @@ public class BackgroundService implements IBackgroundService {
     }
 
     private String extractName(String fileName) {
-        String parsedName = fileName
+        var parsedName = fileName
                 .replace('_', ' ')
                 .replace('-', ' ')
                 .replace(".jpg", "")
                 .replace(".png", "");
-        parsedName = parsedName.substring(0, 1).toUpperCase() + parsedName.substring(1).toLowerCase();
+        parsedName = StringUtils.toOnlyFirstLetterUpperCase(parsedName);
         return parsedName;
     }
 

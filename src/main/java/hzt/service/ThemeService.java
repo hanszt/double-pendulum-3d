@@ -1,6 +1,7 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
+import hzt.utils.StringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,7 +50,7 @@ public class ThemeService implements IThemeService {
                 .replace("style-", "")
                 .replace('-', ' ')
                 .replace(".css", "");
-        themeName = themeName.substring(0, 1).toUpperCase() + themeName.substring(1).toLowerCase();
+        themeName = StringUtils.toOnlyFirstLetterUpperCase(themeName);
         return themeName;
     }
 

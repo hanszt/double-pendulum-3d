@@ -2,7 +2,6 @@ package hzt.model;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +28,7 @@ public class AppConstants {
     public static final Color INIT_ARM_COLOR = RED;
     public static final Color INIT_TRACE_COLOR = GREEN;
 
-    public static final Translate INIT_CAMERA_PLATFORM_TRANSLATION = new Translate(0, 0, -500);
+    public static final double INIT_CAMERA_Z_PENDULUMS = -500;
     public static final double INIT_CAMERA_FOV = 30;
     public static final double INIT_MAX_CAMERA_VELOCITY = 100;
 
@@ -125,4 +124,7 @@ public class AppConstants {
         }
     }
 
+    public static Properties getPROPS() {
+        return PROPS;
+    }
 }

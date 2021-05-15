@@ -11,6 +11,8 @@ import hzt.service.AnimationService;
 import hzt.service.IAnimationService;
 import hzt.service.IMouseControlService;
 import hzt.service.MouseControlService;
+import hzt.utils.StringUtils;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -133,7 +136,9 @@ public class MainSceneController extends SceneController {
     private Deque<DoublePendulum> buildDoublePendulums() {
         var amount = parsedIntProp("number_of_pendulums", 1);
         amount = amount > 0 ? amount : 1;
-        return IntStream.range(0, amount)
+        int lower = -(amount / 2);
+        int upper = lower + amount;
+        return IntStream.range(lower, upper)
                 .mapToObj(this::createDoublePendulum)
                 .collect(Collectors.toCollection(ArrayDeque::new));
     }
@@ -158,7 +163,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureCameraPlatform(MovableCameraPlatform cameraPlatform) {
-        cameraPlatform.setTranslate(INIT_CAMERA_PLATFORM_TRANSLATION);
+        cameraPlatform.setTranslate(initCameraTranslation());
         cameraPlatform.addKeyControls(scene);
 
         cameraPlatform.getCamera().fieldOfViewProperty().bindBidirectional(cameraFieldOfViewSlider.valueProperty());
@@ -178,8 +183,12 @@ public class MainSceneController extends SceneController {
     }
 
     private void configureComboBoxes() {
-        traceModeCombobox.getItems().addAll(DoublePendulum.BALL_TRACE, DoublePendulum.LINK_TRACE, DoublePendulum.NO_TRACE);
-        traceModeCombobox.setValue(DoublePendulum.BALL_TRACE);
+        ObservableList<String> items = traceModeCombobox.getItems();
+        items.addAll(DoublePendulum.BALL_TRACE, DoublePendulum.LINK_TRACE, DoublePendulum.NO_TRACE);
+        String initTraceType = getPROPS().getProperty("init_trace_type", "");
+        initTraceType = StringUtils.toOnlyFirstLetterUpperCase(initTraceType);
+        initTraceType = items.contains(initTraceType) ? initTraceType : DoublePendulum.BALL_TRACE;
+        traceModeCombobox.setValue(initTraceType);
     }
 
     private void configureDoublePendulum(DoublePendulum doublePendulum, double deltaAngle) {
@@ -236,7 +245,7 @@ public class MainSceneController extends SceneController {
         vAngular1Slider.setMax(MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMin(-MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMax(MAX_ANGULAR_VELOCITY);
-        frictionSlider.setValue(parsedDoubleProp("init_friction", .002));
+        frictionSlider.setValue(parsedDoubleProp("init_friction", .001));
         maxTraceLengthSlider.setValue(INIT_TRACE_LENGTH);
         cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
         cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
@@ -277,9 +286,13 @@ public class MainSceneController extends SceneController {
         //this method should enable/disable follow draw spot
     }
 
+    private Translate initCameraTranslation() {
+        return new Translate(0, 0, INIT_CAMERA_Z_PENDULUMS + frontDoublePendulum.getTranslateZ());
+    }
+
     @FXML
     public void recenterButtonAction() {
-        cameraPlatform.setTranslate(INIT_CAMERA_PLATFORM_TRANSLATION);
+        cameraPlatform.setTranslate(initCameraTranslation());
         cameraPlatform.getCamera().setFieldOfView(INIT_CAMERA_FOV);
         subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
         subSceneRootMouseControlService.setTargetTranslation(Point3D.ZERO);

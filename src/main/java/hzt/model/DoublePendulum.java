@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static hzt.model.AppConstants.G;
 import static java.lang.Math.*;
+import static java.util.Optional.*;
 
 public class DoublePendulum extends Group {
 
@@ -77,16 +78,18 @@ public class DoublePendulum extends Group {
     }
 
     private void traceTypeChanged(ObservableValue<? extends String> o, String c, String n) {
-        TraceXY curTrace = traceTypeMap.get(c);
-        if (curTrace != null) {
-            curTrace.clear();
-            getChildren().remove(curTrace);
-        }
-        TraceXY newTrace = traceTypeMap.get(n);
-        if (newTrace != null) {
-            newTrace.setTranslateZ(anchor.getHeight());
-            getChildren().add(newTrace);
-        }
+        ofNullable(traceTypeMap.get(c)).ifPresent(this::clearAndRemove);
+        ofNullable(traceTypeMap.get(n)).ifPresent(this::setTranslateZAndAdd);
+    }
+
+    private void clearAndRemove(TraceXY curTrace) {
+        curTrace.clear();
+        getChildren().remove(curTrace);
+    }
+
+    private void setTranslateZAndAdd(TraceXY newTrace) {
+        newTrace.setTranslateZ(anchor.getHeight());
+        getChildren().add(newTrace);
     }
 
     private void configureComponents() {
