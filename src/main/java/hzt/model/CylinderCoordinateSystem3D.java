@@ -3,7 +3,6 @@ package hzt.model;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -23,7 +22,7 @@ public class CylinderCoordinateSystem3D extends CoordinateSystem3D {
         getChildren().addAll(xAxis, yAxis, zAxis);
     }
 
-    private Shape3D buildAxis(Material material, Point3D rotationAxis) {
+    Shape3D buildAxis(Material material, Point3D rotationAxis) {
         var axis = new Cylinder(AXIS_RADIUS, AXIS_LENGTH);
         axis.setRotationAxis(rotationAxis);
         axis.setRotate(90);
@@ -31,10 +30,4 @@ public class CylinderCoordinateSystem3D extends CoordinateSystem3D {
         return axis;
     }
 
-    private Material getMaterial(Color diffuseColor, Color specularColor) {
-        var redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(diffuseColor);
-        redMaterial.setSpecularColor(specularColor);
-        return redMaterial;
-    }
 }

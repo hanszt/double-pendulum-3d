@@ -1,6 +1,5 @@
 package hzt.utils;
 
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.shape.Shape3D;
 
@@ -19,7 +18,7 @@ public class FxUtils {
     }
 
     private static void addAllDescendents(Parent parent, List<Shape3D> nodes) {
-        for (Node node : parent.getChildrenUnmodifiable()) {
+        for (var node : parent.getChildrenUnmodifiable()) {
             if (node instanceof Shape3D) nodes.add((Shape3D) node);
             if (node instanceof Parent) addAllDescendents((Parent) node, nodes);
         }

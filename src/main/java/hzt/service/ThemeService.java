@@ -35,9 +35,9 @@ public class ThemeService implements IThemeService {
         if (url != null) {
             var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
-                String[] fileNames = styleDirectory.list();
-                for (String fileName : fileNames) {
-                    String themeName = extractThemeName(fileName);
+                var fileNames = styleDirectory.list();
+                for (var fileName : fileNames) {
+                    var themeName = extractThemeName(fileName);
                     themeSet.add(new Resource(themeName, fileName));
                 }
             }
@@ -46,7 +46,7 @@ public class ThemeService implements IThemeService {
     }
 
     private String extractThemeName(String fileName) {
-        String themeName = fileName
+        var themeName = fileName
                 .replace("style-", "")
                 .replace('-', ' ')
                 .replace(".css", "");
