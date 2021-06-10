@@ -1,6 +1,7 @@
 package hzt.model.appearance;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class Resource {
 
@@ -39,8 +40,8 @@ public class Resource {
         return fileName;
     }
 
-    public String getPathToResource() {
-        return pathToResource;
+    public Optional<String> getPathToResource() {
+        return Optional.ofNullable(pathToResource);
     }
 
     @Override

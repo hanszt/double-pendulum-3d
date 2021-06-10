@@ -303,7 +303,7 @@ public class MainSceneController extends SceneController {
         sceneManager.setupScene(ABOUT_SCENE);
     }
 
-    protected SceneController getBean() {
+    protected SceneController getController() {
         return this;
     }
 

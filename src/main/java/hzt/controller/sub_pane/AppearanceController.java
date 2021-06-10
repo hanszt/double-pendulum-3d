@@ -23,7 +23,9 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.Optional;
 
 import static hzt.model.AppConstants.*;
 import static java.lang.Boolean.*;
@@ -52,7 +54,8 @@ public class AppearanceController extends FXMLController {
     private final MainSceneController mainSceneController;
     private final Collection<DoublePendulum> doublePendulums;
 
-    public AppearanceController(MainSceneController mainSceneController, Collection<DoublePendulum> doublePendulums) throws IOException {
+    public AppearanceController(MainSceneController mainSceneController,
+                                Collection<DoublePendulum> doublePendulums) throws IOException {
         super("appearancePane.fxml");
         this.mainSceneController = mainSceneController;
         this.doublePendulums = doublePendulums;
@@ -117,19 +120,25 @@ public class AppearanceController extends FXMLController {
 
     @FXML
     private void backgroundComboBoxAction() {
-        var path = backgroundCombobox.getValue().getPathToResource();
-        if (path != null) {
-            var inputStream = backgroundService.getClass().getResourceAsStream(path);
-            var image = new Image(inputStream);
-            var animationPane = mainSceneController.getAnimationPane();
-            var background = new Background(new BackgroundImage(image,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
-                            false, false, false, true)));
-            animationPane.setBackground(background);
-        } else backgroundColorPickerAction();
+        var pathOpt = backgroundCombobox.getValue().getPathToResource();
+        pathOpt.ifPresentOrElse(this::changeBackgroundImage, this::backgroundColorPickerAction);
+    }
+
+    private void changeBackgroundImage(String path) {
+        var inputStreamOpt = Optional.ofNullable(backgroundService.getClass().getResourceAsStream(path));
+        inputStreamOpt.ifPresentOrElse(this::changeBackgroundImage, this::backgroundColorPickerAction);
+    }
+
+    private void changeBackgroundImage(InputStream inputStream) {
+        var image = new Image(inputStream);
+        var animationPane = mainSceneController.getAnimationPane();
+        var background = new Background(new BackgroundImage(image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
+                        false, false, false, true)));
+        animationPane.setBackground(background);
     }
 
     @FXML
@@ -150,7 +159,7 @@ public class AppearanceController extends FXMLController {
     }
 
     @Override
-    protected FXMLController getBean() {
+    protected FXMLController getController() {
         return this;
     }
 }

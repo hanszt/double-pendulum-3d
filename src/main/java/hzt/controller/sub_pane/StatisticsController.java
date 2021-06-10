@@ -137,7 +137,7 @@ public class StatisticsController extends FXMLController {
         fieldOfViewCameraLabel.setText(format(TWO_DEC_DOUBLE + " deg", cameraPlatform.getCamera().getFieldOfView()));
     }
 
-    public StatisticsController getBean() {
+    public StatisticsController getController() {
         return this;
     }
 }

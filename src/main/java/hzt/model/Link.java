@@ -34,7 +34,7 @@ public class Link extends Cylinder {
         DoubleProperty xDistanceSquared = bindOperation(xDistance.multiply(xDistance));
         DoubleProperty yDistanceSquared = bindOperation(yDistance.multiply(yDistance));
         DoubleProperty lengthSquared = bindOperation(xDistanceSquared.add(yDistanceSquared));
-        lengthSquared.addListener((observableValue, number, t1) -> setHeight(Math.sqrt(lengthSquared.get())));
+//        lengthSquared.addListener((observableValue, number, t1) -> setHeight(Math.sqrt(lengthSquared.get())));
         endX.addListener((o, c, n) -> rotate(xDistance, yDistance));
         endY.addListener((o, c, n) -> rotate(xDistance, yDistance));
     }

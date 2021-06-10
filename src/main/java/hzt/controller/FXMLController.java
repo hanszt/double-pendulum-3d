@@ -15,12 +15,12 @@ public abstract class FXMLController {
         var loader = new FXMLLoader();
 
         //to be able to pass arguments to the constructor, it's necessary to specify the controller in the controller factory of the loader
-        loader.setControllerFactory(c -> getBean());
+        loader.setControllerFactory(c -> getController());
         loader.setLocation(getClass().getResource(FXML_FILE_LOCATION + fxmlFileName));
         this.root = loader.load();
     }
 
-    protected abstract FXMLController getBean();
+    protected abstract FXMLController getController();
 
     public Parent getRoot() {
         return root;
