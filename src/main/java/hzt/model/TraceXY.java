@@ -1,18 +1,17 @@
 package hzt.model;
 
 import hzt.utils.FxUtils;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 
 public abstract class TraceXY extends Group {
 
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>();
     private final PhongMaterial material = new PhongMaterial();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     final DoubleProperty maxLength = new SimpleDoubleProperty();
@@ -32,13 +31,17 @@ public abstract class TraceXY extends Group {
         return getChildren().size();
     }
 
-    public void add(Shape3D shape3D) {
+    void add(Shape3D shape3D) {
         shape3D.setMaterial(material);
+        shape3D.drawModeProperty().bind(drawMode);
         getChildren().add(shape3D);
     }
 
-    public void add(Group group) {
-        FxUtils.allShapeDescendents(group).forEach(s -> s.setMaterial(material));
+    void add(Group group) {
+        FxUtils.allShapeDescendents(group).forEach(s -> {
+            s.setMaterial(material);
+            s.drawModeProperty().bind(drawMode);
+        });
         getChildren().add(group);
     }
 
@@ -55,6 +58,10 @@ public abstract class TraceXY extends Group {
     }
 
     public abstract void clear();
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
+    }
 
     public DoubleProperty maxLengthProperty() {
         return maxLength;

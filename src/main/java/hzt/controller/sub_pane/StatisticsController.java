@@ -9,9 +9,9 @@ import hzt.service.StatisticsService;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
-import javafx.util.Duration;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import static java.lang.String.format;
 
@@ -85,7 +85,7 @@ public class StatisticsController extends FXMLController {
 
     public void updateGlobalStatistics(Duration runTimeSim) {
         frameRateStatsLabel.setText(format(TWO_DEC_DOUBLE + " f/s", statisticsService.getSimpleFrameRateMeter().getFrameRate()));
-        runTimeLabel.setText(format("%-4.3f seconds", runTimeSim.toSeconds()));
+        runTimeLabel.setText(format("%d.%03d seconds", runTimeSim.toSeconds(), runTimeSim.toMillisPart()));
     }
 
     public void updateGroupStatistics(DoublePendulum doublePendulum, IMouseControlService mouseControlService) {

@@ -30,8 +30,8 @@ public class DoublePendulum extends Group {
     private final PendulumCylinder upperPendulum;
     private final PendulumCylinder lowerPendulum;
     private final PhongMaterial armMaterial = new PhongMaterial();
-    private final Link upperArm;
-    private final Link lowerArm;
+    private final Link2D upperArm;
+    private final Link2D lowerArm;
 
     private final Map<String, TraceXY> traceTypeMap = new HashMap<>();
     private final ObjectProperty<String> traceType = new SimpleObjectProperty<>();
@@ -50,12 +50,13 @@ public class DoublePendulum extends Group {
     public DoublePendulum() {
         this.anchor = new Cylinder();
         traceTypeMap.put(BALL_TRACE, new BallTrace());
-        traceTypeMap.put(LINK_TRACE, new LinkTrace());
+        traceTypeMap.put(LINK_TRACE, new LinkTrace2D());
         traceTypeMap.put(NO_TRACE, noTrace());
+        traceTypeMap.values().forEach(trace -> trace.drawModeProperty().bindBidirectional(anchor.drawModeProperty()));
         this.upperPendulum = new PendulumCylinder();
         this.lowerPendulum = new PendulumCylinder();
-        this.upperArm = new Link();
-        this.lowerArm = new Link();
+        this.upperArm = new Link2D();
+        this.lowerArm = new Link2D();
         this.getChildren().addAll(anchor, upperArm, lowerArm);
         upperPendulum.addWeightToFxGroup(this);
         lowerPendulum.addWeightToFxGroup(this);

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import static hzt.model.AppConstants.*;
 
@@ -46,8 +47,8 @@ public class AppManager {
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
         stage.setOnCloseRequest(e -> LOGGER.info(this::closingText));
-        var inputStream = getClass().getResourceAsStream("../../images/icon3.png");
-        if (inputStream != null) stage.getIcons().add(new Image(inputStream));
+        Optional.ofNullable(getClass().getResourceAsStream("/images/icon.png"))
+        .ifPresent(inputStream -> stage.getIcons().add(new Image(inputStream)));
     }
 
     private String closingText() {

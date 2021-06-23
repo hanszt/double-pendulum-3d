@@ -62,7 +62,6 @@
                                             prefWidth="1000.0" text="Clear trace"/>
                                     <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
                                                   prefWidth="1000.0" text="Show axis"/>
-
                                 </VBox>
                             </HBox>
                         </VBox>

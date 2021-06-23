@@ -7,6 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
+import java.util.List;
 
 import static hzt.model.AppConstants.INIT_SCENE_DIMENSION;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
@@ -30,8 +31,9 @@ public class AboutSceneController extends SceneController {
     public void setup() {
         textArea.setPrefSize(INIT_SCENE_DIMENSION.getWidth(), INIT_SCENE_DIMENSION.getHeight());
         textArea.setEditable(false);
-        aboutService.loadContent().forEach(aboutText -> textComboBox.getItems().add(aboutText));
-        textComboBox.setValue(textComboBox.getItems().get(0));
+        List<AboutText> aboutTextList = textComboBox.getItems();
+        aboutTextList.addAll(aboutService.loadContent());
+        textComboBox.setValue(aboutTextList.get(0));
     }
 
     @FXML
