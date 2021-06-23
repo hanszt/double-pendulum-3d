@@ -1,12 +1,14 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
+import hzt.service.inteface.IBackgroundService;
 import hzt.utils.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class BackgroundService implements IBackgroundService {
@@ -30,7 +32,7 @@ public class BackgroundService implements IBackgroundService {
             var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
                 var fileNames = styleDirectory.list();
-                for (var fileName : fileNames) {
+                for (var fileName : Objects.requireNonNull(fileNames)) {
                     var name = extractName(fileName);
                     set.add(new Resource(name, fileName, RELATIVE_BG_IMAGES_RESOURCE_DIR + "/" + fileName));
                 }

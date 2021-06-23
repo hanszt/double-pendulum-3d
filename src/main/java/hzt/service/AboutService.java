@@ -1,5 +1,6 @@
 package hzt.service;
 
+import hzt.service.inteface.IAboutService;
 import hzt.utils.StringUtils;
 import javafx.beans.property.SimpleStringProperty;
 import org.apache.logging.log4j.LogManager;

@@ -10,10 +10,10 @@ import javafx.scene.shape.Shape3D;
 public abstract class CoordinateSystem3D extends Group {
 
     Material getMaterial(Color diffuseColor, Color specularColor) {
-        var redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(diffuseColor);
-        redMaterial.setSpecularColor(specularColor);
-        return redMaterial;
+        var material = new PhongMaterial();
+        material.setDiffuseColor(diffuseColor);
+        material.setSpecularColor(specularColor);
+        return material;
     }
 
     abstract Shape3D buildAxis(Material material, Point3D rotationAxis);

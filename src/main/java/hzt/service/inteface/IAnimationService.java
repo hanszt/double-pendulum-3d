@@ -1,4 +1,4 @@
-package hzt.service;
+package hzt.service.inteface;
 
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;

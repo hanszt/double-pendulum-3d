@@ -1,6 +1,7 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
+import hzt.service.inteface.IThemeService;
 import hzt.utils.StringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ThemeService implements IThemeService {
@@ -36,7 +38,7 @@ public class ThemeService implements IThemeService {
             var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
                 var fileNames = styleDirectory.list();
-                for (var fileName : fileNames) {
+                for (var fileName : Objects.requireNonNull(fileNames)) {
                     var themeName = extractThemeName(fileName);
                     themeSet.add(new Resource(themeName, fileName));
                 }

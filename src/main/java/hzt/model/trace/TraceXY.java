@@ -1,4 +1,4 @@
-package hzt.model;
+package hzt.model.trace;
 
 import hzt.utils.FxUtils;
 import javafx.beans.property.*;
@@ -16,8 +16,20 @@ public abstract class TraceXY extends Group {
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     final DoubleProperty maxLength = new SimpleDoubleProperty();
 
-    protected TraceXY() {
+    Point2D prevPointXY;
+
+    TraceXY() {
         material.diffuseColorProperty().bind(color);
+        material.setSpecularColor(Color.WHITE);
+    }
+
+    public static TraceXY noTrace() {
+        return new TraceXY() {
+            @Override
+            void updateTrace(Point2D pointXY) {
+                //nothing to update...
+            }
+        };
     }
 
     public void update(Point2D pointXY) {
@@ -49,7 +61,7 @@ public abstract class TraceXY extends Group {
         while (size() > maxLength.get()) removeFirst();
     }
 
-    public void removeFirst() {
+    private void removeFirst() {
         getChildren().remove(0);
     }
 
@@ -57,7 +69,10 @@ public abstract class TraceXY extends Group {
         return color;
     }
 
-    public abstract void clear();
+    public void clear() {
+        getChildren().clear();
+        prevPointXY = null;
+    }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
         return drawMode;

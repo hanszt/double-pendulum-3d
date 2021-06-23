@@ -8,8 +8,8 @@ import hzt.model.CylinderCoordinateSystem3D;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
 import hzt.service.AnimationService;
-import hzt.service.IAnimationService;
-import hzt.service.IMouseControlService;
+import hzt.service.inteface.IAnimationService;
+import hzt.service.inteface.IMouseControlService;
 import hzt.service.MouseControlService;
 import hzt.utils.FxUtils;
 import hzt.utils.StringUtils;
@@ -41,6 +41,7 @@ import java.util.stream.IntStream;
 import static hzt.model.AppConstants.*;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
 import static hzt.model.AppConstants.Scene.MAIN_SCENE;
+import static hzt.model.DoublePendulum.*;
 
 public class MainSceneController extends SceneController {
 
@@ -190,10 +191,10 @@ public class MainSceneController extends SceneController {
 
     private void configureComboBoxes() {
         ObservableList<String> items = traceModeCombobox.getItems();
-        items.addAll(DoublePendulum.BALL_TRACE, DoublePendulum.LINK_TRACE, DoublePendulum.NO_TRACE);
+        items.addAll(BALL_TRACE, ROUND_LINK_TRACE, NO_TRACE, SQUARE_LINK_TRACE);
         String initTraceType = getPROPS().getProperty("init_trace_type", "");
         initTraceType = StringUtils.toOnlyFirstLetterUpperCase(initTraceType);
-        initTraceType = items.contains(initTraceType) ? initTraceType : DoublePendulum.BALL_TRACE;
+        initTraceType = items.contains(initTraceType) ? initTraceType : BALL_TRACE;
         traceModeCombobox.setValue(initTraceType);
     }
 

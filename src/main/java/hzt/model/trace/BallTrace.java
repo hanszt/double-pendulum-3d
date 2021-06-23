@@ -1,4 +1,4 @@
-package hzt.model;
+package hzt.model.trace;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Sphere;
@@ -13,8 +13,4 @@ public class BallTrace extends TraceXY {
         add(sphere);
     }
 
-    @Override
-    public void clear() {
-        getChildren().clear();
-    }
 }

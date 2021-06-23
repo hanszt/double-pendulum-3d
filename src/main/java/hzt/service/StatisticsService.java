@@ -1,5 +1,6 @@
 package hzt.service;
 
+import hzt.service.inteface.IStatisticsService;
 import javafx.animation.AnimationTimer;
 
 import static hzt.model.AppConstants.INIT_FRAME_RATE;

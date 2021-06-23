@@ -2,6 +2,7 @@ package hzt.service;
 
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
+import hzt.service.inteface.IAnimationService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;

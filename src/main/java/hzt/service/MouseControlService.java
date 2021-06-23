@@ -1,5 +1,6 @@
 package hzt.service;
 
+import hzt.service.inteface.IMouseControlService;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point3D;
@@ -8,7 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.transform.Rotate;
 
-public class MouseControlService implements IMouseControlService{
+public class MouseControlService implements IMouseControlService {
 
     private double mouseAnchorX;
     private double mouseAnchorY;

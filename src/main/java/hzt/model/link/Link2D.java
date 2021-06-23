@@ -1,18 +1,21 @@
-package hzt.model;
+package hzt.model.link;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.shape.Box;
+import javafx.scene.paint.Material;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
-public class Link2D extends Box {
+public abstract class Link2D extends Group {
 
     private static final int RIGHT_ANGLE = 90;
 
+    final Shape3D shape3D;
     private final Rotate rotateZ = new Rotate();
 
     private final DoubleProperty startX = new SimpleDoubleProperty();
@@ -21,9 +24,9 @@ public class Link2D extends Box {
     private final DoubleProperty endX = new SimpleDoubleProperty();
     private final DoubleProperty endY = new SimpleDoubleProperty();
 
-
-    public Link2D() {
-        super();
+    Link2D(Shape3D shape3D) {
+        super(shape3D);
+        this.shape3D = shape3D;
         rotateZ.setAxis(Rotate.Z_AXIS);
         getTransforms().addAll(rotateZ);
         bindPositionBasedOnStartAndEnd();
@@ -41,9 +44,9 @@ public class Link2D extends Box {
         endY.addListener((o, c, n) -> rotate(xDistance, yDistance));
     }
 
-    private void updateHeightIfNotBound(ObservableValue<? extends Number> o, Number c, Number n) {
+    void updateHeightIfNotBound(ObservableValue<? extends Number> o, Number c, Number n) {
         if (!heightProperty().isBound()) {
-            setHeight(Math.sqrt(n.doubleValue()));
+            heightProperty().set(Math.sqrt(n.doubleValue()));
         }
     }
 
@@ -87,5 +90,15 @@ public class Link2D extends Box {
 
         endX.set(endPoint.getX());
         endY.set(endPoint.getY());
+    }
+
+    public abstract DoubleProperty heightProperty();
+
+    public double getHeight() {
+        return heightProperty().get();
+    }
+
+    public void setMaterial(Material material) {
+        shape3D.setMaterial(material);
     }
 }

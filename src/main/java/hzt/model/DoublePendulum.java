@@ -1,5 +1,11 @@
 package hzt.model;
 
+import hzt.model.link.Link2D;
+import hzt.model.link.SquareLink2D;
+import hzt.model.trace.BallTrace;
+import hzt.model.trace.RoundLinkTrace2D;
+import hzt.model.trace.SquareLinkTrace2D;
+import hzt.model.trace.TraceXY;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -17,13 +23,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static hzt.model.AppConstants.G;
+import static hzt.model.trace.TraceXY.noTrace;
 import static java.lang.Math.*;
 import static java.util.Optional.*;
 
 public class DoublePendulum extends Group {
 
     public static final String BALL_TRACE = "Ball trace";
-    public static final String LINK_TRACE = "Linked trace";
+    public static final String ROUND_LINK_TRACE = "Round linked trace";
+    public static final String SQUARE_LINK_TRACE = "Square linked trace";
     public static final String NO_TRACE = "No trace";
 
     private final Cylinder anchor;
@@ -50,32 +58,19 @@ public class DoublePendulum extends Group {
     public DoublePendulum() {
         this.anchor = new Cylinder();
         traceTypeMap.put(BALL_TRACE, new BallTrace());
-        traceTypeMap.put(LINK_TRACE, new LinkTrace2D());
+        traceTypeMap.put(ROUND_LINK_TRACE, new RoundLinkTrace2D());
+        traceTypeMap.put(SQUARE_LINK_TRACE, new SquareLinkTrace2D());
         traceTypeMap.put(NO_TRACE, noTrace());
         traceTypeMap.values().forEach(trace -> trace.drawModeProperty().bindBidirectional(anchor.drawModeProperty()));
         this.upperPendulum = new PendulumCylinder();
         this.lowerPendulum = new PendulumCylinder();
-        this.upperArm = new Link2D();
-        this.lowerArm = new Link2D();
+        this.upperArm = new SquareLink2D();
+        this.lowerArm = new SquareLink2D();
         this.getChildren().addAll(anchor, upperArm, lowerArm);
         upperPendulum.addWeightToFxGroup(this);
         lowerPendulum.addWeightToFxGroup(this);
         configureComponents();
         traceType.addListener(this::traceTypeChanged);
-    }
-
-    private TraceXY noTrace() {
-        return new TraceXY() {
-            @Override
-            void updateTrace(Point2D pointXY) {
-                //nothing to update...
-            }
-
-            @Override
-            public void clear() {
-                // nothing to clear...
-            }
-        };
     }
 
     private void traceTypeChanged(ObservableValue<? extends String> o, String c, String n) {
@@ -101,6 +96,7 @@ public class DoublePendulum extends Group {
     }
 
     private void configureArms() {
+        armMaterial.setSpecularColor(Color.WHITE);
         upperArm.defineStartAndEndpoint(anchor, upperPendulum.getCylinder());
         lowerArm.defineStartAndEndpoint(upperPendulum.getCylinder(), lowerPendulum.getCylinder());
         upperArm.setMaterial(armMaterial);
@@ -116,6 +112,7 @@ public class DoublePendulum extends Group {
         anchor.setHeight(DEFAULT_ANCHOR_WIDTH);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(massColor);
+        material.setSpecularColor(Color.WHITE);
         anchor.setMaterial(material);
     }
 

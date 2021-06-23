@@ -1,4 +1,4 @@
-package hzt.service;
+package hzt.service.inteface;
 
 public interface IStatisticsService {
 

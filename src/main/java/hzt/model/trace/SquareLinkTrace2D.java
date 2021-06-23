@@ -1,18 +1,17 @@
-package hzt.model;
+package hzt.model.trace;
 
+import hzt.model.link.SquareLink2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-public class LinkTrace2D extends TraceXY {
-
-    private Point2D prevPointXY;
+public class SquareLinkTrace2D extends TraceXY {
 
     @Override
     void updateTrace(Point2D pointXY) {
         if (prevPointXY != null) {
-            var link = new Link2D();
+            var link = new SquareLink2D();
             var startCylinder = new Cylinder();
             startCylinder.setRotationAxis(Rotate.X_AXIS);
             startCylinder.setRotate(90);
@@ -25,9 +24,4 @@ public class LinkTrace2D extends TraceXY {
         prevPointXY = pointXY;
     }
 
-    @Override
-    public void clear() {
-        getChildren().clear();
-        prevPointXY = null;
-    }
 }

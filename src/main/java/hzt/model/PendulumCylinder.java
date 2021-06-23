@@ -32,6 +32,7 @@ public class PendulumCylinder {
 
     private void configureComponents() {
         bindRadiusToMass();
+        phongMaterial.setDiffuseColor(Color.WHITE);
         cylinder.setHeight(DEFAULT_MASS_WIDTH);
         cylinder.setMaterial(phongMaterial);
         cylinder.setRotationAxis(Rotate.X_AXIS);

@@ -4,12 +4,12 @@ import hzt.controller.FXMLController;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import hzt.model.DoublePendulum;
-import hzt.model.TraceXY;
 import hzt.model.appearance.Resource;
+import hzt.model.trace.TraceXY;
 import hzt.service.BackgroundService;
-import hzt.service.IBackgroundService;
-import hzt.service.IThemeService;
 import hzt.service.ThemeService;
+import hzt.service.inteface.IBackgroundService;
+import hzt.service.inteface.IThemeService;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -23,10 +23,14 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 import static hzt.model.AppConstants.*;
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.TRUE;
+import static java.util.function.Predicate.not;
+import static javafx.scene.layout.BackgroundPosition.*;
+import static javafx.scene.layout.BackgroundRepeat.*;
 
 public class AppearanceController extends FXMLController {
 
@@ -117,19 +121,18 @@ public class AppearanceController extends FXMLController {
 
     @FXML
     private void backgroundComboBoxAction() {
-        var path = backgroundCombobox.getValue().getPathToResource();
-        if (path != null) {
-            var inputStream = backgroundService.getClass().getResourceAsStream(path);
-            var image = new Image(inputStream);
-            var animationPane = mainSceneController.getAnimationPane();
-            var background = new Background(new BackgroundImage(image,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
-                            false, false, false, true)));
-            animationPane.setBackground(background);
-        } else backgroundColorPickerAction();
+        backgroundCombobox.getValue().getPathToResource()
+                .filter(not(String::isBlank))
+                .map(path -> backgroundService.getClass().getResourceAsStream(path))
+                .ifPresentOrElse(this::changeBackground, this::backgroundColorPickerAction);
+    }
+
+    private void changeBackground(InputStream inputStream) {
+        var animationPane = mainSceneController.getAnimationPane();
+        var background = new Background(new BackgroundImage(new Image(inputStream),
+                NO_REPEAT, NO_REPEAT, CENTER, new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
+                        false, false, false, true)));
+        animationPane.setBackground(background);
     }
 
     @FXML

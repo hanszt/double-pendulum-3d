@@ -1,4 +1,4 @@
-package hzt.service;
+package hzt.service.inteface;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
