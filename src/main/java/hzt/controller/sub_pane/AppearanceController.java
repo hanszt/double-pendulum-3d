@@ -73,7 +73,8 @@ public class AppearanceController extends FXMLController {
 
     private void bindColorProperties(DoublePendulum doublePendulum) {
         doublePendulum.massColorProperty().bind(pendulumMassColorPicker.valueProperty());
-        doublePendulum.armColorProperty().bind(pendulumColorPicker.valueProperty());
+        doublePendulum.getArmMaterial().diffuseColorProperty().bind(pendulumColorPicker.valueProperty());
+        doublePendulum.getArmMaterial().specularColorProperty().bind(pendulumColorPicker.valueProperty());
     }
 
     public void bindTraceColorToTraceColorPicker(TraceXY traceXY) {

@@ -20,7 +20,7 @@ public abstract class TraceXY extends Group {
 
     TraceXY() {
         material.diffuseColorProperty().bind(color);
-        material.setSpecularColor(Color.WHITE);
+        material.specularColorProperty().bind(color);
     }
 
     public static TraceXY noTrace() {

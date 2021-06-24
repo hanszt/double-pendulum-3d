@@ -1,7 +1,6 @@
 package hzt.model;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -59,8 +58,8 @@ public class PendulumCylinder {
         group.getChildren().add(cylinder);
     }
 
-    public ObjectProperty<Color> diffuseColorProperty() {
-        return phongMaterial.diffuseColorProperty();
+    public PhongMaterial getPhongMaterial() {
+        return phongMaterial;
     }
 
     public Cylinder getCylinder() {

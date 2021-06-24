@@ -25,7 +25,7 @@ import java.util.Map;
 import static hzt.model.AppConstants.G;
 import static hzt.model.trace.TraceXY.noTrace;
 import static java.lang.Math.*;
-import static java.util.Optional.*;
+import static java.util.Optional.ofNullable;
 
 public class DoublePendulum extends Group {
 
@@ -112,13 +112,17 @@ public class DoublePendulum extends Group {
         anchor.setHeight(DEFAULT_ANCHOR_WIDTH);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(massColor);
-        material.setSpecularColor(Color.WHITE);
+        material.specularColorProperty().bind(massColor);
         anchor.setMaterial(material);
     }
 
     private void bindColorProperties() {
-        upperPendulum.diffuseColorProperty().bind(massColor);
-        lowerPendulum.diffuseColorProperty().bind(massColor);
+        var upperArmMaterial = upperPendulum.getPhongMaterial();
+        var lowerArmMaterial = lowerPendulum.getPhongMaterial();
+        upperArmMaterial.diffuseColorProperty().bind(massColor);
+        lowerArmMaterial.diffuseColorProperty().bind(massColor);
+        upperArmMaterial.specularColorProperty().bind(massColor);
+        lowerArmMaterial.specularColorProperty().bind(massColor);
     }
 
     public void update() {
@@ -215,8 +219,8 @@ public class DoublePendulum extends Group {
         return massColor;
     }
 
-    public ObjectProperty<Color> armColorProperty() {
-        return armMaterial.diffuseColorProperty();
+    public PhongMaterial getArmMaterial() {
+        return armMaterial;
     }
 
     public PendulumCylinder getUpperPendulum() {
