@@ -124,10 +124,10 @@ public class AppearanceController extends FXMLController {
         backgroundCombobox.getValue().getPathToResource()
                 .filter(not(String::isBlank))
                 .map(path -> backgroundService.getClass().getResourceAsStream(path))
-                .ifPresentOrElse(this::changeBackground, this::backgroundColorPickerAction);
+                .ifPresentOrElse(this::changeBackgroundImage, this::backgroundColorPickerAction);
     }
 
-    private void changeBackground(InputStream inputStream) {
+    private void changeBackgroundImage(InputStream inputStream) {
         var animationPane = mainSceneController.getAnimationPane();
         var background = new Background(new BackgroundImage(new Image(inputStream),
                 NO_REPEAT, NO_REPEAT, CENTER, new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
@@ -153,7 +153,7 @@ public class AppearanceController extends FXMLController {
     }
 
     @Override
-    protected FXMLController getBean() {
+    protected FXMLController getController() {
         return this;
     }
 }
