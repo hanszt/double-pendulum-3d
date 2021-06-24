@@ -11,10 +11,15 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <!--        dependencies-->
         <openjfx.version>11</openjfx.version>
         <log4j.version>2.13.3</log4j.version>
         <slf4j.version>1.7.30</slf4j.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
+        <archunit.version>0.18.0</archunit.version>
+        <!--        plugins-->
+        <maven.plugin.version>3.8.1</maven.plugin.version>
+        <openjfx.plugin.version>0.0.3</openjfx.plugin.version>
     </properties>
 
     <dependencies>
@@ -40,17 +45,17 @@
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
-            <version>0.18.0</version>
+            <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
-<!--        other-->
+        <!--        other-->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>17.0.0</version>
             <scope>compile</scope>
         </dependency>
-<!--        javafx-->
+        <!--        javafx-->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -61,7 +66,7 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${openjfx.version}</version>
         </dependency>
-<!--        logging-->
+        <!--        logging-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -124,7 +129,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -134,7 +139,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.3</version>
+                <version>${openjfx.plugin.version}</version>
                 <configuration>
                     <mainClass>hzt.view.Launcher</mainClass>
                 </configuration>
