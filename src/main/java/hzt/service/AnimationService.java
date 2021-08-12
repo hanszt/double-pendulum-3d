@@ -23,7 +23,7 @@ public class AnimationService implements IAnimationService {
         this.statisticsTimeline = setupTimeline();
     }
 
-    private Timeline setupTimeline() {
+    private static Timeline setupTimeline() {
         Timeline t = new Timeline();
         t.setCycleCount(INDEFINITE);
         return t;

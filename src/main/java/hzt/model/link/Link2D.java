@@ -55,7 +55,7 @@ public abstract class Link2D extends Group {
         rotateZ.setAngle(angle + RIGHT_ANGLE);
     }
 
-    private DoubleProperty bindOperation(DoubleBinding doubleBinding) {
+    private static DoubleProperty bindOperation(DoubleBinding doubleBinding) {
         DoubleProperty doubleProperty = new SimpleDoubleProperty();
         doubleProperty.bind(doubleBinding);
         return doubleProperty;
@@ -68,7 +68,7 @@ public abstract class Link2D extends Group {
         translateYProperty().bind(centerY);
     }
 
-    private DoubleProperty centerBasedOnStartAndEnd(DoubleProperty start, DoubleProperty end) {
+    private static DoubleProperty centerBasedOnStartAndEnd(DoubleProperty start, DoubleProperty end) {
         DoubleProperty center = new SimpleDoubleProperty();
         center.bind((start.add(end)).divide(2));
         return center;

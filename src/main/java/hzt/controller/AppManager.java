@@ -18,7 +18,7 @@ public class AppManager {
 
     private static int instances = 0;
     private final int instance;
-    final Stage stage;
+    private final Stage stage;
     private final SceneManager sceneManager;
 
     public AppManager(Stage stage) {

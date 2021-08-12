@@ -7,15 +7,16 @@ import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import static javafx.scene.paint.Color.*;
 
-public class AppConstants {
-
-    private AppConstants() {
-    }
+public final class AppConstants {
 
     private static final Logger LOGGER = LogManager.getLogger(AppConstants.class);
     private static final Properties PROPS = configProperties();
@@ -58,6 +59,9 @@ public class AppConstants {
         INIT_WORLD_TO_CAMERA_ANGLE_Y = parsedDoubleProp("init_angle_y", 0);
     }
 
+    private AppConstants() {
+    }
+
     public static double parsedDoubleProp(String property, double defaultVal) {
         double value = defaultVal;
         String propertyVal = PROPS.getProperty(property);
@@ -65,7 +69,7 @@ public class AppConstants {
             value = Double.parseDouble(propertyVal);
         } catch (NumberFormatException | NullPointerException e) {
             LOGGER.warn(String.format("Property '%s' with value '%s' could not be parsed to a double... " +
-                    "Falling back to default: %f...", property, propertyVal, defaultVal ));
+                    "Falling back to default: %f...", property, propertyVal, defaultVal ), e);
         }
         return value;
     }
@@ -99,7 +103,7 @@ public class AppConstants {
         try (InputStream stream = new BufferedInputStream(new FileInputStream(file))) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.warn(() -> pathName + " not found...");
+            LOGGER.warn(() -> pathName + " not found...", e);
         }
         return properties;
     }

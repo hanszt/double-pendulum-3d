@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,11 +44,13 @@ public class ThemeService implements IThemeService {
                     themeSet.add(new Resource(themeName, fileName));
                 }
             }
-        } else LOGGER.error("Stylesheet resource folder not found...");
+        } else {
+            LOGGER.error("Stylesheet resource folder not found...");
+        }
         return themeSet;
     }
 
-    private String extractThemeName(String fileName) {
+    private static String extractThemeName(String fileName) {
         var themeName = fileName
                 .replace("style-", "")
                 .replace('-', ' ')
@@ -63,7 +66,9 @@ public class ThemeService implements IThemeService {
             LOGGER.debug(styleSheetUrl);
             this.styleSheet.set(styleSheetUrl.toExternalForm());
             LOGGER.debug(styleSheetUrl::toExternalForm);
-        } else LOGGER.error(() -> "stylesheet of " + theme.getName() + " could not be loaded...");
+        } else {
+            LOGGER.error(() -> "stylesheet of " + theme.getName() + " could not be loaded...");
+        }
     }
 
     public StringProperty styleSheetProperty() {
@@ -75,7 +80,7 @@ public class ThemeService implements IThemeService {
     }
 
     public Set<Resource> getThemes() {
-        return themes;
+        return Collections.unmodifiableSet(themes);
     }
 
 }

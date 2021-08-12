@@ -35,7 +35,7 @@ public class SceneManager {
             curSceneController = sceneControllerMap.get(MAIN_SCENE);
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.fatal("Something went wrong when loading fxml frontend...");
+            LOGGER.fatal("Something went wrong when loading fxml frontend...", e);
         }
     }
 

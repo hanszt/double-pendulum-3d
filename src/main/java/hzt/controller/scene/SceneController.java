@@ -3,6 +3,7 @@ package hzt.controller.scene;
 import hzt.controller.AppManager;
 import hzt.controller.FXMLController;
 import hzt.controller.SceneManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,7 +42,7 @@ public abstract class SceneController extends FXMLController {
 
     @FXML
     void exitProgram() {
-        System.exit(0);
+        Platform.exit();
     }
 
     public boolean isSetup() {

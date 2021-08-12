@@ -27,7 +27,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.transform.Translate;
 
 import java.io.IOException;
@@ -52,6 +56,9 @@ public class MainSceneController extends SceneController {
     private static final double INIT_ANGLE_1 = parsedDoubleProp("init_angle1", 30);
     private static final double INIT_ANGLE_2 = parsedDoubleProp("init_angle2", 30);
     public static final double DELTA_ANGLE_1 = parsedDoubleProp("delta_angle1", 0.1);
+    private static final double Z_SPACING = 30;
+    private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4;
+    private static final int INIT_MAX_TRACE_LENGTH = 500;
 
     @FXML
     private Tab appearanceTab;
@@ -132,19 +139,17 @@ public class MainSceneController extends SceneController {
         animationService.addLoopHandlersToTimelines(true, animationLoopEventHandler(), this::updateStatisticsLoop);
     }
 
-    private static final double Z_SPACING = 30;
-
-    private Deque<DoublePendulum> buildDoublePendulums() {
+    private static Deque<DoublePendulum> buildDoublePendulums() {
         var amount = parsedIntProp("number_of_pendulums", 1);
         amount = amount > 0 ? amount : 1;
         int lower = -(amount / 2);
         int upper = lower + amount;
         return IntStream.range(lower, upper)
-                .mapToObj(this::createDoublePendulum)
+                .mapToObj(MainSceneController::createDoublePendulum)
                 .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    private DoublePendulum createDoublePendulum(int index) {
+    private static DoublePendulum createDoublePendulum(int index) {
         var doublePendulum = new DoublePendulum();
         doublePendulum.setTranslateZ(index * Z_SPACING);
         return doublePendulum;
@@ -179,12 +184,12 @@ public class MainSceneController extends SceneController {
     }
 
     private void wireFrameWhenZPressed(KeyEvent e) {
-        if (e.getCharacter().equals("z")) {
+        if ("z".equals(e.getCharacter())) {
             FxUtils.allShapeDescendents(subSceneRoot).forEach(FxUtils::setDrawMode);
         }
     }
 
-    private void configureAnimationPane(AnchorPane animationPane) {
+    private static void configureAnimationPane(AnchorPane animationPane) {
         animationPane.setPrefSize(INIT_ANIMATION_PANE_DIMENSION.getWidth(), INIT_ANIMATION_PANE_DIMENSION.getHeight());
         animationPane.setBackground(new Background(new BackgroundFill(INIT_BG_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -234,9 +239,6 @@ public class MainSceneController extends SceneController {
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
 
-    private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4;
-    private static final int INIT_MAX_TRACE_LENGTH = 500;
-
     private void setInitControlValues() {
         upperMassSlider.setValue(INIT_MASS_1);
         lowerMassSlider.setValue(INIT_MASS_2);
@@ -262,7 +264,9 @@ public class MainSceneController extends SceneController {
     private void pauseSimButtonAction(ActionEvent actionEvent) {
         if (((ToggleButton) actionEvent.getSource()).isSelected()) {
             animationService.pauseAnimationTimeline();
-        } else animationService.startAnimationTimeline();
+        } else {
+            animationService.startAnimationTimeline();
+        }
     }
 
     @FXML
