@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -38,10 +39,10 @@ public class ThemeService implements IThemeService {
         if (url != null) {
             var styleDirectory = new File(url.getFile());
             if (styleDirectory.isDirectory()) {
-                var fileNames = styleDirectory.list();
-                for (var fileName : Objects.requireNonNull(fileNames)) {
-                    var themeName = extractThemeName(fileName);
-                    themeSet.add(new Resource(themeName, fileName));
+                var fileNames = styleDirectory.listFiles();
+                for (var file : Objects.requireNonNull(fileNames)) {
+                    var themeName = extractThemeName(file.getName());
+                    themeSet.add(new Resource(themeName, file));
                 }
             }
         } else {
@@ -51,23 +52,17 @@ public class ThemeService implements IThemeService {
     }
 
     private static String extractThemeName(String fileName) {
-        var themeName = fileName
-                .replace("style-", "")
-                .replace('-', ' ')
-                .replace(".css", "");
-        themeName = StringUtils.toOnlyFirstLetterUpperCase(themeName);
-        return themeName;
+        return StringUtils.convertToCapitalizedSentence(fileName, "style", ".css");
     }
 
     private void loadThemeStyleSheet(Resource theme) {
-        var styleSheetUrl = getClass()
-                .getResource(RELATIVE_STYLE_SHEET_RESOURCE_DIR + "/" + theme.getFileName());
-        if (styleSheetUrl != null) {
+        try {
+            final var styleSheetUrl = theme.getUrl();
             LOGGER.debug(styleSheetUrl);
             this.styleSheet.set(styleSheetUrl.toExternalForm());
             LOGGER.debug(styleSheetUrl::toExternalForm);
-        } else {
-            LOGGER.error(() -> "stylesheet of " + theme.getName() + " could not be loaded...");
+        } catch (MalformedURLException e) {
+            LOGGER.error(() -> "stylesheet of " + theme.name() + " could not be loaded...");
         }
     }
 

@@ -19,20 +19,30 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.CornerRadii;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 
 import static hzt.model.AppConstants.*;
 import static java.lang.Boolean.TRUE;
-import static java.util.function.Predicate.not;
 import static javafx.scene.layout.BackgroundPosition.*;
 import static javafx.scene.layout.BackgroundRepeat.*;
 
 public class AppearanceController extends FXMLController {
+
+
+    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
 
     @FXML
     private ColorPicker traceColorPicker;
@@ -56,10 +66,11 @@ public class AppearanceController extends FXMLController {
     private final MainSceneController mainSceneController;
     private final Collection<DoublePendulum> doublePendulums;
 
+
     public AppearanceController(MainSceneController mainSceneController, Collection<DoublePendulum> doublePendulums) throws IOException {
         super("appearancePane.fxml");
         this.mainSceneController = mainSceneController;
-        this.doublePendulums = doublePendulums;
+        this.doublePendulums = Collections.unmodifiableCollection(doublePendulums);
         configureComboBoxes();
     }
 
@@ -97,7 +108,9 @@ public class AppearanceController extends FXMLController {
         for (SceneController sceneController : sceneControllers) {
             var styleSheets = sceneController.getScene().getStylesheets();
             styleSheets.removeIf(filter -> !styleSheets.isEmpty());
-            if (newVal != null) styleSheets.add(newVal);
+            if (newVal != null) {
+                styleSheets.add(newVal);
+            }
         }
     }
 
@@ -108,13 +121,11 @@ public class AppearanceController extends FXMLController {
         bindStageOpacityToOpacityButton(stage);
     }
 
-    private void setFullScreenWhenF11Pressed(Stage stage, KeyEvent keyEvent) {
+    private static void setFullScreenWhenF11Pressed(Stage stage, KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.F11) {
             stage.setFullScreen(!stage.isFullScreen());
         }
     }
-
-    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
 
     private void bindStageOpacityToOpacityButton(Stage stage) {
         opacityStageButton.selectedProperty().addListener((o, c, n) -> stage.setOpacity(TRUE.equals(n) ? STAGE_OPACITY : 1));
@@ -122,10 +133,18 @@ public class AppearanceController extends FXMLController {
 
     @FXML
     private void backgroundComboBoxAction() {
-        backgroundCombobox.getValue().getPathToResource()
-                .filter(not(String::isBlank))
-                .map(path -> backgroundService.getClass().getResourceAsStream(path))
+        Optional.of(backgroundCombobox.getValue().file())
+                .filter(file -> !file.getPath().isBlank())
+                .map(AppearanceController::toInputStream)
                 .ifPresentOrElse(this::changeBackgroundImage, this::backgroundColorPickerAction);
+    }
+
+    private static InputStream toInputStream(File file) {
+        try {
+            return new FileInputStream(file);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private void changeBackgroundImage(InputStream inputStream) {

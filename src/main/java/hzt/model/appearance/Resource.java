@@ -1,51 +1,13 @@
 package hzt.model.appearance;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class Resource {
+public record Resource(String name, File file) {
 
-    private final String name;
-    private final String fileName;
-    private final String pathToResource;
-
-    public Resource(String name, String fileName) {
-        this(name, fileName, "");
-    }
-
-    public Resource(String name, String fileName, String pathToResource) {
-        this.name = name;
-        this.fileName = fileName;
-        this.pathToResource = pathToResource;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        var resource = (Resource) o;
-        return Objects.equals(name, resource.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public Optional<String> getPathToResource() {
-        return Optional.ofNullable(pathToResource);
+    public URL getUrl() throws MalformedURLException {
+        return file.toURI().toURL();
     }
 
     @Override

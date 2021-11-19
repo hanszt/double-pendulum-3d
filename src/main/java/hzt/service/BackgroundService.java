@@ -7,13 +7,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Objects;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BackgroundService implements IBackgroundService {
 
-    public static final Resource NO_PICTURE = new Resource("No picture", "");
+    public static final Resource NO_PICTURE = new Resource("No picture", new File(""));
     private static final String RELATIVE_BG_IMAGES_RESOURCE_DIR = "../../images/backgrounds";
 
     private static final Logger LOGGER = LogManager.getLogger(BackgroundService.class);
@@ -25,34 +28,31 @@ public class BackgroundService implements IBackgroundService {
     }
 
     private Set<Resource> scanForResourceImages() {
-        Set<Resource> set = new HashSet<>();
-        set.add(NO_PICTURE);
-        var url = getClass().getResource(RELATIVE_BG_IMAGES_RESOURCE_DIR);
-        if (url != null) {
-            var styleDirectory = new File(url.getFile());
-            if (styleDirectory.isDirectory()) {
-                var fileNames = styleDirectory.list();
-                for (var fileName : Objects.requireNonNull(fileNames)) {
-                    var name = extractName(fileName);
-                    set.add(new Resource(name, fileName, RELATIVE_BG_IMAGES_RESOURCE_DIR + "/" + fileName));
-                }
-            }
-        } else LOGGER.error("Resource folder at " + RELATIVE_BG_IMAGES_RESOURCE_DIR + " not found...");
-        return set;
+        return Optional.ofNullable(getClass().getResource(RELATIVE_BG_IMAGES_RESOURCE_DIR))
+                .map(URL::getFile)
+                .map(File::new)
+                .filter(File::isDirectory)
+                .map(File::listFiles)
+                .stream()
+                .flatMap(Arrays::stream)
+                .map(file -> new Resource(extractName(file), file))
+                .collect(Collectors.collectingAndThen(Collectors.toSet(), BackgroundService::checkNotEmpty));
     }
 
-    private String extractName(String fileName) {
-        var parsedName = fileName
-                .replace('_', ' ')
-                .replace('-', ' ')
-                .replace(".jpg", "")
-                .replace(".png", "");
-        parsedName = StringUtils.toOnlyFirstLetterUpperCase(parsedName);
-        return parsedName;
+    private static Set<Resource> checkNotEmpty(Set<Resource> set) {
+        if (set.isEmpty()) {
+            LOGGER.error("Resource folder at " + RELATIVE_BG_IMAGES_RESOURCE_DIR + " not found...");
+        }
+        set.add(NO_PICTURE);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static String extractName(File file) {
+        return StringUtils.convertToCapitalizedSentence(file.getName(), ".jpg", ".png");
     }
 
     public Set<Resource> getResources() {
-        return resources;
+        return Collections.unmodifiableSet(resources);
     }
 
 }

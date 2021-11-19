@@ -2,21 +2,13 @@ package hzt.service.inteface;
 
 import javafx.beans.property.StringProperty;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface IAboutService {
 
-    List<AboutText> loadContent();
+    Collection<AboutText> loadContent();
 
-    class AboutText {
-
-        private final String title;
-        private final StringProperty text;
-
-        public AboutText(String title, StringProperty text) {
-            this.title = title;
-            this.text = text;
-        }
+    record AboutText(String title, StringProperty text) {
 
         public String getText() {
             return text.get();
