@@ -3,9 +3,8 @@ package hzt.model;
 import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,7 +17,7 @@ import static javafx.scene.paint.Color.*;
 
 public final class AppConstants {
 
-    private static final Logger LOGGER = LogManager.getLogger(AppConstants.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppConstants.class);
     private static final Properties PROPS = configProperties();
 
     public static final int INIT_FRAME_RATE = 30; // f/s
@@ -64,10 +63,10 @@ public final class AppConstants {
 
     public static double parsedDoubleProp(String property, double defaultVal) {
         double value = defaultVal;
-        String propertyVal = PROPS.getProperty(property);
+        String propertyVal = PROPS.getProperty(property, "default");
         try {
             value = Double.parseDouble(propertyVal);
-        } catch (NumberFormatException | NullPointerException e) {
+        } catch (NumberFormatException e) {
             LOGGER.warn(String.format("Property '%s' with value '%s' could not be parsed to a double... " +
                     "Falling back to default: %f...", property, propertyVal, defaultVal ), e);
         }
@@ -103,7 +102,7 @@ public final class AppConstants {
         try (InputStream stream = new BufferedInputStream(new FileInputStream(file))) {
             properties.load(stream);
         } catch (IOException e) {
-            LOGGER.warn(() -> pathName + " not found...", e);
+            LOGGER.warn("{} not found...", pathName, e);
         }
         return properties;
     }
@@ -128,7 +127,7 @@ public final class AppConstants {
         }
     }
 
-    public static Properties getPROPS() {
-        return PROPS;
+    public static String getInitTraceType() {
+        return PROPS.getProperty("init_trace_type", "");
     }
 }

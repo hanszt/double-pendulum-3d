@@ -3,8 +3,8 @@ package hzt.service;
 import hzt.model.appearance.Resource;
 import hzt.service.inteface.IBackgroundService;
 import hzt.utils.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 public class BackgroundService implements IBackgroundService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundService.class);
     public static final Resource NO_PICTURE = new Resource("No picture", new File(""));
-    private static final String RELATIVE_BG_IMAGES_RESOURCE_DIR = "../../images/backgrounds";
+    private static final String RELATIVE_BG_IMAGES_RESOURCE_DIR = "/images/backgrounds";
 
-    private static final Logger LOGGER = LogManager.getLogger(BackgroundService.class);
 
     private final Set<Resource> resources;
 
@@ -41,7 +41,7 @@ public class BackgroundService implements IBackgroundService {
 
     private static Set<Resource> checkNotEmpty(Set<Resource> set) {
         if (set.isEmpty()) {
-            LOGGER.error("Resource folder at " + RELATIVE_BG_IMAGES_RESOURCE_DIR + " not found...");
+            LOGGER.error("Resource folder at {} not found...", RELATIVE_BG_IMAGES_RESOURCE_DIR);
         }
         set.add(NO_PICTURE);
         return Collections.unmodifiableSet(set);

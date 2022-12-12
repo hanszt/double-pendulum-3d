@@ -3,8 +3,8 @@ package hzt.controller;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +14,7 @@ import static hzt.model.AppConstants.*;
 
 public class AppManager {
 
-    private static final Logger LOGGER = LogManager.getLogger(AppManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppManager.class);
 
     private static int instances = 0;
     private final int instance;
@@ -28,11 +28,11 @@ public class AppManager {
     }
 
     public void start() {
-        LOGGER.info(this::startingMessage);
+        LOGGER.atInfo().setMessage(this::startingMessage).log();
         sceneManager.setupScene(Scene.MAIN_SCENE);
         configureStage(stage);
         stage.show();
-        LOGGER.info(() -> String.format("instance %d started%n", instance));
+        LOGGER.info("instance {} started", instance);
     }
 
     private String startingMessage() {
@@ -46,7 +46,7 @@ public class AppManager {
         stage.setTitle(String.format("%s (%d)", TITLE, instance));
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
-        stage.setOnCloseRequest(e -> LOGGER.info(this::closingText));
+        stage.setOnCloseRequest(e -> LOGGER.atInfo().setMessage(this::closingText).log());
         Optional.ofNullable(getClass().getResourceAsStream("/images/icon.png"))
         .ifPresent(inputStream -> stage.getIcons().add(new Image(inputStream)));
     }

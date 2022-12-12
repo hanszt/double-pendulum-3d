@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public abstract class FXMLController {
 
-    private static final String FXML_FILE_LOCATION = "../../../fxml/";
+    private static final String FXML_FILE_LOCATION = "/fxml/";
 
     private final Parent root;
 

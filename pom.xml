@@ -12,21 +12,24 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <!--        dependencies-->
-        <openjfx.version>17.0.0.1</openjfx.version>
+        <coverage.target>50%</coverage.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--dependencies-->
+        <openjfx.version>19</openjfx.version>
         <openjfx.plugin.version>0.0.8</openjfx.plugin.version>
-        <log4j.version>2.17.0</log4j.version>
-        <slf4j.version>1.7.32</slf4j.version>
-        <junit.jupiter.version>5.8.2</junit.jupiter.version>
-        <archunit.version>0.22.0</archunit.version>
-        <annotations.version>22.0.0</annotations.version>
-        <!--        plugins-->
-        <maven.plugin.version>3.8.1</maven.plugin.version>
+        <log4j.version>2.19.0</log4j.version>
+        <slf4j.version>2.0.5</slf4j.version>
+        <junit.jupiter.version>5.9.0</junit.jupiter.version>
+        <archunit.version>1.0.0</archunit.version>
+        <annotations.version>23.0.0</annotations.version>
+        <!--plugins-->
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
     </properties>
 
     <dependencies>
-        <!--        test-->
+        <!--test-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -96,16 +99,13 @@
 
         <resources>
             <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.fxml</include>
-                </includes>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
 
         <plugins>
             <plugin>
-                <!--                Build an all inclusive Jar file for stand alone execution-->
+                <!--Build an all-inclusive Jar file for stand-alone execution-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
@@ -119,7 +119,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-                <!--                Next causes the plugin to get called-->
+                <!--Next causes the plugin to get called-->
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -130,17 +130,20 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.plugin.version}</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>

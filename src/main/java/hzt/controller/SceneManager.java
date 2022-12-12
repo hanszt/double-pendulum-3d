@@ -4,8 +4,8 @@ import hzt.controller.scene.AboutSceneController;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -17,7 +17,7 @@ import static hzt.model.AppConstants.Scene.MAIN_SCENE;
 
 public class SceneManager {
 
-    private static final Logger LOGGER = LogManager.getLogger(SceneManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SceneManager.class);
 
     private final Stage stage;
     private final Map<Scene, SceneController> sceneControllerMap = new EnumMap<>(Scene.class);
@@ -35,7 +35,7 @@ public class SceneManager {
             curSceneController = sceneControllerMap.get(MAIN_SCENE);
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.fatal("Something went wrong when loading fxml frontend...", e);
+            LOGGER.error("Something went wrong when loading fxml frontend...", e);
         }
     }
 
@@ -43,7 +43,7 @@ public class SceneManager {
         curSceneController = sceneControllerMap.get(scene);
         stage.setScene(curSceneController.getScene());
         if (!curSceneController.isSetup()) {
-            LOGGER.info(() -> "setting up " + scene.formattedName() + "...");
+            LOGGER.atInfo().setMessage("setting up {}...").addArgument(scene::formattedName).log();
             curSceneController.setup();
         }
     }
@@ -57,6 +57,6 @@ public class SceneManager {
     }
 
     public Map<Scene, SceneController> getSceneControllerMap() {
-        return sceneControllerMap;
+        return Map.copyOf(sceneControllerMap);
     }
 }

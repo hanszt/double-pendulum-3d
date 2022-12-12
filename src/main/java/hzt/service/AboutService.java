@@ -3,8 +3,8 @@ package hzt.service;
 import hzt.service.inteface.IAboutService;
 import hzt.utils.StringUtils;
 import javafx.beans.property.SimpleStringProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class AboutService implements IAboutService {
 
-    private static final Logger LOGGER = LogManager.getLogger(AboutService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AboutService.class);
     private static final String RELATIVE_TEXT_RESOURCE_DIR = "../../about";
 
     public Set<AboutText> loadContent() {
@@ -53,7 +53,7 @@ public class AboutService implements IAboutService {
         try {
             return String.join(String.format("%n"), Files.readAllLines(file.toPath()));
         } catch (IOException e) {
-            LOGGER.error(() -> "Invalid resource url...", e);
+            LOGGER.error("Invalid resource url...", e);
             return "";
         }
     }

@@ -7,8 +7,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -19,9 +19,9 @@ import java.util.Set;
 
 public class ThemeService implements IThemeService {
 
-    private static final String RELATIVE_STYLE_SHEET_RESOURCE_DIR = "../../css";
+    private static final String RELATIVE_STYLE_SHEET_RESOURCE_DIR = "/css";
 
-    private static final Logger LOGGER = LogManager.getLogger(ThemeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThemeService.class);
 
     private final StringProperty styleSheet = new SimpleStringProperty();
     private final ObjectProperty<Resource> currentTheme = new SimpleObjectProperty<>();
@@ -58,11 +58,11 @@ public class ThemeService implements IThemeService {
     private void loadThemeStyleSheet(Resource theme) {
         try {
             final var styleSheetUrl = theme.getUrl();
-            LOGGER.debug(styleSheetUrl);
+            LOGGER.debug("{}", styleSheetUrl);
             this.styleSheet.set(styleSheetUrl.toExternalForm());
-            LOGGER.debug(styleSheetUrl::toExternalForm);
+            LOGGER.atDebug().setMessage(styleSheetUrl::toExternalForm).log();
         } catch (MalformedURLException e) {
-            LOGGER.error(() -> "stylesheet of " + theme.name() + " could not be loaded...");
+            LOGGER.error("stylesheet of {} could not be loaded...", theme.name());
         }
     }
 

@@ -3,6 +3,7 @@ package hzt.controller.scene;
 import hzt.controller.SceneManager;
 import hzt.controller.sub_pane.AppearanceController;
 import hzt.controller.sub_pane.StatisticsController;
+import hzt.model.AppConstants;
 import hzt.model.CoordinateSystem3D;
 import hzt.model.CylinderCoordinateSystem3D;
 import hzt.model.DoublePendulum;
@@ -197,7 +198,7 @@ public class MainSceneController extends SceneController {
     private void configureComboBoxes() {
         ObservableList<String> items = traceModeCombobox.getItems();
         items.addAll(BALL_TRACE, ROUND_LINK_TRACE, NO_TRACE, SQUARE_LINK_TRACE);
-        String initTraceType = getPROPS().getProperty("init_trace_type", "");
+        String initTraceType = AppConstants.getInitTraceType();
         initTraceType = StringUtils.toOnlyFirstLetterUpperCase(initTraceType);
         initTraceType = items.contains(initTraceType) ? initTraceType : BALL_TRACE;
         traceModeCombobox.setValue(initTraceType);
