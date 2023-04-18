@@ -19,8 +19,8 @@ public class AnimationService implements IAnimationService {
     private final Timeline statisticsTimeline;
 
     public AnimationService() {
-        this.animationTimeline = setupTimeline();
-        this.statisticsTimeline = setupTimeline();
+        animationTimeline = setupTimeline();
+        statisticsTimeline = setupTimeline();
     }
 
     private static Timeline setupTimeline() {
@@ -30,7 +30,8 @@ public class AnimationService implements IAnimationService {
     }
 
     public void addLoopHandlersToTimelines(boolean start,
-                                           EventHandler<ActionEvent> animationLoop, EventHandler<ActionEvent> statisticsLoop) {
+                                           EventHandler<ActionEvent> animationLoop,
+                                           EventHandler<ActionEvent> statisticsLoop) {
         animationTimeline.getKeyFrames().add(new KeyFrame(INIT_FRAME_DURATION, "Animation keyframe", animationLoop));
         statisticsTimeline.getKeyFrames().add(new KeyFrame(INIT_FRAME_DURATION, "Statistics keyframe", statisticsLoop));
         if (start) {

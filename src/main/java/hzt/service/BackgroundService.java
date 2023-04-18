@@ -9,22 +9,23 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class BackgroundService implements IBackgroundService {
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
+
+public final class BackgroundService implements IBackgroundService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundService.class);
     public static final Resource NO_PICTURE = new Resource("No picture", new File(""));
     private static final String RELATIVE_BG_IMAGES_RESOURCE_DIR = "/images/backgrounds";
 
-
     private final Set<Resource> resources;
 
     public BackgroundService() {
-        this.resources = scanForResourceImages();
+        resources = scanForResourceImages();
     }
 
     private Set<Resource> scanForResourceImages() {
@@ -36,15 +37,15 @@ public class BackgroundService implements IBackgroundService {
                 .stream()
                 .flatMap(Arrays::stream)
                 .map(file -> new Resource(extractName(file), file))
-                .collect(Collectors.collectingAndThen(Collectors.toSet(), BackgroundService::checkNotEmpty));
+                .collect(collectingAndThen(toSet(), BackgroundService::logIfEmptyAndAddNoPicture));
     }
 
-    private static Set<Resource> checkNotEmpty(Set<Resource> set) {
-        if (set.isEmpty()) {
+    private static Set<Resource> logIfEmptyAndAddNoPicture(Collection<Resource> collection) {
+        if (collection.isEmpty()) {
             LOGGER.error("Resource folder at {} not found...", RELATIVE_BG_IMAGES_RESOURCE_DIR);
         }
-        set.add(NO_PICTURE);
-        return Collections.unmodifiableSet(set);
+        collection.add(NO_PICTURE);
+        return Set.copyOf(collection);
     }
 
     private static String extractName(File file) {
@@ -52,7 +53,7 @@ public class BackgroundService implements IBackgroundService {
     }
 
     public Set<Resource> getResources() {
-        return Collections.unmodifiableSet(resources);
+        return Set.copyOf(resources);
     }
 
 }

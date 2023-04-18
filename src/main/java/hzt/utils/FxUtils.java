@@ -20,18 +20,18 @@ public final class FxUtils {
 
     private static void addAllDescendents(Parent parent, List<Shape3D> nodes) {
         for (var node : parent.getChildrenUnmodifiable()) {
-            if (node instanceof Shape3D) {
-                nodes.add((Shape3D) node);
+            if (node instanceof Shape3D shape3D) {
+                nodes.add(shape3D);
             }
-            if (node instanceof Parent) {
-                addAllDescendents((Parent) node, nodes);
+            if (node instanceof Parent subParent) {
+                addAllDescendents(subParent, nodes);
             }
         }
     }
 
     public static void setDrawMode(Shape3D shape3D) {
         if (!shape3D.drawModeProperty().isBound()) {
-            shape3D.setDrawMode(shape3D.getDrawMode() == DrawMode.LINE ? DrawMode.FILL : DrawMode.LINE);
+            shape3D.setDrawMode(DrawMode.LINE == shape3D.getDrawMode() ? DrawMode.FILL : DrawMode.LINE);
         }
     }
 

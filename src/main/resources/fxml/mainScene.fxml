@@ -36,6 +36,9 @@
                             <Label text="Trace mode:"/>
                             <ComboBox fx:id="traceModeCombobox" prefWidth="300.0"
                                       promptText="Trace mode"/>
+                            <Label text="Integrator:"/>
+                            <ComboBox fx:id="integratorCombobox" prefWidth="300.0"
+                                      promptText="Integrator type"/>
                             <Label text="Choose animation settings"/>
                             <HBox prefWidth="1000.0">
                                 <VBox prefWidth="150.0" spacing="4.0">

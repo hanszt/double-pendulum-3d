@@ -11,7 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
-public class MovableCameraPlatform extends Group {
+public final class MovableCameraPlatform extends Group {
 
     private final PerspectiveCamera camera = new PerspectiveCamera(true);//fixedEyeAtCameraZero
     private final Translation3DKeyFilter translation3DKeyFilter = new Translation3DKeyFilter();
@@ -22,15 +22,14 @@ public class MovableCameraPlatform extends Group {
     private double velocity;
 
     public MovableCameraPlatform() {
-        super();
         translation3DKeyFilter.userInputVectorSizeProperty().bindBidirectional(maxVelocityProperty());
         setInitCameraConfig();
-        this.getChildren().add(camera);
+        getChildren().add(camera);
     }
 
     private void setInitCameraConfig() {
-        camera.setFarClip(10_000);
-        camera.setNearClip(.01);
+        camera.setFarClip(10_000.0);
+        camera.setNearClip(0.01);
     }
 
     public void update(Duration deltaDuration) {
@@ -41,8 +40,8 @@ public class MovableCameraPlatform extends Group {
         var deltaTSeconds = deltaDuration.toSeconds();
         var velocityVector = translation3DKeyFilter.getUserInputVector();
         velocity = velocityVector.magnitude();
-        var position = new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
-        position = position.add(velocityVector.multiply(deltaTSeconds));
+        var position = new Point3D(getTranslateX(), getTranslateY(), getTranslateZ())
+                .add(velocityVector.multiply(deltaTSeconds));
         setTranslateX(position.getX());
         setTranslateY(position.getY());
         setTranslateZ(position.getZ());

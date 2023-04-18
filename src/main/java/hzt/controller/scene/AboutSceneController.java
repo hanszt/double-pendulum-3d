@@ -2,6 +2,7 @@ package hzt.controller.scene;
 
 import hzt.controller.SceneManager;
 import hzt.service.AboutService;
+import hzt.service.inteface.IAboutService;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -21,10 +22,12 @@ public class AboutSceneController extends SceneController {
     @FXML
     private TextArea textArea;
 
-    private final AboutService aboutService = new AboutService();
+    private final IAboutService aboutService;
 
-    public AboutSceneController(SceneManager sceneManager) throws IOException {
+    public AboutSceneController(SceneManager sceneManager,
+                                IAboutService aboutService) throws IOException {
         super(ABOUT_SCENE.getFxmlFileName(), sceneManager);
+        this.aboutService = aboutService;
     }
 
     @Override

@@ -9,8 +9,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-import static java.lang.Math.pow;
-
 public class PendulumCylinder {
 
     private final Cylinder cylinder;
@@ -18,16 +16,16 @@ public class PendulumCylinder {
 
     private final DoubleProperty mass = new SimpleDoubleProperty();
 
-    public PendulumCylinder() {
+    PendulumCylinder() {
         this(new Cylinder());
     }
 
-    public PendulumCylinder(Cylinder cylinder) {
+    private PendulumCylinder(Cylinder cylinder) {
         this.cylinder = cylinder;
         configureComponents();
     }
 
-    private static final int DEFAULT_MASS_WIDTH = 10;
+    private static final double DEFAULT_MASS_WIDTH = 10.0;
 
     private void configureComponents() {
         bindRadiusToMass();
@@ -35,34 +33,34 @@ public class PendulumCylinder {
         cylinder.setHeight(DEFAULT_MASS_WIDTH);
         cylinder.setMaterial(phongMaterial);
         cylinder.setRotationAxis(Rotate.X_AXIS);
-        cylinder.setRotate(90);
+        cylinder.setRotate(90.0);
     }
 
     private static final double CYLINDER_SIZE_FACTOR = 10;
 
     private void bindRadiusToMass() {
         mass.addListener((o, c, n) ->
-                cylinder.setRadius(pow(n.doubleValue() / CYLINDER_SIZE_FACTOR * cylinder.getHeight(), 1./2)));
+                cylinder.setRadius(StrictMath.pow(n.doubleValue() / CYLINDER_SIZE_FACTOR * cylinder.getHeight(), 1.0 / 2.0)));
     }
 
     public Point2D getPositionXY() {
         return new Point2D(cylinder.getTranslateX(), cylinder.getTranslateY());
     }
 
-    public void setPosition(double x, double y) {
+    void setPosition(double x, double y) {
         cylinder.setTranslateX(x);
         cylinder.setTranslateY(y);
     }
 
-    public void addWeightToFxGroup(Group group) {
+    void addWeightToFxGroup(Group group) {
         group.getChildren().add(cylinder);
     }
 
-    public PhongMaterial getPhongMaterial() {
+    PhongMaterial getPhongMaterial() {
         return phongMaterial;
     }
 
-    public Cylinder getCylinder() {
+    Cylinder getCylinder() {
         return cylinder;
     }
 

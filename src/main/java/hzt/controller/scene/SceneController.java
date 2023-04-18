@@ -23,7 +23,7 @@ public abstract class SceneController extends FXMLController {
 
     protected SceneController(String fxmlFileName, SceneManager sceneManager) throws IOException {
         super(fxmlFileName);
-        this.startTimeScene = LocalTime.now();
+        startTimeScene = LocalTime.now();
         this.sceneManager = sceneManager;
         scene = new Scene(getRoot(), INIT_SCENE_DIMENSION.getWidth(), INIT_SCENE_DIMENSION.getHeight());
     }

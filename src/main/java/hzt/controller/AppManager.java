@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 
 import static hzt.model.AppConstants.*;
@@ -23,8 +24,9 @@ public class AppManager {
 
     public AppManager(Stage stage) {
         this.stage = stage;
-        this.sceneManager = new SceneManager(stage);
-        this.instance = ++instances;
+        sceneManager = new SceneManager(stage);
+        ++instances;
+        instance = instances;
     }
 
     public void start() {
@@ -39,10 +41,10 @@ public class AppManager {
         return String.format("Starting instance %d of %s at %s...%n",
                 instance, TITLE, sceneManager.getCurSceneController()
                         .getStartTimeScene()
-                        .format(DateTimeFormatter.ofPattern("hh:mm:ss")));
+                        .format(DateTimeFormatter.ofPattern("hh:mm:ss", Locale.ROOT)));
     }
 
-    public void configureStage(Stage stage) {
+    private void configureStage(Stage stage) {
         stage.setTitle(String.format("%s (%d)", TITLE, instance));
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
@@ -55,7 +57,7 @@ public class AppManager {
         var startTimeSim = sceneManager.getCurSceneController().getStartTimeScene();
         var stopTimeSim = LocalTime.now();
         var runTimeSim = Duration.millis((stopTimeSim.toNanoOfDay() - startTimeSim.toNanoOfDay()) / 1e6);
-        return String.format("%s%nAnimation Runtime of instance %d: %.2f seconds%n%s%n", CLOSING_MESSAGE,
+        return "%s%nAnimation Runtime of instance %d: %.2f seconds%n%s%n".formatted(CLOSING_MESSAGE,
                 instance, runTimeSim.toSeconds(), DOTTED_LINE);
     }
 

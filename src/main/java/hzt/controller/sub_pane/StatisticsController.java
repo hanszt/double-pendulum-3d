@@ -115,15 +115,15 @@ public class StatisticsController extends FXMLController {
     private void updatePendulumPropertyStatistics(DoublePendulum doublePendulum) {
         upperPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getUpperArmLength()));
         lowerPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getLowerArmLength()));
-        upperMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getUpperPendulum().getMass()));
-        lowerMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getLowerPendulum().getMass()));
+        upperMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.upperPendulum.getMass()));
+        lowerMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.lowerPendulum.getMass()));
     }
 
     private void updatePendulumPositionStatistics(DoublePendulum doublePendulum) {
-        Point2D upperMassPosition = doublePendulum.getUpperPendulum().getPositionXY();
+        Point2D upperMassPosition = doublePendulum.upperPendulum.getPositionXY();
         upperMassXLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getX()));
         upperMassYLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getY()));
-        Point2D lowerMassPosition = doublePendulum.getLowerPendulum().getPositionXY();
+        Point2D lowerMassPosition = doublePendulum.lowerPendulum.getPositionXY();
         lowerMassXLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
         lowerMassYLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
     }

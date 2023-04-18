@@ -3,6 +3,7 @@ package hzt.controller;
 import hzt.controller.scene.AboutSceneController;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
+import hzt.service.AboutService;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,9 @@ public class SceneManager {
 
     private final Stage stage;
     private final Map<Scene, SceneController> sceneControllerMap = new EnumMap<>(Scene.class);
-    private SceneController curSceneController;
+    private SceneController curSceneController = null;
 
-    public SceneManager(Stage stage) {
+    SceneManager(Stage stage) {
         this.stage = stage;
         loadFrontend();
     }
@@ -31,10 +32,9 @@ public class SceneManager {
     private void loadFrontend() {
         try {
             sceneControllerMap.put(MAIN_SCENE, new MainSceneController(this));
-            sceneControllerMap.put(ABOUT_SCENE, new AboutSceneController(this));
+            sceneControllerMap.put(ABOUT_SCENE, new AboutSceneController(this, new AboutService()));
             curSceneController = sceneControllerMap.get(MAIN_SCENE);
         } catch (IOException e) {
-            e.printStackTrace();
             LOGGER.error("Something went wrong when loading fxml frontend...", e);
         }
     }
@@ -52,7 +52,7 @@ public class SceneManager {
         return stage;
     }
 
-    public SceneController getCurSceneController() {
+    SceneController getCurSceneController() {
         return curSceneController;
     }
 

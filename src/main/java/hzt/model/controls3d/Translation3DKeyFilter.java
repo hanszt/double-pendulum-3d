@@ -5,7 +5,7 @@ import javafx.scene.input.KeyCode;
 
 import static javafx.scene.input.KeyCode.*;
 
-public class Translation3DKeyFilter extends Abstract3DKeyFilter {
+public final class Translation3DKeyFilter extends Abstract3DKeyFilter {
 
     private Point3D userInputVector = Point3D.ZERO;
 
@@ -13,9 +13,9 @@ public class Translation3DKeyFilter extends Abstract3DKeyFilter {
         this(A, D, W, S, F, R);
     }
 
-    public Translation3DKeyFilter(KeyCode left, KeyCode right,
-                                  KeyCode up, KeyCode down,
-                                  KeyCode front, KeyCode back) {
+    private Translation3DKeyFilter(KeyCode left, KeyCode right,
+                                   KeyCode up, KeyCode down,
+                                   KeyCode front, KeyCode back) {
         super(left, right, up, down, front, back);
     }
     boolean pressedAction(Point3D vector) {

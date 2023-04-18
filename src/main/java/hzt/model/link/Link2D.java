@@ -11,11 +11,11 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
-public abstract class Link2D extends Group {
+public abstract class Link2D<S extends Shape3D> extends Group {
 
     private static final int RIGHT_ANGLE = 90;
 
-    final Shape3D shape3D;
+    private final S shape3D;
     private final Rotate rotateZ = new Rotate();
 
     private final DoubleProperty startX = new SimpleDoubleProperty();
@@ -24,7 +24,7 @@ public abstract class Link2D extends Group {
     private final DoubleProperty endX = new SimpleDoubleProperty();
     private final DoubleProperty endY = new SimpleDoubleProperty();
 
-    Link2D(Shape3D shape3D) {
+    Link2D(S shape3D) {
         super(shape3D);
         this.shape3D = shape3D;
         rotateZ.setAxis(Rotate.Z_AXIS);
@@ -90,6 +90,10 @@ public abstract class Link2D extends Group {
 
         endX.set(endPoint.getX());
         endY.set(endPoint.getY());
+    }
+
+    S getShape3D() {
+        return shape3D;
     }
 
     public abstract DoubleProperty heightProperty();

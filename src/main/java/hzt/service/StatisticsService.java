@@ -13,7 +13,7 @@ public class StatisticsService implements IStatisticsService {
         simpleFrameRateMeter.initialize();
     }
 
-    public static class SimpleFrameRateMeter implements ISimpleFramerateMeter {
+    public static class SimpleFrameRateMeter implements IStatisticsService.ISimpleFramerateMeter {
 
         private final long[] frameTimes = new long[100];
         private int frameTimeIndex = 0;
@@ -21,26 +21,20 @@ public class StatisticsService implements IStatisticsService {
         private double frameRate = INIT_FRAME_RATE;
 
         private void initialize() {
-            AnimationTimer frameRateTimer = new AnimationTimer() {
+            new AnimationTimer() {
 
-                @Override
                 public void handle(long now) {
-                    frameRateTimer(now);
+                    long oldFrameTime = frameTimes[frameTimeIndex];
+                    frameTimes[frameTimeIndex] = now;
+                    frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
+                    if (frameTimeIndex == 0) arrayFilled = true;
+                    if (arrayFilled) {
+                        var elapsedNanos = now - oldFrameTime;
+                        var elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
+                        frameRate = 1.0e9 / elapsedNanosPerFrame;
+                    }
                 }
-            };
-            frameRateTimer.start();
-        }
-
-        private void frameRateTimer(long now) {
-            long oldFrameTime = frameTimes[frameTimeIndex];
-            frameTimes[frameTimeIndex] = now;
-            frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-            if (frameTimeIndex == 0) arrayFilled = true;
-            if (arrayFilled) {
-                var elapsedNanos = now - oldFrameTime;
-                var elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
-                frameRate = 1e9 / elapsedNanosPerFrame;
-            }
+            }.start();
         }
 
         public double getFrameRate() {

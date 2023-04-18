@@ -42,7 +42,7 @@ import static javafx.scene.layout.BackgroundRepeat.*;
 public class AppearanceController extends FXMLController {
 
 
-    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", .8D);
+    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", 0.8D);
 
     @FXML
     private ColorPicker traceColorPicker;
@@ -67,7 +67,8 @@ public class AppearanceController extends FXMLController {
     private final Collection<DoublePendulum> doublePendulums;
 
 
-    public AppearanceController(MainSceneController mainSceneController, Collection<DoublePendulum> doublePendulums) throws IOException {
+    public AppearanceController(MainSceneController mainSceneController,
+                                Collection<DoublePendulum> doublePendulums) throws IOException {
         super("appearancePane.fxml");
         this.mainSceneController = mainSceneController;
         this.doublePendulums = Collections.unmodifiableCollection(doublePendulums);
@@ -84,8 +85,8 @@ public class AppearanceController extends FXMLController {
 
     private void bindColorProperties(DoublePendulum doublePendulum) {
         doublePendulum.massColorProperty().bind(pendulumMassColorPicker.valueProperty());
-        doublePendulum.getArmMaterial().diffuseColorProperty().bind(pendulumColorPicker.valueProperty());
-        doublePendulum.getArmMaterial().specularColorProperty().bind(pendulumColorPicker.valueProperty());
+        doublePendulum.armMaterial.diffuseColorProperty().bind(pendulumColorPicker.valueProperty());
+        doublePendulum.armMaterial.specularColorProperty().bind(pendulumColorPicker.valueProperty());
     }
 
     public void bindTraceColorToTraceColorPicker(TraceXY traceXY) {

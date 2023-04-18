@@ -11,35 +11,35 @@ import javafx.scene.transform.Rotate;
 
 public class MouseControlService implements IMouseControlService {
 
-    private double mouseAnchorX;
-    private double mouseAnchorY;
+    private double mouseAnchorX = 0.0;
+    private double mouseAnchorY = 0.0;
 
-    private double nodeAnchorTranslateX = 0;
-    private double nodeAnchorTranslateY = 0;
+    private double nodeAnchorTranslateX = 0.0;
+    private double nodeAnchorTranslateY = 0.0;
 
-    private double nodeAnchorAngleX = 0;
-    private double nodeAnchorAngleY = 0;
+    private double nodeAnchorAngleX = 0.0;
+    private double nodeAnchorAngleY = 0.0;
 
     private final DoubleProperty angleX = new SimpleDoubleProperty();
     private final DoubleProperty angleY = new SimpleDoubleProperty();
 
     private final Node target;
 
-    public MouseControlService(Node target) {
-        this.target = target;
+    public MouseControlService(Node node) {
+        target = node;
     }
 
-    public void initMouseControl(Node reference) {
-        var xRotate = new Rotate(0, Rotate.X_AXIS);
-        var yRotate = new Rotate(0, Rotate.Y_AXIS);
+    public final void initMouseControl(Node node) {
+        var xRotate = new Rotate(0.0, Rotate.X_AXIS);
+        var yRotate = new Rotate(0.0, Rotate.Y_AXIS);
         target.getTransforms().addAll(xRotate, yRotate);
 
         xRotate.angleProperty().bind(angleX);
         yRotate.angleProperty().bind(angleY);
 
-        reference.setOnMousePressed(event -> mousePressedEvent(target, event));
-        reference.setOnMouseDragged(event -> mouseDraggedEvent(target, event));
-        reference.addEventHandler(ScrollEvent.SCROLL, event -> mouseScrollEvent(target, event));
+        node.setOnMousePressed(event -> mousePressedEvent(target, event));
+        node.setOnMouseDragged(event -> mouseDraggedEvent(target, event));
+        node.addEventHandler(ScrollEvent.SCROLL, event -> mouseScrollEvent(target, event));
     }
 
     private void mousePressedEvent(Node node, MouseEvent event) {
@@ -66,7 +66,7 @@ public class MouseControlService implements IMouseControlService {
         }
     }
 
-    private void mouseScrollEvent(Node node, ScrollEvent event) {
+    private static void mouseScrollEvent(Node node, ScrollEvent event) {
         double delta = event.getDeltaY();
         node.setTranslateZ(node.getTranslateZ() - delta);
     }

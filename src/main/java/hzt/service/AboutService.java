@@ -21,14 +21,15 @@ public class AboutService implements IAboutService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AboutService.class);
     private static final String RELATIVE_TEXT_RESOURCE_DIR = "../../about";
 
-    public Set<AboutText> loadContent() {
+    public final Set<AboutText> loadContent() {
+        LOGGER.info("Loading content...");
         return Optional.ofNullable(getClass().getResource(RELATIVE_TEXT_RESOURCE_DIR))
                 .map(AboutService::toAboutTexts)
                 .orElseGet(AboutService::logErrorAndGetDefault);
     }
 
     private static Set<AboutText> logErrorAndGetDefault() {
-        LOGGER.error("about folder not found at " + RELATIVE_TEXT_RESOURCE_DIR + "...");
+        LOGGER.error("about folder not found at {}...", RELATIVE_TEXT_RESOURCE_DIR);
         return Set.of(new AboutText("No content", new SimpleStringProperty()));
     }
 

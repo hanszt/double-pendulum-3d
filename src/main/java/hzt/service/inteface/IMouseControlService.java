@@ -7,9 +7,9 @@ public interface IMouseControlService {
 
     void initMouseControl(Node node);
 
-    void setOrientation(double initAngleX, double initAngleY);
+    void setOrientation(double angleX, double angleY);
 
-    void setTargetTranslation(Point3D point);
+    void setTargetTranslation(Point3D point3D);
 
     double getTargetTranslateX();
 

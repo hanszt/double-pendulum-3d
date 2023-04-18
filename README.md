@@ -34,12 +34,22 @@ I was inspired by [this](https://youtu.be/bqtqltqcQhw?t=345) the coding train ep
 
 ---
 
+The motion of a double pendulum can be described by a system of ordinary differential equations (ODE's).
+
+For background on how these equations can be derived and implemented in code, look at the following paper: [Thesis Kessels][Thesis_BTW_Kessels]
+
+---
+
 ## Setup
+
+The project is set up in such a way that it should feel like a plug and play experience
 
 ---
 
 ## Sources
 
 - [openjfx-docs IDE Intellij](https://openjfx.io/openjfx-docs/#IDE-Intellij)
+
+[Thesis_BTW_Kessels]:docs/Thesis_BTW_Kessels.pdf
 
 ---

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class ThemeService implements IThemeService {
     private final Set<Resource> themes;
 
     public ThemeService() {
-        this.themes = scanForThemeStyleSheets();
+        themes = scanForThemeStyleSheets();
         currentTheme.addListener((observableValue, theme, newTheme) -> loadThemeStyleSheet(newTheme));
     }
 
@@ -48,7 +47,7 @@ public class ThemeService implements IThemeService {
         } else {
             LOGGER.error("Stylesheet resource folder not found...");
         }
-        return themeSet;
+        return Set.copyOf(themeSet);
     }
 
     private static String extractThemeName(String fileName) {
@@ -59,7 +58,7 @@ public class ThemeService implements IThemeService {
         try {
             final var styleSheetUrl = theme.getUrl();
             LOGGER.debug("{}", styleSheetUrl);
-            this.styleSheet.set(styleSheetUrl.toExternalForm());
+            styleSheet.set(styleSheetUrl.toExternalForm());
             LOGGER.atDebug().setMessage(styleSheetUrl::toExternalForm).log();
         } catch (MalformedURLException e) {
             LOGGER.error("stylesheet of {} could not be loaded...", theme.name());
@@ -75,7 +74,7 @@ public class ThemeService implements IThemeService {
     }
 
     public Set<Resource> getThemes() {
-        return Collections.unmodifiableSet(themes);
+        return themes;
     }
 
 }

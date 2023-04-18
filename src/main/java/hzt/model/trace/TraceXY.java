@@ -1,21 +1,26 @@
 package hzt.model.trace;
 
 import hzt.utils.FxUtils;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class TraceXY extends Group {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>();
     private final PhongMaterial material = new PhongMaterial();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
-    final DoubleProperty maxLength = new SimpleDoubleProperty();
+    private final DoubleProperty maxLength = new SimpleDoubleProperty();
 
+    @Nullable
     Point2D prevPointXY;
 
     TraceXY() {
@@ -58,7 +63,9 @@ public abstract class TraceXY extends Group {
     }
 
     private void updateTraceLength() {
-        while (size() > maxLength.get()) removeFirst();
+        while (size() > maxLength.get()) {
+            removeFirst();
+        }
     }
 
     private void removeFirst() {

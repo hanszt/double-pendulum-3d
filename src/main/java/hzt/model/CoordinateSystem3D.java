@@ -9,7 +9,7 @@ import javafx.scene.shape.Shape3D;
 
 public abstract class CoordinateSystem3D extends Group {
 
-    Material getMaterial(Color diffuseColor, Color specularColor) {
+    static Material getMaterial(Color diffuseColor, Color specularColor) {
         var material = new PhongMaterial();
         material.setDiffuseColor(diffuseColor);
         material.setSpecularColor(specularColor);
