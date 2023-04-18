@@ -14,7 +14,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <coverage.target>50%</coverage.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.8.20</kotlin.version>
+        <kotlin.version>1.8.0</kotlin.version>
         <!--dependencies-->
         <openjfx.version>19</openjfx.version>
         <openjfx.plugin.version>0.0.8</openjfx.plugin.version>
@@ -24,7 +24,7 @@
         <archunit.version>1.0.0</archunit.version>
         <annotations.version>23.0.0</annotations.version>
         <!--plugins-->
-        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
     </properties>
@@ -96,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -108,6 +108,9 @@
     </dependencies>
 
     <build>
+
+        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
 
         <resources>
             <resource>
@@ -127,7 +130,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>hzt.view.FxLauncher</mainClass>
+                            <mainClass>hzt.view.Launcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -162,20 +165,19 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>compile</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>src/main/java</source>
-                                <source>target/generated-sources/annotations</source>
+                                <sourceDir>src/main/java</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
-                        <phase>test-compile</phase>
+                        <phase>process-test-sources</phase>
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
@@ -189,22 +191,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>

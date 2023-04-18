@@ -1,4 +1,4 @@
-package hzt;
+package hzt.utils;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
