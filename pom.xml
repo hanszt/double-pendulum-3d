@@ -14,7 +14,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <coverage.target>50%</coverage.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.8.0</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
         <!--dependencies-->
         <openjfx.version>19</openjfx.version>
         <openjfx.plugin.version>0.0.8</openjfx.plugin.version>

@@ -8,6 +8,7 @@ module doublependulum3d {
 
     opens hzt.controller.scene to javafx.fxml;
     opens hzt.controller.sub_pane to javafx.fxml;
+    //needed for running tests with maven
     opens hzt.utils;
 
     exports hzt.view to javafx.graphics;
