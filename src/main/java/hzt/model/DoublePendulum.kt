@@ -230,7 +230,7 @@ class DoublePendulum : Group() {
 
     fun traceSize(): Int = traceTypeMap[traceType.get()]?.size() ?: 0
 
-    fun integratorProperty() = integrator;
+    fun integratorProperty() = integrator
 
     fun upperArmLengthProperty(): DoubleProperty = upperArm.heightProperty()
 
