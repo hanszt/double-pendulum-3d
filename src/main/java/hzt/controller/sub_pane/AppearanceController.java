@@ -172,9 +172,4 @@ public class AppearanceController extends FXMLController {
     private void heightLightColorPickerAction() {
         doublePendulums.forEach(DoublePendulum::update);
     }
-
-    @Override
-    protected FXMLController getController() {
-        return this;
-    }
 }

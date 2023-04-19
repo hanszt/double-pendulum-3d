@@ -49,8 +49,4 @@ public class AboutSceneController extends SceneController {
         textArea.setText(textComboBox.getValue().getText());
     }
 
-    protected SceneController getController() {
-        return this;
-    }
-
 }

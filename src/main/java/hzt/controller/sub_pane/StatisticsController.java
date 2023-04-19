@@ -3,9 +3,9 @@ package hzt.controller.sub_pane;
 import hzt.controller.FXMLController;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
+import hzt.service.StatisticsService;
 import hzt.service.inteface.IMouseControlService;
 import hzt.service.inteface.IStatisticsService;
-import hzt.service.StatisticsService;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -135,9 +135,5 @@ public class StatisticsController extends FXMLController {
 
         velocityCameraLabel.setText(format(TWO_DEC_DOUBLE + " /s", cameraPlatform.getVelocity()));
         fieldOfViewCameraLabel.setText(format(TWO_DEC_DOUBLE + " deg", cameraPlatform.getCamera().getFieldOfView()));
-    }
-
-    public StatisticsController getController() {
-        return this;
     }
 }

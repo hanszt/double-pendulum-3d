@@ -217,7 +217,7 @@ class DoublePendulum : Group() {
         vAngular2.set(vAngular2.get() * (1.0 - friction.get()))
     }
 
-    fun reset() {
+    fun resetVAndAAngular() {
         vAngular1.set(0.0)
         vAngular2.set(0.0)
         aAngular1.set(0.0)

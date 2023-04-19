@@ -60,7 +60,7 @@ public class MainSceneController extends SceneController {
     private static final double INIT_LOWER_ARM_LENGTH = parsedDoubleProp("init_lower_arm_length", 100.0);
     private static final double INIT_ANGLE_1 = parsedDoubleProp("init_angle1", 30.0);
     private static final double INIT_ANGLE_2 = parsedDoubleProp("init_angle2", 30.0);
-    public static final double DELTA_ANGLE_1 = parsedDoubleProp("delta_angle1", 0.1);
+    private static final double DELTA_ANGLE_1 = parsedDoubleProp("delta_angle1", 0.1);
     private static final double Z_SPACING = 30.0;
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4.0;
     private static final double INIT_MAX_TRACE_LENGTH = 500.0;
@@ -137,7 +137,8 @@ public class MainSceneController extends SceneController {
         configureAppearanceController();
         configureDoublePendulums();
         configureSelectedDoublePendulum(frontDoublePendulum);
-        scene.setOnKeyTyped(this::wireFrameWhenZPressed);
+        scene.addEventFilter(KeyEvent.KEY_TYPED, this::wireFrameWhenZPressed);
+        MainSceneControllers.configureResetAllInstances(this, scene);
         subSceneRootMouseControlService.initMouseControl(animationPane);
         subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
         subSceneRoot.getChildren().add(coordinateSystem3D);
@@ -226,7 +227,7 @@ public class MainSceneController extends SceneController {
     }
 
     private void setDoublePendulumParams(DoublePendulum doublePendulum, double deltaAngle) {
-        doublePendulum.reset();
+        doublePendulum.resetVAndAAngular();
         doublePendulum.upperPendulum.massProperty().bind(upperMassSlider.valueProperty());
         doublePendulum.lowerPendulum.massProperty().bind(lowerMassSlider.valueProperty());
         doublePendulum.upperArmLengthProperty().bind(upperPendulumLengthSlider.valueProperty());
@@ -284,10 +285,10 @@ public class MainSceneController extends SceneController {
     }
 
     @FXML
-    private void resetButtonAction() {
+    void resetButtonAction() {
         setInitValuesSliders();
         setParamsDoublePendulumsExclusiveFront();
-        doublePendulums.forEach(DoublePendulum::reset);
+        doublePendulums.forEach(DoublePendulum::resetVAndAAngular);
     }
 
     private void setParamsDoublePendulumsExclusiveFront() {
@@ -326,10 +327,6 @@ public class MainSceneController extends SceneController {
     @FXML
     private void showAbout() {
         sceneManager.setupScene(ABOUT_SCENE);
-    }
-
-    protected SceneController getController() {
-        return this;
     }
 
     public AnchorPane getAnimationPane() {

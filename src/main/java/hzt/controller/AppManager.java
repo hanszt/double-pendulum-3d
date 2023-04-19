@@ -48,7 +48,7 @@ public class AppManager {
         stage.setTitle(String.format("%s (%d)", TITLE, instance));
         stage.setMinWidth(MIN_STAGE_DIMENSION.getWidth());
         stage.setMinHeight(MIN_STAGE_DIMENSION.getHeight());
-        stage.setOnCloseRequest(e -> LOGGER.atInfo().setMessage(this::closingText).log());
+        stage.onCloseRequestProperty().addListener((o, c, n) -> LOGGER.atInfo().setMessage(this::closingText).log());
         Optional.ofNullable(getClass().getResourceAsStream("/images/icon.png"))
         .ifPresent(inputStream -> stage.getIcons().add(new Image(inputStream)));
     }

@@ -13,12 +13,9 @@ public final class CylinderCoordinateSystem3D extends CoordinateSystem3D {
     private static final double AXIS_RADIUS = 1.0;
 
     public CylinderCoordinateSystem3D() {
-        var redMaterial = getMaterial(Color.DARKRED, Color.RED);
-        var greenMaterial = getMaterial(Color.DARKGREEN, Color.GREEN);
-        var blueMaterial = getMaterial(Color.DARKBLUE, Color.BLUE);
-        var xAxis = buildAxis(redMaterial, Rotate.Z_AXIS);
-        var yAxis = buildAxis(greenMaterial, Rotate.Y_AXIS);
-        var zAxis = buildAxis(blueMaterial, Rotate.X_AXIS);
+        var xAxis = buildAxis(getMaterial(Color.DARKRED, Color.RED), Rotate.Z_AXIS);
+        var yAxis = buildAxis(getMaterial(Color.DARKGREEN, Color.GREEN), Rotate.Y_AXIS);
+        var zAxis = buildAxis(getMaterial(Color.DARKBLUE, Color.BLUE), Rotate.X_AXIS);
         getChildren().addAll(xAxis, yAxis, zAxis);
     }
 
