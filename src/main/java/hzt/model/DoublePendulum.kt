@@ -145,25 +145,25 @@ class DoublePendulum : Group() {
 
     fun integrateByRungeKutta4() {
         val dt = 1.0
-        val (angle1, angle2, vAngular1, vAngular2, aAngular1, aAngular2) = doubleArrayOf(
+        val (angle1, angle2, vAngular1, vAngular2, aAngular1, aAngular2) = Double[
             angle1.get(),
             angle2.get(),
             vAngular1.get(),
             vAngular2.get(),
             aAngular1.get(),
             aAngular2.get()
-        )
+        ]
             .rungeKutta4(dt) { (ang1, ang2, vAng1, vAng2) ->
                 val aAng1 = calculateAngularAcc1(ang1, ang2, vAng1, vAng2)
                 val aAng2 = calculateAngularAcc2(ang1, ang2, vAng1, vAng2)
-                doubleArrayOf(
+                Double[
                     vAng1, // dangle1/dt = vAngular1
                     vAng2, // dangle2/dt = vAngular2
                     aAng1, // dvAngular1/dt = aAngular1
                     aAng2, // dvAngular2/dt = aAngular2
                     0.0, // daAngular1/dt = 0
                     0.0  // daAngular2/dt = 0
-                )
+                ]
             }
         this.aAngular1.set(aAngular1)
         this.aAngular2.set(aAngular2)

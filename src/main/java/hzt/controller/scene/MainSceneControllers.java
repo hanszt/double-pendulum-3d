@@ -5,8 +5,9 @@ import javafx.scene.input.KeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * A singleton list to hold all main scene controllers to be able to reset all instances
@@ -21,9 +22,11 @@ final class MainSceneControllers {
     private static class Holder {
         /**
          * Is only instantiated after Holder.mainSceneControllers is called for the first time (Lazy initialization)
+         * <p>
+         * A weakHashMap is used to enable removal by garbage collector if the controller in the set is not used anymore
          */
         @SuppressWarnings("StaticCollection")
-        private static final Collection<MainSceneController> mainSceneControllers = new ArrayList<>();
+        private static final Set<MainSceneController> mainSceneControllers = Collections.newSetFromMap(new WeakHashMap<>());
     }
 
     static void configureResetAllInstances(MainSceneController mainSceneController, Scene scene) {
