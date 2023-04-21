@@ -42,10 +42,7 @@ public class SceneManager {
     public void setupScene(Scene scene) {
         curSceneController = sceneControllerMap.get(scene);
         stage.setScene(curSceneController.getScene());
-        if (!curSceneController.isSetup()) {
-            LOGGER.atInfo().setMessage("setting up {}...").addArgument(scene::formattedName).log();
-            curSceneController.setup();
-        }
+        curSceneController.setupOnce(scene::formattedName);
     }
 
     public Stage getStage() {

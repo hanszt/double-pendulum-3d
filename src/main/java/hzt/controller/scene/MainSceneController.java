@@ -16,8 +16,6 @@ import hzt.utils.FxUtils;
 import hzt.utils.Integrator;
 import hzt.utils.StringUtils;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
@@ -27,7 +25,6 @@ import javafx.scene.SubScene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -75,6 +72,8 @@ public class MainSceneController extends SceneController {
     private ComboBox<String> traceModeCombobox;
     @FXML
     private ComboBox<Integrator<DoublePendulum>> integratorCombobox;
+    @FXML
+    private ToggleButton pauseButton;
     @FXML
     private ToggleButton showAxisButton;
     @FXML
@@ -144,7 +143,10 @@ public class MainSceneController extends SceneController {
         subSceneRoot.getChildren().add(coordinateSystem3D);
         doublePendulums.forEach(doublePendulum ->subSceneRoot.getChildren().add(doublePendulum));
         coordinateSystem3D.visibleProperty().bind(showAxisButton.selectedProperty());
-        animationService.addLoopHandlersToTimelines(true, animationLoopEventHandler(), this::updateStatisticsLoop);
+        pauseButton.selectedProperty().addListener((o, c, isSelected) -> pauseSimButtonAction(Boolean.TRUE.equals(isSelected)));
+        animationService.addLoopHandlersToTimelines(true,
+                e -> animationService.run(doublePendulums, cameraPlatform),
+                e -> updateStatisticsLoop());
     }
 
     private static Deque<DoublePendulum> buildDoublePendulums() {
@@ -243,11 +245,7 @@ public class MainSceneController extends SceneController {
         doublePendulum.vAngular2Property().bindBidirectional(vAngular2Slider.valueProperty());
     }
 
-    private EventHandler<ActionEvent> animationLoopEventHandler() {
-        return loop -> animationService.run(doublePendulums, cameraPlatform);
-    }
-
-    private void updateStatisticsLoop(ActionEvent loopEvent) {
+    private void updateStatisticsLoop() {
         Duration runTimeSim = Duration.between(startTimeScene, LocalTime.now());
         statisticsController.updateGroupStatistics(frontDoublePendulum, subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
@@ -275,13 +273,16 @@ public class MainSceneController extends SceneController {
         cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
     }
 
-    @FXML
-    private void pauseSimButtonAction(ActionEvent actionEvent) {
-        if (((Toggle) actionEvent.getSource()).isSelected()) {
+    private void pauseSimButtonAction(boolean isSelected) {
+        if (isSelected) {
             animationService.pauseAnimationTimeline();
         } else {
             animationService.startAnimationTimeline();
         }
+    }
+
+    void togglePauseButton() {
+        pauseButton.setSelected(!pauseButton.isSelected());
     }
 
     @FXML

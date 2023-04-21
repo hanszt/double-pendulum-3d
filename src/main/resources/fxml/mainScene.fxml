@@ -51,8 +51,8 @@
                                             prefWidth="1000.0" text="Follow draw spot"/>
                                     <Button mnemonicParsing="false" onAction="#recenterButtonAction"
                                             prefWidth="1000.0" text="Recenter"/>
-                                    <ToggleButton layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
-                                                  onAction="#pauseSimButtonAction" prefWidth="1000.0"
+                                    <ToggleButton fx:id="pauseButton" layoutX="14.0" layoutY="72.0" mnemonicParsing="false"
+                                                  prefWidth="1000.0"
                                                   text="Pause"/>
                                 </VBox>
                                 <VBox prefWidth="150.0" spacing="4.0">

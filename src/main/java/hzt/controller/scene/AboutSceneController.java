@@ -31,7 +31,7 @@ public class AboutSceneController extends SceneController {
     }
 
     @Override
-    public void setup() {
+    protected void setup() {
         textArea.setPrefSize(INIT_SCENE_DIMENSION.getWidth(), INIT_SCENE_DIMENSION.getHeight());
         textArea.setEditable(false);
         List<AboutText> aboutTextList = textComboBox.getItems();

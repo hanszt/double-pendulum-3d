@@ -32,12 +32,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static hzt.model.AppConstants.*;
 import static java.lang.Boolean.TRUE;
-import static javafx.scene.layout.BackgroundPosition.*;
-import static javafx.scene.layout.BackgroundRepeat.*;
+import static java.util.Comparator.comparing;
+import static javafx.scene.layout.BackgroundPosition.CENTER;
+import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
 
 public class AppearanceController extends FXMLController {
 
@@ -94,12 +96,20 @@ public class AppearanceController extends FXMLController {
     }
 
     private void configureComboBoxes() {
-        themeService.getThemes().forEach(theme -> themeCombobox.getItems().add(theme));
+        final List<Resource> themes = themeService.getThemes().stream()
+                .sorted(comparing(Resource::name))
+                .toList();
+
+        themeCombobox.getItems().addAll(themes);
         themeService.currentThemeProperty().bind(themeCombobox.valueProperty());
         themeService.styleSheetProperty().addListener(this::changeStyle);
         themeCombobox.setValue(IThemeService.DEFAULT_THEME);
 
-        backgroundService.getResources().forEach(r -> backgroundCombobox.getItems().add(r));
+        final List<Resource> backgrounds = backgroundService.getResources().stream()
+                .sorted(comparing(Resource::name))
+                .toList();
+
+        backgroundCombobox.getItems().addAll(backgrounds);
         backgroundCombobox.setValue(BackgroundService.NO_PICTURE);
     }
 

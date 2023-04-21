@@ -33,7 +33,7 @@ public class ThemeService implements IThemeService {
     }
 
     private Set<Resource> scanForThemeStyleSheets() {
-        Set<Resource> themeSet = new HashSet<>(Set.of(DEFAULT_THEME, DARK_THEME));
+        Set<Resource> themeSet = new HashSet<>(Set.of(DEFAULT_THEME));
         var url = getClass().getResource(RELATIVE_STYLE_SHEET_RESOURCE_DIR);
         if (url != null) {
             var styleDirectory = new File(url.getFile());
@@ -74,7 +74,7 @@ public class ThemeService implements IThemeService {
     }
 
     public Set<Resource> getThemes() {
-        return themes;
+        return Set.copyOf(themes);
     }
 
 }

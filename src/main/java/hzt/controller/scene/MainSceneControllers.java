@@ -30,15 +30,19 @@ final class MainSceneControllers {
     }
 
     static void configureResetAllInstances(MainSceneController mainSceneController, Scene scene) {
-        scene.addEventFilter(KeyEvent.KEY_TYPED, MainSceneControllers::resetAllInstances);
+        scene.addEventFilter(KeyEvent.KEY_TYPED, MainSceneControllers::allInstancesKeyResponse);
         Holder.mainSceneControllers.add(mainSceneController);
         scene.getWindow().setOnCloseRequest(o -> Holder.mainSceneControllers.remove(mainSceneController));
     }
 
-    private static void resetAllInstances(KeyEvent e) {
+    private static void allInstancesKeyResponse(KeyEvent e) {
         if ("r".equals(e.getCharacter())) {
             LOGGER.info("Resetting all main scene controllers... ({})", Holder.mainSceneControllers.size());
             Holder.mainSceneControllers.forEach(MainSceneController::resetButtonAction);
+        }
+        if ("p".equals(e.getCharacter())) {
+            LOGGER.info("Toggling pause button for all instances... ({})", Holder.mainSceneControllers.size());
+            Holder.mainSceneControllers.forEach(MainSceneController::togglePauseButton);
         }
     }
 }
