@@ -26,7 +26,7 @@ Made By Hans Zuidervaart.
 
 ## Motivation
 
-I was inspired by [this](https://youtu.be/bqtqltqcQhw?t=345) the coding train episode!
+I was inspired by [this](https://www.youtube.com/watch?v=uWzPe_S-RVE) the coding train episode!
 
 ---
 

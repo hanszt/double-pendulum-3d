@@ -14,15 +14,15 @@
         <maven.compiler.target>17</maven.compiler.target>
         <coverage.target>50%</coverage.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.8.10</kotlin.version>
+        <kotlin.version>1.9.0</kotlin.version>
         <!--dependencies-->
-        <openjfx.version>19</openjfx.version>
+        <openjfx.version>20</openjfx.version>
         <openjfx.plugin.version>0.0.8</openjfx.plugin.version>
-        <log4j.version>2.19.0</log4j.version>
+        <log4j.version>2.20.0</log4j.version>
         <slf4j.version>2.0.5</slf4j.version>
-        <junit.jupiter.version>5.9.0</junit.jupiter.version>
-        <archunit.version>1.0.0</archunit.version>
-        <annotations.version>23.0.0</annotations.version>
+        <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <archunit.version>1.0.1</archunit.version>
+        <annotations.version>24.0.1</annotations.version>
         <!--plugins-->
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
@@ -109,9 +109,6 @@
 
     <build>
 
-        <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -169,11 +166,6 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
