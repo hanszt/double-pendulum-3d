@@ -1,13 +1,18 @@
 package hzt.model
 
-import hzt.model.AppConstants.*
-import hzt.model.link.Link2D
-import hzt.model.link.SquareLink2D
+import hzt.model.AppConstants.G
+import hzt.model.link.Link
+import hzt.model.link.SquareLink
 import hzt.model.trace.BallTrace
 import hzt.model.trace.RoundLinkTrace2D
 import hzt.model.trace.SquareLinkTrace2D
 import hzt.model.trace.TraceXY
-import hzt.utils.*
+import hzt.utils.Integrator
+import hzt.utils.component6
+import hzt.utils.eulerIntegration
+import hzt.utils.get
+import hzt.utils.invoke
+import hzt.utils.rungeKutta4
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleDoubleProperty
@@ -22,7 +27,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class DoublePendulum : Group() {
+class DoublePendulum(val name: String) : Group() {
     private val anchor: Cylinder = Cylinder()
 
     @JvmField
@@ -33,8 +38,8 @@ class DoublePendulum : Group() {
 
     @JvmField
     val armMaterial = PhongMaterial()
-    private val upperArm: Link2D<*>
-    private val lowerArm: Link2D<*>
+    private val upperArm: Link<*>
+    private val lowerArm: Link<*>
     private val traceTypeMap: Map<String?, TraceXY> = mapOf(
         BALL_TRACE to BallTrace(),
         ROUND_LINK_TRACE to RoundLinkTrace2D(),
@@ -56,8 +61,8 @@ class DoublePendulum : Group() {
         traceTypeMap.values.forEach { it.drawModeProperty().bindBidirectional(anchor.drawModeProperty()) }
         upperPendulum = PendulumCylinder()
         lowerPendulum = PendulumCylinder()
-        upperArm = SquareLink2D()
-        lowerArm = SquareLink2D()
+        upperArm = SquareLink()
+        lowerArm = SquareLink()
         children.addAll(anchor, upperArm, lowerArm)
         upperPendulum.addWeightToFxGroup(this)
         lowerPendulum.addWeightToFxGroup(this)
@@ -173,10 +178,10 @@ class DoublePendulum : Group() {
         this.angle2.set(angle2)
     }
 
-    private fun updatePendulumPosition() {
-        upperPendulum.setPosition(sin(angle1.get()) * upperArm.height, cos(angle1.get()) * upperArm.height)
+    fun updatePendulumPosition() {
+        upperPendulum.setPosition(sin(angle1.get()) * upperArm.length, cos(angle1.get()) * upperArm.length)
         val posLowerMassWithRespectToUpperMass =
-            Point2D(sin(angle2.get()) * lowerArm.height, cos(angle2.get()) * lowerArm.height)
+            Point2D(sin(angle2.get()) * lowerArm.length, cos(angle2.get()) * lowerArm.length)
         val positionUpperMass = upperPendulum.positionXY
         lowerPendulum.setPosition(
             positionUpperMass.x + posLowerMassWithRespectToUpperMass.x,
@@ -188,17 +193,17 @@ class DoublePendulum : Group() {
         val num1 = -G * (2.0 * upperPendulum.mass + lowerPendulum.mass) * sin(ang1)
         val num2 = -lowerPendulum.mass * G * sin(ang1 - 2.0 * ang2)
         val num3 = -2.0 * sin(ang1 - ang2) * lowerPendulum.mass
-        val num4 = vAng2 * vAng2 * lowerArm.height + vAng1 * vAng1 * upperArm.height * cos(ang1 - ang2)
-        val den = upperArm.height * denP2(ang1, ang2)
+        val num4 = vAng2 * vAng2 * lowerArm.length + vAng1 * vAng1 * upperArm.length * cos(ang1 - ang2)
+        val den = upperArm.length * denP2(ang1, ang2)
         return (num1 + num2 + num3 * num4) / den
     }
 
     private fun calculateAngularAcc2(ang1: Double, ang2: Double, vAng1: Double, vAng2: Double): Double {
         val num1 = 2.0 * sin(ang1 - ang2)
-        val num2 = vAng1 * vAng1 * upperArm.height * (upperPendulum.mass + lowerPendulum.mass)
+        val num2 = vAng1 * vAng1 * upperArm.length * (upperPendulum.mass + lowerPendulum.mass)
         val num3 = G * (upperPendulum.mass + lowerPendulum.mass) * cos(ang1)
-        val num4 = vAng2 * vAng2 * lowerArm.height * lowerPendulum.mass * cos(ang1 - ang2)
-        val den = lowerArm.height * denP2(ang1, ang2)
+        val num4 = vAng2 * vAng2 * lowerArm.length * lowerPendulum.mass * cos(ang1 - ang2)
+        val den = lowerArm.length * denP2(ang1, ang2)
         return num1 * (num2 + num3 + num4) / den
     }
 
@@ -232,15 +237,15 @@ class DoublePendulum : Group() {
 
     fun integratorProperty() = integrator
 
-    fun upperArmLengthProperty(): DoubleProperty = upperArm.heightProperty()
+    fun upperArmLengthProperty(): DoubleProperty = upperArm.lengthProperty()
 
     val upperArmLength: Double
-        get() = upperArm.height
+        get() = upperArm.length
 
-    fun lowerArmLengthProperty(): DoubleProperty = lowerArm.heightProperty()
+    fun lowerArmLengthProperty(): DoubleProperty = lowerArm.lengthProperty()
 
     val lowerArmLength: Double
-        get() = lowerArm.height
+        get() = lowerArm.length
 
     fun massColorProperty(): ObjectProperty<Color> = massColor
 

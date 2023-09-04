@@ -16,7 +16,7 @@ import static hzt.model.AppConstants.Scene;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
 import static hzt.model.AppConstants.Scene.MAIN_SCENE;
 
-public class SceneManager {
+public final class SceneManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SceneManager.class);
 

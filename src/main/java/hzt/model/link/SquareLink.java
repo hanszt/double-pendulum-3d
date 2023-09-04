@@ -3,14 +3,14 @@ package hzt.model.link;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.shape.Box;
 
-public class SquareLink2D extends Link2D<Box> {
+public class SquareLink extends Link<Box> {
 
-    public SquareLink2D() {
+    public SquareLink() {
         super(new Box());
     }
 
     @Override
-    public DoubleProperty heightProperty() {
+    public DoubleProperty lengthProperty() {
         return getShape3D().heightProperty();
     }
 

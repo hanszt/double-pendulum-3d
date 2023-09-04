@@ -36,13 +36,30 @@ I was inspired by [this](https://www.youtube.com/watch?v=uWzPe_S-RVE) the coding
 
 The motion of a double pendulum can be described by a system of ordinary differential equations (ODE's).
 
-For background on how these equations can be derived and implemented in code, look at the following paper: [Thesis Kessels][Thesis_BTW_Kessels]
+For background on how these equations can be derived and implemented in code, look at the following
+paper: [Thesis Kessels][Thesis_BTW_Kessels]
 
 ---
 
 ## Setup
 
 The project is set up in such a way that it should feel like a plug and play experience
+
+---
+
+## Tests
+
+Some tests make use of TestFx
+
+To let TestFX manage Mouse and Keyboard on macOS, you have to authorized it.
+
+* Go to System Settings > Privacy & Security > Accessibility
+    * If you want to execute the tests from your IDE, check your IDE in the list
+    * If you want to execute the tests from maven/gradle in your terminal, check the Terminal
+    * If you don't find the Terminal or your IDE, click on + and add it to the list
+        * Terminal should be there /Applications/Utilities/Terminal.app
+
+See also [Fix with documentation](https://github.com/bjalon/TestFX/commit/13cdd07e5e6091a5f067edc1a80b8b126de3fd0b)
 
 ---
 

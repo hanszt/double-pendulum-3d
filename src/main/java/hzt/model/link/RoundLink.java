@@ -3,14 +3,14 @@ package hzt.model.link;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.shape.Cylinder;
 
-public class RoundLink2D extends Link2D<Cylinder> {
+public class RoundLink extends Link<Cylinder> {
 
-    public RoundLink2D() {
+    public RoundLink() {
         super(new Cylinder());
     }
 
     @Override
-    public DoubleProperty heightProperty() {
+    public DoubleProperty lengthProperty() {
         return getShape3D().heightProperty();
     }
 }

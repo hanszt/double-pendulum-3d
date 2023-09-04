@@ -12,4 +12,5 @@ module doublependulum3d {
     opens hzt.utils;
 
     exports hzt.view to javafx.graphics;
+    exports hzt.model;
 }

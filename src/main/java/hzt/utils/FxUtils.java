@@ -1,5 +1,6 @@
 package hzt.utils;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
@@ -12,19 +13,25 @@ public final class FxUtils {
     private FxUtils() {
     }
 
-    public static List<Shape3D> allShapeDescendents(Parent root) {
-        List<Shape3D> shape3DList = new ArrayList<>();
-        addAllDescendents(root, shape3DList);
-        return shape3DList;
+    public static List<Node> allDescendents(Parent root) {
+        List<Node> nodes = new ArrayList<>();
+        addAllDescendents(root, nodes, Node.class);
+        return nodes;
     }
 
-    private static void addAllDescendents(Parent parent, List<Shape3D> nodes) {
+    public static <N extends Node> List<N> allDescendents(Parent root, Class<N> type) {
+        List<N> nodes = new ArrayList<>();
+        addAllDescendents(root, nodes, type);
+        return nodes;
+    }
+
+    private static <N extends Node> void addAllDescendents(Parent parent, List<N> nodes, Class<N> type) {
         for (var node : parent.getChildrenUnmodifiable()) {
-            if (node instanceof Shape3D shape3D) {
-                nodes.add(shape3D);
+            if (type.isInstance(node)) {
+                nodes.add(type.cast(node));
             }
             if (node instanceof Parent subParent) {
-                addAllDescendents(subParent, nodes);
+                addAllDescendents(subParent, nodes, type);
             }
         }
     }

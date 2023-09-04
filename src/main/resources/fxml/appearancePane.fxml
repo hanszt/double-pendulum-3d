@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <VBox maxWidth="300.0" prefHeight="744.0" prefWidth="536.0" spacing="4.0"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="hzt.controller.sub_pane.AppearanceController">
@@ -45,7 +49,7 @@
                          prefWidth="1000.0"/>
             <Label text="Pendulum color"/>
             <ColorPicker fx:id="pendulumColorPicker"
-                         onAction="#heightLightColorPickerAction" prefHeight="30"
+                         prefHeight="30"
                          prefWidth="1000.0"/>
         </VBox>
         <VBox prefWidth="150.0" spacing="4.0">
@@ -54,7 +58,7 @@
             </padding>
             <Label text="Pendulum mass color"/>
             <ColorPicker fx:id="pendulumMassColorPicker"
-                         onAction="#pendulumMassColorPickerAction" prefHeight="30"
+                         prefHeight="30"
                          prefWidth="1000.0"/>
             <Label text="Trace color"/>
             <ColorPicker fx:id="traceColorPicker"

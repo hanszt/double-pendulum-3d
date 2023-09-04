@@ -15,6 +15,8 @@ import hzt.service.inteface.IMouseControlService;
 import hzt.utils.FxUtils;
 import hzt.utils.Integrator;
 import hzt.utils.StringUtils;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -27,11 +29,13 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Translate;
 
 import java.io.IOException;
@@ -44,10 +48,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static hzt.model.AppConstants.*;
+import static hzt.model.AppConstants.INIT_ANIMATION_PANE_DIMENSION;
+import static hzt.model.AppConstants.INIT_BG_COLOR;
+import static hzt.model.AppConstants.INIT_CAMERA_FOV;
+import static hzt.model.AppConstants.INIT_CAMERA_Z_PENDULUMS;
+import static hzt.model.AppConstants.INIT_MAX_CAMERA_VELOCITY;
+import static hzt.model.AppConstants.INIT_WORLD_TO_CAMERA_ANGLE_X;
+import static hzt.model.AppConstants.INIT_WORLD_TO_CAMERA_ANGLE_Y;
 import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
 import static hzt.model.AppConstants.Scene.MAIN_SCENE;
-import static hzt.model.DoublePendulum.*;
+import static hzt.model.AppConstants.getInitTraceType;
+import static hzt.model.AppConstants.parsedDoubleProp;
+import static hzt.model.AppConstants.parsedIntProp;
+import static hzt.model.DoublePendulum.BALL_TRACE;
+import static hzt.model.DoublePendulum.NO_TRACE;
+import static hzt.model.DoublePendulum.ROUND_LINK_TRACE;
+import static hzt.model.DoublePendulum.SQUARE_LINK_TRACE;
 
 public class MainSceneController extends SceneController {
 
@@ -61,7 +77,8 @@ public class MainSceneController extends SceneController {
     private static final double Z_SPACING = 30.0;
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4.0;
     private static final double INIT_MAX_TRACE_LENGTH = 500.0;
-
+    @FXML
+    private AnchorPane sliderPane;
     @FXML
     private Tab appearanceTab;
     @FXML
@@ -105,7 +122,7 @@ public class MainSceneController extends SceneController {
 
     private final Group subSceneRoot = new Group();
     private final Deque<DoublePendulum> doublePendulums = buildDoublePendulums();
-    private final DoublePendulum frontDoublePendulum = doublePendulums.peek();
+    private final ObjectProperty<DoublePendulum> selectedDoublePendulum;
 
     private final CoordinateSystem3D coordinateSystem3D = new CylinderCoordinateSystem3D();
 
@@ -121,6 +138,9 @@ public class MainSceneController extends SceneController {
 
     public MainSceneController(SceneManager sceneManager) throws IOException {
         super(MAIN_SCENE.getFxmlFileName(), sceneManager);
+        selectedDoublePendulum = new SimpleObjectProperty<>();
+        selectedDoublePendulum.addListener((s, w, n) -> statisticsController.setPendulumName(n.getName()));
+        selectedDoublePendulum.set(doublePendulums.peek());
         animationPane.getChildren().add(subScene3D);
         statisticsTab.setContent(statisticsController.getRoot());
         appearanceTab.setContent(appearanceController.getRoot());
@@ -135,34 +155,50 @@ public class MainSceneController extends SceneController {
         configureComboBoxes();
         configureAppearanceController();
         configureDoublePendulums();
-        configureSelectedDoublePendulum(frontDoublePendulum);
+        changeSliderBindings(null, selectedDoublePendulum.get());
         scene.addEventFilter(KeyEvent.KEY_TYPED, this::wireFrameWhenZPressed);
         MainSceneControllers.configureResetAllInstances(this, scene);
         subSceneRootMouseControlService.initMouseControl(animationPane);
         subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
         subSceneRoot.getChildren().add(coordinateSystem3D);
-        doublePendulums.forEach(doublePendulum ->subSceneRoot.getChildren().add(doublePendulum));
+        doublePendulums.forEach(doublePendulum -> subSceneRoot.getChildren().add(doublePendulum));
         coordinateSystem3D.visibleProperty().bind(showAxisButton.selectedProperty());
         pauseButton.selectedProperty().addListener((o, c, isSelected) -> pauseSimButtonAction(Boolean.TRUE.equals(isSelected)));
         animationService.addLoopHandlersToTimelines(true,
                 e -> animationService.run(doublePendulums, cameraPlatform),
                 e -> updateStatisticsLoop());
+        FxUtils.allDescendents(sliderPane).stream()
+                .filter(Slider.class::isInstance)
+                .map(Slider.class::cast)
+                .forEach(s -> s.valueProperty().addListener((o, a, v) -> updatePendulumPositionsIfPaused()));
     }
 
-    private static Deque<DoublePendulum> buildDoublePendulums() {
-        var nrOfPendulums = parsedIntProp("number_of_pendulums", 1);
-        var amount = 0 < nrOfPendulums ? nrOfPendulums : 1;
-        int lower = -(amount / 2);
-        int upper = lower + amount;
-        return IntStream.range(lower, upper)
-                .mapToObj(MainSceneController::createDoublePendulum)
+    private void updatePendulumPositionsIfPaused() {
+        if (pauseButton.isSelected()) {
+            doublePendulums.forEach(DoublePendulum::updatePendulumPosition);
+        }
+    }
+
+    private Deque<DoublePendulum> buildDoublePendulums() {
+        var nrOfPendulums = Math.max(parsedIntProp("number_of_pendulums", 1), 1);
+        return IntStream.rangeClosed(1, nrOfPendulums)
+                .mapToObj(this::createDoublePendulum)
                 .collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    private static DoublePendulum createDoublePendulum(int index) {
-        var doublePendulum = new DoublePendulum();
-        doublePendulum.setTranslateZ(index * Z_SPACING);
+    private DoublePendulum createDoublePendulum(int pendulumNr) {
+        var doublePendulum = new DoublePendulum("Pendulum " + pendulumNr);
+        doublePendulum.setTranslateZ(pendulumNr * Z_SPACING);
+        doublePendulum.setOnMouseClicked(this::selectPendulum);
         return doublePendulum;
+    }
+
+    private void selectPendulum(MouseEvent e) {
+        DoublePendulum clicked = (DoublePendulum) e.getSource();
+        DoublePendulum current = selectedDoublePendulum.get();
+        selectedDoublePendulum.set(clicked);
+        appearanceController.highlightSelectedPendulum(clicked);
+        changeSliderBindings(current, clicked);
     }
 
     private void configureDoublePendulums() {
@@ -195,7 +231,7 @@ public class MainSceneController extends SceneController {
 
     private void wireFrameWhenZPressed(KeyEvent e) {
         if ("z".equals(e.getCharacter())) {
-            FxUtils.allShapeDescendents(subSceneRoot).forEach(FxUtils::setDrawMode);
+            FxUtils.allDescendents(subSceneRoot, Shape3D.class).forEach(FxUtils::setDrawMode);
         }
     }
 
@@ -219,6 +255,7 @@ public class MainSceneController extends SceneController {
 
     private void configureDoublePendulum(DoublePendulum doublePendulum, double deltaAngle) {
         setDoublePendulumParams(doublePendulum, deltaAngle);
+        bindMassesAndArmLengths(doublePendulum);
         doublePendulum.frictionProperty().bind(frictionSlider.valueProperty());
         doublePendulum.traceTypeProperty().bind(traceModeCombobox.valueProperty());
         doublePendulum.integratorProperty().bind(integratorCombobox.valueProperty());
@@ -230,24 +267,33 @@ public class MainSceneController extends SceneController {
 
     private void setDoublePendulumParams(DoublePendulum doublePendulum, double deltaAngle) {
         doublePendulum.resetVAndAAngular();
-        doublePendulum.upperPendulum.massProperty().bind(upperMassSlider.valueProperty());
-        doublePendulum.lowerPendulum.massProperty().bind(lowerMassSlider.valueProperty());
-        doublePendulum.upperArmLengthProperty().bind(upperPendulumLengthSlider.valueProperty());
-        doublePendulum.lowerArmLengthProperty().bind(lowerPendulumLengthSlider.valueProperty());
         doublePendulum.angle1Property().set(Math.toRadians(INIT_ANGLE_1 + deltaAngle));
         doublePendulum.angle2Property().set(Math.toRadians(INIT_ANGLE_2));
     }
 
-    private void configureSelectedDoublePendulum(DoublePendulum doublePendulum) {
-        doublePendulum.angle1Property().bindBidirectional(angle1Slider.valueProperty());
-        doublePendulum.angle2Property().bindBidirectional(angle2Slider.valueProperty());
-        doublePendulum.vAngular1Property().bindBidirectional(vAngular1Slider.valueProperty());
-        doublePendulum.vAngular2Property().bindBidirectional(vAngular2Slider.valueProperty());
+    private void bindMassesAndArmLengths(DoublePendulum doublePendulum) {
+        doublePendulum.upperPendulum.massProperty().bind(upperMassSlider.valueProperty());
+        doublePendulum.lowerPendulum.massProperty().bind(lowerMassSlider.valueProperty());
+        doublePendulum.upperArmLengthProperty().bind(upperPendulumLengthSlider.valueProperty());
+        doublePendulum.lowerArmLengthProperty().bind(lowerPendulumLengthSlider.valueProperty());
+    }
+
+    private void changeSliderBindings(DoublePendulum current, DoublePendulum next) {
+        if (current != null) {
+            current.angle1Property().unbindBidirectional(angle1Slider.valueProperty());
+            current.angle2Property().unbindBidirectional(angle2Slider.valueProperty());
+            current.vAngular1Property().unbindBidirectional(vAngular1Slider.valueProperty());
+            current.vAngular2Property().unbindBidirectional(vAngular2Slider.valueProperty());
+        }
+        angle1Slider.valueProperty().bindBidirectional(next.angle1Property());
+        angle2Slider.valueProperty().bindBidirectional(next.angle2Property());
+        vAngular1Slider.valueProperty().bindBidirectional(next.vAngular1Property());
+        vAngular2Slider.valueProperty().bindBidirectional(next.vAngular2Property());
     }
 
     private void updateStatisticsLoop() {
         Duration runTimeSim = Duration.between(startTimeScene, LocalTime.now());
-        statisticsController.updateGroupStatistics(frontDoublePendulum, subSceneRootMouseControlService);
+        statisticsController.updatePendulumStatistics(selectedDoublePendulum.get(), subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
@@ -257,6 +303,14 @@ public class MainSceneController extends SceneController {
         lowerMassSlider.setValue(INIT_MASS_2);
         upperPendulumLengthSlider.setValue(INIT_UPPER_ARM_LENGTH);
         lowerPendulumLengthSlider.setValue(INIT_LOWER_ARM_LENGTH);
+        setInitValueAngleSliders();
+        frictionSlider.setValue(parsedDoubleProp("init_friction", 0.001));
+        maxTraceLengthSlider.setValue(INIT_MAX_TRACE_LENGTH);
+        cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
+        cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
+    }
+
+    private void setInitValueAngleSliders() {
         angle1Slider.setMin(-Math.PI);
         angle1Slider.setValue(Math.toRadians(INIT_ANGLE_1));
         angle1Slider.setMax(Math.PI);
@@ -267,10 +321,6 @@ public class MainSceneController extends SceneController {
         vAngular1Slider.setMax(MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMin(-MAX_ANGULAR_VELOCITY);
         vAngular2Slider.setMax(MAX_ANGULAR_VELOCITY);
-        frictionSlider.setValue(parsedDoubleProp("init_friction", 0.001));
-        maxTraceLengthSlider.setValue(INIT_MAX_TRACE_LENGTH);
-        cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
-        cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
     }
 
     private void pauseSimButtonAction(boolean isSelected) {
@@ -288,16 +338,14 @@ public class MainSceneController extends SceneController {
     @FXML
     void resetButtonAction() {
         setInitValuesSliders();
-        setParamsDoublePendulumsExclusiveFront();
+        setParamsDoublePendulums();
         doublePendulums.forEach(DoublePendulum::resetVAndAAngular);
     }
 
-    private void setParamsDoublePendulumsExclusiveFront() {
+    private void setParamsDoublePendulums() {
         var counter = 0;
         for (var doublePendulum : doublePendulums) {
-            if (!doublePendulum.equals(frontDoublePendulum)) {
-                setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
-            }
+            setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
             counter++;
         }
     }
@@ -314,7 +362,7 @@ public class MainSceneController extends SceneController {
     }
 
     private Translate initCameraTranslation() {
-        return new Translate(0.0, 0.0, INIT_CAMERA_Z_PENDULUMS + frontDoublePendulum.getTranslateZ());
+        return new Translate(0.0, 0.0, INIT_CAMERA_Z_PENDULUMS + selectedDoublePendulum.get().getTranslateZ());
     }
 
     @FXML

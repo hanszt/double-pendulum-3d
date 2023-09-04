@@ -11,7 +11,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
-public abstract class Link2D<S extends Shape3D> extends Group {
+public abstract class Link<S extends Shape3D> extends Group {
 
     private static final int RIGHT_ANGLE = 90;
 
@@ -20,11 +20,10 @@ public abstract class Link2D<S extends Shape3D> extends Group {
 
     private final DoubleProperty startX = new SimpleDoubleProperty();
     private final DoubleProperty startY = new SimpleDoubleProperty();
-
     private final DoubleProperty endX = new SimpleDoubleProperty();
     private final DoubleProperty endY = new SimpleDoubleProperty();
 
-    Link2D(S shape3D) {
+    Link(S shape3D) {
         super(shape3D);
         this.shape3D = shape3D;
         rotateZ.setAxis(Rotate.Z_AXIS);
@@ -45,8 +44,9 @@ public abstract class Link2D<S extends Shape3D> extends Group {
     }
 
     void updateHeightIfNotBound(ObservableValue<? extends Number> o, Number c, Number n) {
-        if (!heightProperty().isBound()) {
-            heightProperty().set(Math.sqrt(n.doubleValue()));
+        DoubleProperty lengthProperty = lengthProperty();
+        if (!lengthProperty.isBound()) {
+            lengthProperty.set(Math.sqrt(n.doubleValue()));
         }
     }
 
@@ -75,13 +75,13 @@ public abstract class Link2D<S extends Shape3D> extends Group {
     }
 
     public void defineStartAndEndpoint(Node startNode, Node endNode) {
-        startX.bind(startNode.translateXProperty());
-        startY.bind(startNode.translateYProperty());
+        startX.bindBidirectional(startNode.translateXProperty());
+        startY.bindBidirectional(startNode.translateYProperty());
 
-        endX.bind(endNode.translateXProperty());
-        endY.bind(endNode.translateYProperty());
+        endX.bindBidirectional(endNode.translateXProperty());
+        endY.bindBidirectional(endNode.translateYProperty());
 
-        translateZProperty().bind(endNode.translateZProperty());
+        translateZProperty().bindBidirectional(endNode.translateZProperty());
     }
 
     public void defineStartAndEndpoint(Point2D startPoint, Point2D endPoint) {
@@ -96,10 +96,10 @@ public abstract class Link2D<S extends Shape3D> extends Group {
         return shape3D;
     }
 
-    public abstract DoubleProperty heightProperty();
+    public abstract DoubleProperty lengthProperty();
 
-    public double getHeight() {
-        return heightProperty().get();
+    public double getLength() {
+        return lengthProperty().get();
     }
 
     public void setMaterial(Material material) {

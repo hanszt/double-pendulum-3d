@@ -55,7 +55,7 @@ public abstract class TraceXY extends Group {
     }
 
     void add(Group group) {
-        FxUtils.allShapeDescendents(group).forEach(s -> {
+        FxUtils.allDescendents(group, Shape3D.class).forEach(s -> {
             s.setMaterial(material);
             s.drawModeProperty().bind(drawMode);
         });

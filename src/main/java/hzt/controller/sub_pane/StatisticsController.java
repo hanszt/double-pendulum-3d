@@ -18,7 +18,8 @@ import static java.lang.String.format;
 public class StatisticsController extends FXMLController {
 
     private final IStatisticsService statisticsService = new StatisticsService();
-
+    @FXML
+    private Label nameLabel;
     @FXML
     private Label upperMassXLabel;
     @FXML
@@ -88,7 +89,12 @@ public class StatisticsController extends FXMLController {
         runTimeLabel.setText(format("%d.%03d seconds", runTimeSim.toSeconds(), runTimeSim.toMillisPart()));
     }
 
-    public void updateGroupStatistics(DoublePendulum doublePendulum, IMouseControlService mouseControlService) {
+    public void setPendulumName(String name) {
+        nameLabel.setText(name);
+    }
+
+
+    public void updatePendulumStatistics(DoublePendulum doublePendulum, IMouseControlService mouseControlService) {
         updatePendulumPropertyStatistics(doublePendulum);
         updatePendulumPositionStatistics(doublePendulum);
         updatePendulumAngleStatistics(doublePendulum);

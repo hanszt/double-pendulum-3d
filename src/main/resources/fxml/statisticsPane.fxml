@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
@@ -23,13 +24,14 @@
             <Label/>
         </VBox>
     </HBox>
-    <Label text="Pendulum statistics:">
+    <Label text="Selected pendulum statistics:">
         <font>
             <Font name="System Bold" size="12.0"/>
         </font>
     </Label>
     <HBox>
         <VBox prefWidth="100.0">
+            <Label text="Name: "/>
             <Label text="Upper length: "/>
             <Label text="Lower length: "/>
             <Label text="Upper mass: "/>
@@ -57,6 +59,7 @@
             <Label text="Rotation y:"/>
         </VBox>
         <VBox layoutX="10.0" layoutY="10.0">
+            <Label fx:id="nameLabel"/>
             <Label fx:id="upperPendulumLengthLabel"/>
             <Label fx:id="lowerPendulumLengthLabel"/>
             <Label fx:id="upperMassLabel"/>

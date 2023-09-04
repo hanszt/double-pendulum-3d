@@ -10,7 +10,8 @@ import hzt.service.BackgroundService;
 import hzt.service.ThemeService;
 import hzt.service.inteface.IBackgroundService;
 import hzt.service.inteface.IThemeService;
-import javafx.beans.value.ObservableValue;
+import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
@@ -24,7 +25,9 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,15 +37,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-import static hzt.model.AppConstants.*;
+import static hzt.model.AppConstants.INIT_ARM_COLOR;
+import static hzt.model.AppConstants.INIT_BG_COLOR;
+import static hzt.model.AppConstants.INIT_HINGE_COLOR;
+import static hzt.model.AppConstants.INIT_TRACE_COLOR;
+import static hzt.model.AppConstants.parsedDoubleProp;
 import static java.lang.Boolean.TRUE;
 import static java.util.Comparator.comparing;
 import static javafx.scene.layout.BackgroundPosition.CENTER;
 import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
 
 public class AppearanceController extends FXMLController {
-
 
     private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", 0.8D);
 
@@ -102,7 +109,7 @@ public class AppearanceController extends FXMLController {
 
         themeCombobox.getItems().addAll(themes);
         themeService.currentThemeProperty().bind(themeCombobox.valueProperty());
-        themeService.styleSheetProperty().addListener(this::changeStyle);
+        themeService.styleSheetProperty().addListener((o, c, newVal) -> changeStyle(newVal));
         themeCombobox.setValue(IThemeService.DEFAULT_THEME);
 
         final List<Resource> backgrounds = backgroundService.getResources().stream()
@@ -113,7 +120,7 @@ public class AppearanceController extends FXMLController {
         backgroundCombobox.setValue(BackgroundService.NO_PICTURE);
     }
 
-    public void changeStyle(ObservableValue<? extends String> o, String c, String newVal) {
+    public void changeStyle(String newVal) {
         var sceneManager = mainSceneController.getSceneManager();
         var sceneControllers = sceneManager.getSceneControllerMap().values();
         for (SceneController sceneController : sceneControllers) {
@@ -162,7 +169,7 @@ public class AppearanceController extends FXMLController {
         var animationPane = mainSceneController.getAnimationPane();
         var background = new Background(new BackgroundImage(new Image(inputStream),
                 NO_REPEAT, NO_REPEAT, CENTER, new BackgroundSize(animationPane.getWidth(), animationPane.getHeight(),
-                        false, false, false, true)));
+                false, false, false, true)));
         animationPane.setBackground(background);
     }
 
@@ -173,13 +180,37 @@ public class AppearanceController extends FXMLController {
         backgroundCombobox.setValue(BackgroundService.NO_PICTURE);
     }
 
-    @FXML
-    private void pendulumMassColorPickerAction() {
-        doublePendulums.forEach(DoublePendulum::update);
+    public void highlightSelectedPendulum(DoublePendulum pendulum) {
+        playColorTransition(pendulum.massColorProperty(), pendulumMassColorPicker.valueProperty());
+        playColorTransition(pendulum.armMaterial.diffuseColorProperty(), pendulumColorPicker.valueProperty());
     }
 
-    @FXML
-    private void heightLightColorPickerAction() {
-        doublePendulums.forEach(DoublePendulum::update);
+    private void playColorTransition(ObjectProperty<Color> colorObjectProperty, ObjectProperty<Color> bound) {
+        boolean noOtherColorTransitionPlaying = colorObjectProperty.isBound();
+        if (noOtherColorTransitionPlaying) {
+            Color current = colorObjectProperty.get();
+            ColorTransition colorTransition = new ColorTransition(Duration.seconds(1), current.invert(), current, colorObjectProperty::set);
+            colorObjectProperty.unbind();
+            colorTransition.setOnFinished(e -> colorObjectProperty.bind(bound));
+            colorTransition.play();
+        }
+    }
+
+    private static final class ColorTransition extends Transition {
+        private final Color fromColor;
+        private final Color toColor;
+        private final Consumer<Color> colorObjectProperty;
+
+        public ColorTransition(Duration duration, Color fromColor, Color toColor, Consumer<Color> colorConsumer) {
+            setCycleDuration(duration);
+            this.fromColor = fromColor;
+            this.toColor = toColor;
+            this.colorObjectProperty = colorConsumer;
+        }
+
+        @Override
+        protected void interpolate(double frac) {
+            colorObjectProperty.accept(fromColor.interpolate(toColor, frac));
+        }
     }
 }
