@@ -4,7 +4,7 @@ import hzt.model.appearance.Resource;
 
 import java.util.Set;
 
-public interface IBackgroundService {
+public interface BackgroundService {
 
     Set<Resource> getResources();
 }

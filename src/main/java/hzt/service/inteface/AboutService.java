@@ -4,7 +4,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Collection;
 
-public interface IAboutService {
+public interface AboutService {
 
     Collection<AboutText> loadContent();
 

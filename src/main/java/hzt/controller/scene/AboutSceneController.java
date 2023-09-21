@@ -1,19 +1,20 @@
 package hzt.controller.scene;
 
 import hzt.controller.SceneManager;
-import hzt.service.AboutService;
-import hzt.service.inteface.IAboutService;
+import hzt.model.PropertiesParser;
+import hzt.service.inteface.AboutService;
 import javafx.fxml.FXML;
+import javafx.geometry.Dimension2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.util.List;
 
-import static hzt.model.AppConstants.INIT_SCENE_DIMENSION;
-import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
-import static hzt.model.AppConstants.Scene.MAIN_SCENE;
-import static hzt.service.AboutService.AboutText;
+import static hzt.controller.SceneManager.Scene.ABOUT_SCENE;
+import static hzt.controller.SceneManager.Scene.MAIN_SCENE;
+import static hzt.service.StandardAboutService.AboutText;
 
 public class AboutSceneController extends SceneController {
 
@@ -22,17 +23,20 @@ public class AboutSceneController extends SceneController {
     @FXML
     private TextArea textArea;
 
-    private final IAboutService aboutService;
+    private final AboutService aboutService;
 
     public AboutSceneController(SceneManager sceneManager,
-                                IAboutService aboutService) throws IOException {
-        super(ABOUT_SCENE.getFxmlFileName(), sceneManager);
+                                AboutService aboutService,
+                                PropertiesParser propertiesParser,
+                                Clock clock) throws IOException {
+        super(ABOUT_SCENE.getFxmlFileName(), propertiesParser, sceneManager, clock);
         this.aboutService = aboutService;
     }
 
     @Override
     protected void setup() {
-        textArea.setPrefSize(INIT_SCENE_DIMENSION.getWidth(), INIT_SCENE_DIMENSION.getHeight());
+        Dimension2D sceneDimension = initSceneDimension;
+        textArea.setPrefSize(sceneDimension.getWidth(), sceneDimension.getHeight());
         textArea.setEditable(false);
         List<AboutText> aboutTextList = textComboBox.getItems();
         aboutTextList.addAll(aboutService.loadContent());

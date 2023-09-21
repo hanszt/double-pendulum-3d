@@ -7,7 +7,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 
-public abstract class CoordinateSystem3D extends Group {
+public abstract sealed class CoordinateSystem3D extends Group permits CylinderCoordinateSystem3D {
 
     static Material getMaterial(Color diffuseColor, Color specularColor) {
         var material = new PhongMaterial();

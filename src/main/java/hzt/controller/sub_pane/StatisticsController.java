@@ -3,9 +3,9 @@ package hzt.controller.sub_pane;
 import hzt.controller.FXMLController;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
-import hzt.service.StatisticsService;
-import hzt.service.inteface.IMouseControlService;
-import hzt.service.inteface.IStatisticsService;
+import hzt.service.StandardStatisticsService;
+import hzt.service.inteface.MouseControlService;
+import hzt.service.inteface.StatisticsService;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -17,7 +17,7 @@ import static java.lang.String.format;
 
 public class StatisticsController extends FXMLController {
 
-    private final IStatisticsService statisticsService = new StatisticsService();
+    private final StatisticsService statisticsService;
     @FXML
     private Label nameLabel;
     @FXML
@@ -80,6 +80,7 @@ public class StatisticsController extends FXMLController {
 
     public StatisticsController() throws IOException {
         super("statisticsPane.fxml");
+        statisticsService = new StandardStatisticsService();
     }
 
     private static final String TWO_DEC_DOUBLE = "%-4.2f";
@@ -94,7 +95,7 @@ public class StatisticsController extends FXMLController {
     }
 
 
-    public void updatePendulumStatistics(DoublePendulum doublePendulum, IMouseControlService mouseControlService) {
+    public void updatePendulumStatistics(DoublePendulum doublePendulum, MouseControlService mouseControlService) {
         updatePendulumPropertyStatistics(doublePendulum);
         updatePendulumPositionStatistics(doublePendulum);
         updatePendulumAngleStatistics(doublePendulum);

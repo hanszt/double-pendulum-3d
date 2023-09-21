@@ -4,12 +4,13 @@ import hzt.controller.FXMLController;
 import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import hzt.model.DoublePendulum;
+import hzt.model.PropertiesParser;
 import hzt.model.appearance.Resource;
 import hzt.model.trace.TraceXY;
-import hzt.service.BackgroundService;
-import hzt.service.ThemeService;
-import hzt.service.inteface.IBackgroundService;
-import hzt.service.inteface.IThemeService;
+import hzt.service.StandardBackgroundService;
+import hzt.service.StandardThemeService;
+import hzt.service.inteface.BackgroundService;
+import hzt.service.inteface.ThemeService;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
@@ -39,19 +40,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static hzt.model.AppConstants.INIT_ARM_COLOR;
-import static hzt.model.AppConstants.INIT_BG_COLOR;
-import static hzt.model.AppConstants.INIT_HINGE_COLOR;
-import static hzt.model.AppConstants.INIT_TRACE_COLOR;
-import static hzt.model.AppConstants.parsedDoubleProp;
 import static java.lang.Boolean.TRUE;
 import static java.util.Comparator.comparing;
 import static javafx.scene.layout.BackgroundPosition.CENTER;
 import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
+import static javafx.scene.paint.Color.GREEN;
+import static javafx.scene.paint.Color.ORANGE;
+import static javafx.scene.paint.Color.RED;
+import static javafx.scene.paint.Color.WHEAT;
 
 public class AppearanceController extends FXMLController {
 
-    private static final double STAGE_OPACITY = parsedDoubleProp("stage_opacity", 0.8D);
+
+    public static final Color INIT_BG_COLOR = WHEAT;
+    private static final Color INIT_HINGE_COLOR = ORANGE;
+    private static final Color INIT_ARM_COLOR = RED;
+    private static final Color INIT_TRACE_COLOR = GREEN;
 
     @FXML
     private ColorPicker traceColorPicker;
@@ -70,17 +74,20 @@ public class AppearanceController extends FXMLController {
     @FXML
     private ColorPicker pendulumMassColorPicker;
 
-    private final IThemeService themeService = new ThemeService();
-    private final IBackgroundService backgroundService = new BackgroundService();
+    private final ThemeService themeService = new StandardThemeService();
+    private final BackgroundService backgroundService = new StandardBackgroundService();
     private final MainSceneController mainSceneController;
     private final Collection<DoublePendulum> doublePendulums;
+    private final double stageOpacity;
 
 
     public AppearanceController(MainSceneController mainSceneController,
-                                Collection<DoublePendulum> doublePendulums) throws IOException {
+                                Collection<DoublePendulum> doublePendulums,
+                                PropertiesParser propertiesParser) throws IOException {
         super("appearancePane.fxml");
         this.mainSceneController = mainSceneController;
         this.doublePendulums = Collections.unmodifiableCollection(doublePendulums);
+        stageOpacity = propertiesParser.parsedDoubleProp("stage_opacity", 0.8D);
         configureComboBoxes();
     }
 
@@ -110,14 +117,14 @@ public class AppearanceController extends FXMLController {
         themeCombobox.getItems().addAll(themes);
         themeService.currentThemeProperty().bind(themeCombobox.valueProperty());
         themeService.styleSheetProperty().addListener((o, c, newVal) -> changeStyle(newVal));
-        themeCombobox.setValue(IThemeService.DEFAULT_THEME);
+        themeCombobox.setValue(ThemeService.DEFAULT_THEME);
 
         final List<Resource> backgrounds = backgroundService.getResources().stream()
                 .sorted(comparing(Resource::name))
                 .toList();
 
         backgroundCombobox.getItems().addAll(backgrounds);
-        backgroundCombobox.setValue(BackgroundService.NO_PICTURE);
+        backgroundCombobox.setValue(StandardBackgroundService.NO_PICTURE);
     }
 
     public void changeStyle(String newVal) {
@@ -146,7 +153,7 @@ public class AppearanceController extends FXMLController {
     }
 
     private void bindStageOpacityToOpacityButton(Stage stage) {
-        opacityStageButton.selectedProperty().addListener((o, c, n) -> stage.setOpacity(TRUE.equals(n) ? STAGE_OPACITY : 1));
+        opacityStageButton.selectedProperty().addListener((o, c, n) -> stage.setOpacity(TRUE.equals(n) ? stageOpacity : 1));
     }
 
     @FXML
@@ -177,7 +184,7 @@ public class AppearanceController extends FXMLController {
     private void backgroundColorPickerAction() {
         mainSceneController.getAnimationPane().setBackground(new Background(
                 new BackgroundFill(backgroundColorPicker.getValue(), CornerRadii.EMPTY, Insets.EMPTY)));
-        backgroundCombobox.setValue(BackgroundService.NO_PICTURE);
+        backgroundCombobox.setValue(StandardBackgroundService.NO_PICTURE);
     }
 
     public void highlightSelectedPendulum(DoublePendulum pendulum) {

@@ -1,6 +1,6 @@
 package hzt.service;
 
-import hzt.service.inteface.IAboutService;
+import hzt.service.inteface.AboutService;
 import hzt.utils.StringUtils;
 import javafx.beans.property.SimpleStringProperty;
 import org.slf4j.Logger;
@@ -16,16 +16,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AboutService implements IAboutService {
+public final class StandardAboutService implements AboutService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AboutService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StandardAboutService.class);
     private static final String RELATIVE_TEXT_RESOURCE_DIR = "../../about";
 
-    public final Set<AboutText> loadContent() {
+    public Set<AboutText> loadContent() {
         LOGGER.info("Loading content...");
         return Optional.ofNullable(getClass().getResource(RELATIVE_TEXT_RESOURCE_DIR))
-                .map(AboutService::toAboutTexts)
-                .orElseGet(AboutService::logErrorAndGetDefault);
+                .map(StandardAboutService::toAboutTexts)
+                .orElseGet(StandardAboutService::logErrorAndGetDefault);
     }
 
     private static Set<AboutText> logErrorAndGetDefault() {
@@ -37,7 +37,7 @@ public class AboutService implements IAboutService {
         try (var paths = Files.walk(new File(url.getFile()).toPath())) {
             return paths.map(Path::toFile)
                     .filter(File::isFile)
-                    .map(AboutService::toAboutText)
+                    .map(StandardAboutService::toAboutText)
                     .collect(Collectors.toUnmodifiableSet());
         } catch (IOException e) {
             LOGGER.error("Something went wrong", e);

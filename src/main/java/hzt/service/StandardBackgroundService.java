@@ -1,7 +1,7 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
-import hzt.service.inteface.IBackgroundService;
+import hzt.service.inteface.BackgroundService;
 import hzt.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +16,15 @@ import java.util.Set;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 
-public final class BackgroundService implements IBackgroundService {
+public final class StandardBackgroundService implements BackgroundService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BackgroundService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StandardBackgroundService.class);
     public static final Resource NO_PICTURE = new Resource("No picture", new File(""));
     private static final String RELATIVE_BG_IMAGES_RESOURCE_DIR = "/images/backgrounds";
 
     private final Set<Resource> resources;
 
-    public BackgroundService() {
+    public StandardBackgroundService() {
         resources = scanForResourceImages();
     }
 
@@ -37,7 +37,7 @@ public final class BackgroundService implements IBackgroundService {
                 .stream()
                 .flatMap(Arrays::stream)
                 .map(file -> new Resource(extractName(file), file))
-                .collect(collectingAndThen(toSet(), BackgroundService::logIfEmptyAndAddNoPicture));
+                .collect(collectingAndThen(toSet(), StandardBackgroundService::logIfEmptyAndAddNoPicture));
     }
 
     private static Set<Resource> logIfEmptyAndAddNoPicture(Collection<Resource> collection) {

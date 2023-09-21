@@ -3,7 +3,7 @@ package hzt.service.inteface;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 
-public interface IMouseControlService {
+public interface MouseControlService {
 
     void initMouseControl(Node node);
 

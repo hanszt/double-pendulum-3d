@@ -7,7 +7,7 @@ import javafx.event.EventHandler;
 
 import java.util.Collection;
 
-public interface IAnimationService {
+public interface AnimationService {
 
     void run(Collection<DoublePendulum> doublePendulums, MovableCameraPlatform cameraPlatform);
 

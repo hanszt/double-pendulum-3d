@@ -1,7 +1,7 @@
 package hzt.model
 
+import hzt.queryAs
 import hzt.utils.Integrator
-import hzt.utils.queryAs
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe

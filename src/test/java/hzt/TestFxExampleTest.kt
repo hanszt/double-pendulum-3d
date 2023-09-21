@@ -1,4 +1,5 @@
-import hzt.utils.queryAs
+package hzt
+
 import io.kotest.matchers.shouldBe
 import javafx.event.EventHandler
 import javafx.scene.Scene
@@ -15,7 +16,7 @@ import org.testfx.framework.junit5.Start
 @ExtendWith(ApplicationExtension::class)
 internal class TestFxExampleTest {
     /**
-     * Will be called with `@Before` semantics, i. e. before each test method.
+     * Will be called with `@Before` semantics, i.e. before each test method.
      *
      * @param stage - Will be injected by the test runner.
      */

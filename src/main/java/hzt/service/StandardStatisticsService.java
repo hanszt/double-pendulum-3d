@@ -1,24 +1,27 @@
 package hzt.service;
 
-import hzt.service.inteface.IStatisticsService;
+import hzt.service.inteface.StatisticsService;
 import javafx.animation.AnimationTimer;
 
-import static hzt.model.AppConstants.INIT_FRAME_RATE;
+public class StandardStatisticsService implements StatisticsService {
 
-public class StatisticsService implements IStatisticsService {
+    private final SimpleFrameRateMeter simpleFrameRateMeter;
 
-    private final SimpleFrameRateMeter simpleFrameRateMeter = new SimpleFrameRateMeter();
-
-    public StatisticsService() {
+    public StandardStatisticsService() {
+        simpleFrameRateMeter = new SimpleFrameRateMeter();
         simpleFrameRateMeter.initialize();
     }
 
-    public static class SimpleFrameRateMeter implements IStatisticsService.ISimpleFramerateMeter {
+    public static class SimpleFrameRateMeter implements StatisticsService.ISimpleFramerateMeter {
 
         private final long[] frameTimes = new long[100];
         private int frameTimeIndex = 0;
         private boolean arrayFilled = false;
-        private double frameRate = INIT_FRAME_RATE;
+        private double frameRate;
+
+        public SimpleFrameRateMeter() {
+            frameRate = StandardAnimationService.INIT_FRAME_RATE;
+        }
 
         private void initialize() {
             new AnimationTimer() {

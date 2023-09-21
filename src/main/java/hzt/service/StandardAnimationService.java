@@ -2,23 +2,26 @@ package hzt.service;
 
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
-import hzt.service.inteface.IAnimationService;
+import hzt.service.inteface.AnimationService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.util.Duration;
 
 import java.util.Collection;
 
-import static hzt.model.AppConstants.INIT_FRAME_DURATION;
 import static javafx.animation.Animation.INDEFINITE;
 
-public class AnimationService implements IAnimationService {
+public class StandardAnimationService implements AnimationService {
+
+    public static final int INIT_FRAME_RATE = 30; // f/s
+    public static final Duration INIT_FRAME_DURATION = Duration.seconds(1. / INIT_FRAME_RATE); // s/f
 
     private final Timeline animationTimeline;
     private final Timeline statisticsTimeline;
 
-    public AnimationService() {
+    public StandardAnimationService() {
         animationTimeline = setupTimeline();
         statisticsTimeline = setupTimeline();
     }

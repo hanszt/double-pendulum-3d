@@ -7,7 +7,7 @@ import javafx.beans.property.StringProperty;
 import java.io.File;
 import java.util.Set;
 
-public interface IThemeService {
+public interface ThemeService {
 
     Resource DEFAULT_THEME = new Resource("Light", new File(""));
 

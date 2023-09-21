@@ -7,11 +7,12 @@ import hzt.model.CoordinateSystem3D;
 import hzt.model.CylinderCoordinateSystem3D;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
+import hzt.model.PropertiesParser;
 import hzt.model.trace.TraceXY;
-import hzt.service.AnimationService;
-import hzt.service.MouseControlService;
-import hzt.service.inteface.IAnimationService;
-import hzt.service.inteface.IMouseControlService;
+import hzt.service.StandardAnimationService;
+import hzt.service.StandardMouseControlService;
+import hzt.service.inteface.AnimationService;
+import hzt.service.inteface.MouseControlService;
 import hzt.utils.FxUtils;
 import hzt.utils.Integrator;
 import hzt.utils.StringUtils;
@@ -19,6 +20,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -35,10 +37,12 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Translate;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayDeque;
@@ -48,18 +52,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static hzt.model.AppConstants.INIT_ANIMATION_PANE_DIMENSION;
-import static hzt.model.AppConstants.INIT_BG_COLOR;
-import static hzt.model.AppConstants.INIT_CAMERA_FOV;
-import static hzt.model.AppConstants.INIT_CAMERA_Z_PENDULUMS;
-import static hzt.model.AppConstants.INIT_MAX_CAMERA_VELOCITY;
-import static hzt.model.AppConstants.INIT_WORLD_TO_CAMERA_ANGLE_X;
-import static hzt.model.AppConstants.INIT_WORLD_TO_CAMERA_ANGLE_Y;
-import static hzt.model.AppConstants.Scene.ABOUT_SCENE;
-import static hzt.model.AppConstants.Scene.MAIN_SCENE;
-import static hzt.model.AppConstants.getInitTraceType;
-import static hzt.model.AppConstants.parsedDoubleProp;
-import static hzt.model.AppConstants.parsedIntProp;
+import static hzt.controller.SceneManager.Scene.ABOUT_SCENE;
+import static hzt.controller.SceneManager.Scene.MAIN_SCENE;
+import static hzt.controller.sub_pane.AppearanceController.INIT_BG_COLOR;
 import static hzt.model.DoublePendulum.BALL_TRACE;
 import static hzt.model.DoublePendulum.NO_TRACE;
 import static hzt.model.DoublePendulum.ROUND_LINK_TRACE;
@@ -67,16 +62,13 @@ import static hzt.model.DoublePendulum.SQUARE_LINK_TRACE;
 
 public class MainSceneController extends SceneController {
 
-    private static final double INIT_MASS_1 = parsedDoubleProp("init_mass1", 10.0);
-    private static final double INIT_MASS_2 = parsedDoubleProp("init_mass2", 100.0);
-    private static final double INIT_UPPER_ARM_LENGTH = parsedDoubleProp("init_upper_arm_length", 100.0);
-    private static final double INIT_LOWER_ARM_LENGTH = parsedDoubleProp("init_lower_arm_length", 100.0);
-    private static final double INIT_ANGLE_1 = parsedDoubleProp("init_angle1", 30.0);
-    private static final double INIT_ANGLE_2 = parsedDoubleProp("init_angle2", 30.0);
-    private static final double DELTA_ANGLE_1 = parsedDoubleProp("delta_angle1", 0.1);
     private static final double Z_SPACING = 30.0;
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4.0;
     private static final double INIT_MAX_TRACE_LENGTH = 500.0;
+    private static final double INIT_CAMERA_Z_PENDULUMS = -500;
+    private static final double INIT_CAMERA_FOV = 30;
+    private static final double INIT_MAX_CAMERA_VELOCITY = 100;
+
     @FXML
     private AnchorPane sliderPane;
     @FXML
@@ -126,23 +118,35 @@ public class MainSceneController extends SceneController {
 
     private final CoordinateSystem3D coordinateSystem3D = new CylinderCoordinateSystem3D();
 
-    private final IMouseControlService subSceneRootMouseControlService = new MouseControlService(subSceneRoot);
+    private final MouseControlService subSceneRootMouseControlService = new StandardMouseControlService(subSceneRoot);
 
-    private final StatisticsController statisticsController = new StatisticsController();
-    private final AppearanceController appearanceController = new AppearanceController(this, doublePendulums);
-    private final IAnimationService animationService = new AnimationService();
+    private final StatisticsController statisticsController;
+    private final AppearanceController appearanceController;
+    private final AnimationService animationService = new StandardAnimationService();
 
     private final SubScene subScene3D = new SubScene(subSceneRoot, 0.0, 0.0, true, SceneAntialiasing.BALANCED);
 
     private final MovableCameraPlatform cameraPlatform = new MovableCameraPlatform();
 
-    public MainSceneController(SceneManager sceneManager) throws IOException {
-        super(MAIN_SCENE.getFxmlFileName(), sceneManager);
+    private final double initMass1 = propertiesParser.parsedDoubleProp("init_mass1", 10.0);
+    private final double initMass2 = propertiesParser.parsedDoubleProp("init_mass2", 100.0);
+    private final double initUpperArmLength = propertiesParser.parsedDoubleProp("init_upper_arm_length", 100.0);
+    private final double initLowerArmLength = propertiesParser.parsedDoubleProp("init_lower_arm_length", 100.0);
+    private final double initAngle1 = propertiesParser.parsedDoubleProp("init_angle1", 30.0);
+    private final double initAngle2 = propertiesParser.parsedDoubleProp("init_angle2", 30.0);
+    private final double deltaAngle1 = propertiesParser.parsedDoubleProp("delta_angle1", 0.1);
+    private final double initWorldToCameraAngleX = propertiesParser.parsedDoubleProp("init_angle_x", 0);
+    private final double initWorldToCameraAngleY = propertiesParser.parsedDoubleProp("init_angle_y", 0);
+
+    public MainSceneController(SceneManager sceneManager, PropertiesParser propertiesParser, Clock clock) throws IOException {
+        super(MAIN_SCENE.getFxmlFileName(), propertiesParser, sceneManager, clock);
         selectedDoublePendulum = new SimpleObjectProperty<>();
+        statisticsController = new StatisticsController();
         selectedDoublePendulum.addListener((s, w, n) -> statisticsController.setPendulumName(n.getName()));
         selectedDoublePendulum.set(doublePendulums.peek());
         animationPane.getChildren().add(subScene3D);
         statisticsTab.setContent(statisticsController.getRoot());
+        appearanceController = new AppearanceController(this, doublePendulums, propertiesParser);
         appearanceTab.setContent(appearanceController.getRoot());
     }
 
@@ -159,7 +163,8 @@ public class MainSceneController extends SceneController {
         scene.addEventFilter(KeyEvent.KEY_TYPED, this::wireFrameWhenZPressed);
         MainSceneControllers.configureResetAllInstances(this, scene);
         subSceneRootMouseControlService.initMouseControl(animationPane);
-        subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
+
+        subSceneRootMouseControlService.setOrientation(initWorldToCameraAngleX, initWorldToCameraAngleY);
         subSceneRoot.getChildren().add(coordinateSystem3D);
         doublePendulums.forEach(doublePendulum -> subSceneRoot.getChildren().add(doublePendulum));
         coordinateSystem3D.visibleProperty().bind(showAxisButton.selectedProperty());
@@ -167,7 +172,7 @@ public class MainSceneController extends SceneController {
         animationService.addLoopHandlersToTimelines(true,
                 e -> animationService.run(doublePendulums, cameraPlatform),
                 e -> updateStatisticsLoop());
-        FxUtils.allDescendents(sliderPane).stream()
+        FxUtils.allDescendents(sliderPane)
                 .filter(Slider.class::isInstance)
                 .map(Slider.class::cast)
                 .forEach(s -> s.valueProperty().addListener((o, a, v) -> updatePendulumPositionsIfPaused()));
@@ -180,7 +185,7 @@ public class MainSceneController extends SceneController {
     }
 
     private Deque<DoublePendulum> buildDoublePendulums() {
-        var nrOfPendulums = Math.max(parsedIntProp("number_of_pendulums", 1), 1);
+        var nrOfPendulums = Math.max(propertiesParser.parsedIntProp("number_of_pendulums", 1), 1);
         return IntStream.rangeClosed(1, nrOfPendulums)
                 .mapToObj(this::createDoublePendulum)
                 .collect(Collectors.toCollection(ArrayDeque::new));
@@ -205,7 +210,7 @@ public class MainSceneController extends SceneController {
         var deltaAngle = 0.0;
         for (DoublePendulum doublePendulum : doublePendulums) {
             configureDoublePendulum(doublePendulum, deltaAngle);
-            deltaAngle += DELTA_ANGLE_1;
+            deltaAngle += deltaAngle1;
         }
     }
 
@@ -231,12 +236,21 @@ public class MainSceneController extends SceneController {
 
     private void wireFrameWhenZPressed(KeyEvent e) {
         if ("z".equals(e.getCharacter())) {
-            FxUtils.allDescendents(subSceneRoot, Shape3D.class).forEach(FxUtils::setDrawMode);
+            FxUtils.allDescendents(subSceneRoot, Shape3D.class).forEach(this::setDrawMode);
         }
     }
 
-    private static void configureAnimationPane(AnchorPane animationPane) {
-        animationPane.setPrefSize(INIT_ANIMATION_PANE_DIMENSION.getWidth(), INIT_ANIMATION_PANE_DIMENSION.getHeight());
+    void setDrawMode(Shape3D shape3D) {
+        if (!shape3D.drawModeProperty().isBound()) {
+            shape3D.setDrawMode(DrawMode.LINE == shape3D.getDrawMode() ? DrawMode.FILL : DrawMode.LINE);
+        }
+    }
+
+    private void configureAnimationPane(AnchorPane animationPane) {
+        int animationPaneWidthProp = propertiesParser.parsedIntProp("init_animation_pane_width", 640);
+        int animationPaneHeightProp = propertiesParser.parsedIntProp("init_animation_pane_height", 640);
+        Dimension2D paneDimension = new Dimension2D(animationPaneWidthProp, animationPaneHeightProp);
+        animationPane.setPrefSize(paneDimension.getWidth(), paneDimension.getHeight());
         animationPane.setBackground(new Background(new BackgroundFill(INIT_BG_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
@@ -248,7 +262,7 @@ public class MainSceneController extends SceneController {
 
         ObservableList<String> traceModes = traceModeCombobox.getItems();
         traceModes.addAll(BALL_TRACE, ROUND_LINK_TRACE, NO_TRACE, SQUARE_LINK_TRACE);
-        String initTraceType = StringUtils.toOnlyFirstLetterUpperCase(getInitTraceType());
+        String initTraceType = StringUtils.toOnlyFirstLetterUpperCase(propertiesParser.property("init_trace_type", ""));
         String finalInitTraceType = traceModes.contains(initTraceType) ? initTraceType : BALL_TRACE;
         traceModeCombobox.setValue(finalInitTraceType);
     }
@@ -267,8 +281,8 @@ public class MainSceneController extends SceneController {
 
     private void setDoublePendulumParams(DoublePendulum doublePendulum, double deltaAngle) {
         doublePendulum.resetVAndAAngular();
-        doublePendulum.angle1Property().set(Math.toRadians(INIT_ANGLE_1 + deltaAngle));
-        doublePendulum.angle2Property().set(Math.toRadians(INIT_ANGLE_2));
+        doublePendulum.angle1Property().set(Math.toRadians(initAngle1 + deltaAngle));
+        doublePendulum.angle2Property().set(Math.toRadians(initAngle2));
     }
 
     private void bindMassesAndArmLengths(DoublePendulum doublePendulum) {
@@ -292,19 +306,19 @@ public class MainSceneController extends SceneController {
     }
 
     private void updateStatisticsLoop() {
-        Duration runTimeSim = Duration.between(startTimeScene, LocalTime.now());
+        Duration runTimeSim = Duration.between(startTimeScene, LocalTime.now(clock));
         statisticsController.updatePendulumStatistics(selectedDoublePendulum.get(), subSceneRootMouseControlService);
         statisticsController.updateGlobalStatistics(runTimeSim);
         statisticsController.updateCameraPlatformStatistics(cameraPlatform);
     }
 
     private void setInitValuesSliders() {
-        upperMassSlider.setValue(INIT_MASS_1);
-        lowerMassSlider.setValue(INIT_MASS_2);
-        upperPendulumLengthSlider.setValue(INIT_UPPER_ARM_LENGTH);
-        lowerPendulumLengthSlider.setValue(INIT_LOWER_ARM_LENGTH);
+        upperMassSlider.setValue(initMass1);
+        lowerMassSlider.setValue(initMass2);
+        upperPendulumLengthSlider.setValue(initUpperArmLength);
+        lowerPendulumLengthSlider.setValue(initLowerArmLength);
         setInitValueAngleSliders();
-        frictionSlider.setValue(parsedDoubleProp("init_friction", 0.001));
+        frictionSlider.setValue(propertiesParser.parsedDoubleProp("init_friction", 0.001));
         maxTraceLengthSlider.setValue(INIT_MAX_TRACE_LENGTH);
         cameraFieldOfViewSlider.setValue(INIT_CAMERA_FOV);
         cameraMaxVelocitySlider.setValue(INIT_MAX_CAMERA_VELOCITY);
@@ -312,10 +326,10 @@ public class MainSceneController extends SceneController {
 
     private void setInitValueAngleSliders() {
         angle1Slider.setMin(-Math.PI);
-        angle1Slider.setValue(Math.toRadians(INIT_ANGLE_1));
+        angle1Slider.setValue(Math.toRadians(initAngle1));
         angle1Slider.setMax(Math.PI);
         angle2Slider.setMin(-Math.PI);
-        angle2Slider.setValue(Math.toRadians(INIT_ANGLE_2));
+        angle2Slider.setValue(Math.toRadians(initAngle2));
         angle2Slider.setMax(Math.PI);
         vAngular1Slider.setMin(-MAX_ANGULAR_VELOCITY);
         vAngular1Slider.setMax(MAX_ANGULAR_VELOCITY);
@@ -345,7 +359,7 @@ public class MainSceneController extends SceneController {
     private void setParamsDoublePendulums() {
         var counter = 0;
         for (var doublePendulum : doublePendulums) {
-            setDoublePendulumParams(doublePendulum, counter * DELTA_ANGLE_1);
+            setDoublePendulumParams(doublePendulum, counter * deltaAngle1);
             counter++;
         }
     }
@@ -369,7 +383,7 @@ public class MainSceneController extends SceneController {
     public void recenterButtonAction() {
         cameraPlatform.setTranslate(initCameraTranslation());
         cameraPlatform.getCamera().setFieldOfView(INIT_CAMERA_FOV);
-        subSceneRootMouseControlService.setOrientation(INIT_WORLD_TO_CAMERA_ANGLE_X, INIT_WORLD_TO_CAMERA_ANGLE_Y);
+        subSceneRootMouseControlService.setOrientation(initWorldToCameraAngleX, initWorldToCameraAngleY);
         subSceneRootMouseControlService.setTargetTranslation(Point3D.ZERO);
     }
 

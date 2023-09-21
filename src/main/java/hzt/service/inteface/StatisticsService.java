@@ -1,8 +1,8 @@
 package hzt.service.inteface;
 
-public interface IStatisticsService {
+public interface StatisticsService {
 
-    IStatisticsService.ISimpleFramerateMeter getSimpleFrameRateMeter();
+    StatisticsService.ISimpleFramerateMeter getSimpleFrameRateMeter();
 
     interface ISimpleFramerateMeter {
 

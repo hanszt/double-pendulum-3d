@@ -1,7 +1,7 @@
 package hzt.service;
 
 import hzt.model.appearance.Resource;
-import hzt.service.inteface.IThemeService;
+import hzt.service.inteface.ThemeService;
 import hzt.utils.StringUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,18 +16,18 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class ThemeService implements IThemeService {
+public class StandardThemeService implements ThemeService {
 
     private static final String RELATIVE_STYLE_SHEET_RESOURCE_DIR = "/css";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ThemeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StandardThemeService.class);
 
     private final StringProperty styleSheet = new SimpleStringProperty();
     private final ObjectProperty<Resource> currentTheme = new SimpleObjectProperty<>();
 
     private final Set<Resource> themes;
 
-    public ThemeService() {
+    public StandardThemeService() {
         themes = scanForThemeStyleSheets();
         currentTheme.addListener((observableValue, theme, newTheme) -> loadThemeStyleSheet(newTheme));
     }

@@ -66,6 +66,7 @@ See also [Fix with documentation](https://github.com/bjalon/TestFX/commit/13cdd0
 ## Sources
 
 - [openjfx-docs IDE Intellij](https://openjfx.io/openjfx-docs/#IDE-Intellij)
+- [ArchUnit User Guide](https://www.archunit.org/userguide/html/000_Index.html#_introduction)
 
 [Thesis_BTW_Kessels]:docs/Thesis_BTW_Kessels.pdf
 

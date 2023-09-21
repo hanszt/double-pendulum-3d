@@ -1,4 +1,4 @@
-package hzt.utils
+package hzt
 
 import javafx.scene.Node
 import org.testfx.service.query.NodeQuery

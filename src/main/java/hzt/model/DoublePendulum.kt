@@ -1,6 +1,5 @@
 package hzt.model
 
-import hzt.model.AppConstants.G
 import hzt.model.link.Link
 import hzt.model.link.SquareLink
 import hzt.model.trace.BallTrace
@@ -282,6 +281,7 @@ class DoublePendulum(val name: String) : Group() {
 
     companion object {
         private const val DEFAULT_ANCHOR_WIDTH = 10.0
+        const val G = 9.81
         const val BALL_TRACE = "Ball trace"
         const val ROUND_LINK_TRACE = "Round linked trace"
         const val SQUARE_LINK_TRACE = "Square linked trace"

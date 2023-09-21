@@ -11,7 +11,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
-public abstract class Link<S extends Shape3D> extends Group {
+public abstract sealed class Link<S extends Shape3D> extends Group permits RoundLink, SquareLink {
 
     private static final int RIGHT_ANGLE = 90;
 
