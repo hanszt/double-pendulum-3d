@@ -26,7 +26,7 @@ internal class TestFxExampleTest {
             id = "myButton"
             onAction = EventHandler { text = "clicked!" }
         }
-        stage.setScene(Scene(StackPane(button), 100.0, 100.0))
+        stage.scene = Scene(StackPane(button), 100.0, 100.0)
         stage.show()
     }
 

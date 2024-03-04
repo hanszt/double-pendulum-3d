@@ -16,7 +16,7 @@ import static hzt.controller.SceneManager.Scene.ABOUT_SCENE;
 import static hzt.controller.SceneManager.Scene.MAIN_SCENE;
 import static hzt.service.StandardAboutService.AboutText;
 
-public class AboutSceneController extends SceneController {
+public final class AboutSceneController extends SceneController {
 
     @FXML
     private ComboBox<AboutText> textComboBox;
@@ -40,7 +40,7 @@ public class AboutSceneController extends SceneController {
         textArea.setEditable(false);
         List<AboutText> aboutTextList = textComboBox.getItems();
         aboutTextList.addAll(aboutService.loadContent());
-        textComboBox.setValue(aboutTextList.get(0));
+        textComboBox.setValue(aboutTextList.getFirst());
     }
 
     @FXML

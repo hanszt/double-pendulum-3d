@@ -13,7 +13,8 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class TraceXY extends Group {
+public abstract sealed class TraceXY extends Group
+        permits BallTrace, RoundLinkTrace2D, SquareLinkTrace2D, TraceXY.NoTrace {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>();
     private final PhongMaterial material = new PhongMaterial();
@@ -29,12 +30,15 @@ public abstract class TraceXY extends Group {
     }
 
     public static TraceXY noTrace() {
-        return new TraceXY() {
-            @Override
-            void updateTrace(Point2D pointXY) {
-                //nothing to update...
-            }
-        };
+        return new NoTrace();
+    }
+
+    public static final class NoTrace extends TraceXY {
+
+        @Override
+        void updateTrace(Point2D pointXY) {
+            //nothing to update...
+        }
     }
 
     public void update(Point2D pointXY) {
@@ -69,7 +73,7 @@ public abstract class TraceXY extends Group {
     }
 
     private void removeFirst() {
-        getChildren().remove(0);
+        getChildren().removeFirst();
     }
 
     public ObjectProperty<Color> colorProperty() {

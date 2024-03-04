@@ -5,7 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.shape.Sphere;
 
-public class RoundLinkTrace2D extends TraceXY {
+public final class RoundLinkTrace2D extends TraceXY {
 
     @Override
     void updateTrace(Point2D pointXY) {

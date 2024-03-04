@@ -15,7 +15,7 @@ import java.time.Duration;
 
 import static java.lang.String.format;
 
-public class StatisticsController extends FXMLController {
+public final class StatisticsController extends FXMLController {
 
     private final StatisticsService statisticsService;
     @FXML

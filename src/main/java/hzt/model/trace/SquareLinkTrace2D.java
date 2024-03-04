@@ -6,7 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-public class SquareLinkTrace2D extends TraceXY {
+public final class SquareLinkTrace2D extends TraceXY {
 
     @Override
     void updateTrace(Point2D pointXY) {

@@ -49,7 +49,7 @@ import static javafx.scene.paint.Color.ORANGE;
 import static javafx.scene.paint.Color.RED;
 import static javafx.scene.paint.Color.WHEAT;
 
-public class AppearanceController extends FXMLController {
+public final class AppearanceController extends FXMLController {
 
 
     public static final Color INIT_BG_COLOR = WHEAT;

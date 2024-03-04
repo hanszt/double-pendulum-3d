@@ -4,7 +4,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
 public final class CylinderCoordinateSystem3D extends CoordinateSystem3D {
@@ -19,7 +18,7 @@ public final class CylinderCoordinateSystem3D extends CoordinateSystem3D {
         getChildren().addAll(xAxis, yAxis, zAxis);
     }
 
-    Shape3D buildAxis(Material material, Point3D rotationAxis) {
+    Cylinder buildAxis(Material material, Point3D rotationAxis) {
         var axis = new Cylinder(AXIS_RADIUS, AXIS_LENGTH);
         axis.setRotationAxis(rotationAxis);
         axis.setRotate(90.0);

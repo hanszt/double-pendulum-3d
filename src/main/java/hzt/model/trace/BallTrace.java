@@ -3,7 +3,7 @@ package hzt.model.trace;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Sphere;
 
-public class BallTrace extends TraceXY {
+public final class BallTrace extends TraceXY {
 
     @Override
     public void updateTrace(Point2D point2D) {

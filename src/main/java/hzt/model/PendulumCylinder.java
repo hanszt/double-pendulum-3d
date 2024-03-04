@@ -9,11 +9,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 
-public class PendulumCylinder {
+public final class PendulumCylinder {
 
     private final Cylinder cylinder;
     private final PhongMaterial phongMaterial = new PhongMaterial();
-
     private final DoubleProperty mass = new SimpleDoubleProperty();
 
     PendulumCylinder() {

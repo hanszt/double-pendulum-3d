@@ -5,6 +5,8 @@ import hzt.controller.scene.MainSceneController;
 import hzt.controller.scene.SceneController;
 import hzt.model.PropertiesParser;
 import hzt.service.StandardAboutService;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +22,12 @@ public final class SceneManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SceneManager.class);
 
-    private final Stage stage;
     private final Map<Scene, SceneController> sceneControllerMap = new EnumMap<>(Scene.class);
+    private final ObjectProperty<SceneController> curSceneController = new SimpleObjectProperty<>();
+
+    private final Stage stage;
     private final PropertiesParser propertiesParser;
     private final Clock clock;
-    private SceneController curSceneController = null;
 
     SceneManager(Stage stage, PropertiesParser propertiesParser, Clock clock) {
         this.clock = clock;
@@ -37,7 +40,7 @@ public final class SceneManager {
         try {
             sceneControllerMap.put(Scene.MAIN_SCENE, new MainSceneController(this, propertiesParser, clock));
             sceneControllerMap.put(ABOUT_SCENE, new AboutSceneController(this, new StandardAboutService(), propertiesParser, clock));
-            curSceneController = sceneControllerMap.get(Scene.MAIN_SCENE);
+            curSceneController.set(sceneControllerMap.get(Scene.MAIN_SCENE));
         } catch (IOException e) {
             LOGGER.error("Something went wrong when loading fxml frontend...", e);
         }
@@ -64,9 +67,10 @@ public final class SceneManager {
     }
 
     public void setupScene(Scene scene) {
-        curSceneController = sceneControllerMap.get(scene);
-        stage.setScene(curSceneController.getScene());
-        curSceneController.setupOnce(scene::formattedName);
+        final var sceneController = sceneControllerMap.get(scene);
+        curSceneController.set(sceneController);
+        stage.setScene(sceneController.getScene());
+        sceneController.setupOnce(scene::formattedName);
     }
 
     public Stage getStage() {
@@ -74,7 +78,7 @@ public final class SceneManager {
     }
 
     SceneController getCurSceneController() {
-        return curSceneController;
+        return curSceneController.get();
     }
 
     public Map<Scene, SceneController> getSceneControllerMap() {

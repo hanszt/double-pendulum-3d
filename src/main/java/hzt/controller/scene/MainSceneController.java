@@ -60,7 +60,7 @@ import static hzt.model.DoublePendulum.NO_TRACE;
 import static hzt.model.DoublePendulum.ROUND_LINK_TRACE;
 import static hzt.model.DoublePendulum.SQUARE_LINK_TRACE;
 
-public class MainSceneController extends SceneController {
+public final class MainSceneController extends SceneController {
 
     private static final double Z_SPACING = 30.0;
     private static final double MAX_ANGULAR_VELOCITY = Math.PI / 4.0;

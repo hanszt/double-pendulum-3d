@@ -6,12 +6,7 @@ import hzt.model.trace.BallTrace
 import hzt.model.trace.RoundLinkTrace2D
 import hzt.model.trace.SquareLinkTrace2D
 import hzt.model.trace.TraceXY
-import hzt.utils.Integrator
-import hzt.utils.component6
-import hzt.utils.eulerIntegration
-import hzt.utils.get
-import hzt.utils.invoke
-import hzt.utils.rungeKutta4
+import hzt.utils.*
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleDoubleProperty
@@ -149,7 +144,7 @@ class DoublePendulum(val name: String) : Group() {
 
     fun integrateByRungeKutta4() {
         val dt = 1.0
-        val (angle1, angle2, vAngular1, vAngular2, aAngular1, aAngular2) = Double[
+        Double[
             angle1.get(),
             angle2.get(),
             vAngular1.get(),
@@ -168,13 +163,14 @@ class DoublePendulum(val name: String) : Group() {
                     0.0, // daAngular1/dt = 0
                     0.0  // daAngular2/dt = 0
                 ]
+            }.let { (angle1, angle2, vAngular1, vAngular2, aAngular1, aAngular2) ->
+                this.aAngular1.set(aAngular1)
+                this.aAngular2.set(aAngular2)
+                this.vAngular1.set(vAngular1)
+                this.vAngular2.set(vAngular2)
+                this.angle1.set(angle1)
+                this.angle2.set(angle2)
             }
-        this.aAngular1.set(aAngular1)
-        this.aAngular2.set(aAngular2)
-        this.vAngular1.set(vAngular1)
-        this.vAngular2.set(vAngular2)
-        this.angle1.set(angle1)
-        this.angle2.set(angle2)
     }
 
     fun updatePendulumPosition() {
