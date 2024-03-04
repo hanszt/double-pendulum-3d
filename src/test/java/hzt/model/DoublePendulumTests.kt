@@ -35,7 +35,7 @@ internal class DoublePendulumTests {
                 diffuseColor = Color.BLACK
                 specularColor = Color.BLACK
             }
-            upperPendulum.massProperty().set(300.0)
+            calculator.upperMassProperty.set(300.0)
             massColorProperty().set(Color.RED)
             integratorProperty().set(Integrator("test") {})
             update()

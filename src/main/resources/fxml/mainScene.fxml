@@ -49,8 +49,6 @@
                                     </padding>
                                     <Button mnemonicParsing="false" onAction="#resetButtonAction"
                                             prefWidth="1000.0" text="Reset"/>
-                                    <Button mnemonicParsing="false" onAction="#followDrawSpotButtonAction"
-                                            prefWidth="1000.0" text="Follow draw spot"/>
                                     <Button mnemonicParsing="false" onAction="#recenterButtonAction"
                                             prefWidth="1000.0" text="Recenter"/>
                                     <ToggleButton fx:id="pauseButton" layoutX="14.0" layoutY="72.0" mnemonicParsing="false"

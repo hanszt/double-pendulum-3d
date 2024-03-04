@@ -1,12 +1,16 @@
 package hzt.utils
 
-import java.util.function.Consumer
-
-class Integrator<T>(private val name: String, val integrate: Consumer<T>) {
+class Integrator<T>(private val name: String, val integrate: (T) -> Unit) {
 
     override fun toString(): String = name
 }
 
+/**
+ * @receiver the input vector that supplies the values of all derivatives
+ * @param h stepSize
+ * @param nextDeltaByOdeSystem the function that calculates the next set of values for the ordinary differential equation (ODE)
+ * @return The next array of values calculated by [nextDeltaByOdeSystem]
+ */
 fun DoubleArray.rungeKutta4(h: Double, nextDeltaByOdeSystem: (DoubleArray) -> DoubleArray): DoubleArray {
     val k1 = nextDeltaByOdeSystem(this)
     val k2 = nextDeltaByOdeSystem(DoubleArray(size) { this[it] + k1[it] * (h / 2) })

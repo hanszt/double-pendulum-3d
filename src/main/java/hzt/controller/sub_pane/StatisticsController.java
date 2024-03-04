@@ -1,13 +1,13 @@
 package hzt.controller.sub_pane;
 
 import hzt.controller.FXMLController;
+import hzt.engine.DoublePendulumCalculator;
 import hzt.model.DoublePendulum;
 import hzt.model.MovableCameraPlatform;
 import hzt.service.StandardStatisticsService;
 import hzt.service.inteface.MouseControlService;
 import hzt.service.inteface.StatisticsService;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
@@ -97,7 +97,7 @@ public final class StatisticsController extends FXMLController {
 
     public void updatePendulumStatistics(DoublePendulum doublePendulum, MouseControlService mouseControlService) {
         updatePendulumPropertyStatistics(doublePendulum);
-        updatePendulumPositionStatistics(doublePendulum);
+        updatePendulumPositionStatistics(doublePendulum.getCalculator());
         updatePendulumAngleStatistics(doublePendulum);
         frictionLabel.setText(format("%-4.3f", doublePendulum.getFriction()));
         traceSizeLabel.setText(format("%d", doublePendulum.traceSize()));
@@ -122,17 +122,16 @@ public final class StatisticsController extends FXMLController {
     private void updatePendulumPropertyStatistics(DoublePendulum doublePendulum) {
         upperPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getUpperArmLength()));
         lowerPendulumLengthLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.getLowerArmLength()));
-        upperMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.upperPendulum.getMass()));
-        lowerMassLabel.setText(format(TWO_DEC_DOUBLE, doublePendulum.lowerPendulum.getMass()));
+        final var calculator = doublePendulum.getCalculator();
+        upperMassLabel.setText(format(TWO_DEC_DOUBLE, calculator.getUpperMass()));
+        lowerMassLabel.setText(format(TWO_DEC_DOUBLE, calculator.getLowerMass()));
     }
 
-    private void updatePendulumPositionStatistics(DoublePendulum doublePendulum) {
-        Point2D upperMassPosition = doublePendulum.upperPendulum.getPositionXY();
-        upperMassXLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getX()));
-        upperMassYLabel.setText(format(TWO_DEC_DOUBLE, upperMassPosition.getY()));
-        Point2D lowerMassPosition = doublePendulum.lowerPendulum.getPositionXY();
-        lowerMassXLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
-        lowerMassYLabel.setText(format(TWO_DEC_DOUBLE, lowerMassPosition.getY()));
+    private void updatePendulumPositionStatistics(DoublePendulumCalculator calculator) {
+        upperMassXLabel.setText(format(TWO_DEC_DOUBLE, calculator.getUpperMassX()));
+        upperMassYLabel.setText(format(TWO_DEC_DOUBLE, calculator.getUpperMassY()));
+        lowerMassXLabel.setText(format(TWO_DEC_DOUBLE, calculator.getLowerMassX()));
+        lowerMassYLabel.setText(format(TWO_DEC_DOUBLE, calculator.getLowerMassY()));
     }
 
     public void updateCameraPlatformStatistics(MovableCameraPlatform cameraPlatform) {

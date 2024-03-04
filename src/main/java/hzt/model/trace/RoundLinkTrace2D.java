@@ -8,17 +8,18 @@ import javafx.scene.shape.Sphere;
 public final class RoundLinkTrace2D extends TraceXY {
 
     @Override
-    void updateTrace(Point2D pointXY) {
+    void updateTrace(double x, double y) {
+        final var endPoint = new Point2D(x, y);
         if (prevPointXY != null) {
             var link = new RoundLink();
             var startSphere = new Sphere();
-            startSphere.setTranslateX(pointXY.getX());
-            startSphere.setTranslateY(pointXY.getY());
-            link.defineStartAndEndpoint(prevPointXY, pointXY);
+            startSphere.setTranslateX(x);
+            startSphere.setTranslateY(y);
+            link.defineStartAndEndpoint(prevPointXY, endPoint);
             var group = new Group(link, startSphere);
             add(group);
         }
-        prevPointXY = pointXY;
+        prevPointXY = endPoint;
     }
 
 }

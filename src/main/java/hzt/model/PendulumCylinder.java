@@ -2,7 +2,6 @@ package hzt.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -42,13 +41,19 @@ public final class PendulumCylinder {
                 cylinder.setRadius(StrictMath.pow(n.doubleValue() / CYLINDER_SIZE_FACTOR * cylinder.getHeight(), 1.0 / 2.0)));
     }
 
-    public Point2D getPositionXY() {
-        return new Point2D(cylinder.getTranslateX(), cylinder.getTranslateY());
+    public double getPositionX() {
+        return positionXProperty().get();
     }
 
-    void setPosition(double x, double y) {
-        cylinder.setTranslateX(x);
-        cylinder.setTranslateY(y);
+    public double getPositionY() {
+        return positionYProperty().get();
+    }
+
+    public DoubleProperty positionXProperty() {
+        return cylinder.translateXProperty();
+    }
+    public DoubleProperty positionYProperty() {
+        return cylinder.translateYProperty();
     }
 
     void addWeightToFxGroup(Group group) {

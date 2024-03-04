@@ -36,17 +36,17 @@ public abstract sealed class TraceXY extends Group
     public static final class NoTrace extends TraceXY {
 
         @Override
-        void updateTrace(Point2D pointXY) {
+        void updateTrace(double x, double y) {
             //nothing to update...
         }
     }
 
-    public void update(Point2D pointXY) {
-        updateTrace(pointXY);
+    public void update(double x, double y) {
+        updateTrace(x, y);
         updateTraceLength();
     }
 
-    abstract void updateTrace(Point2D pointXY);
+    abstract void updateTrace(double x, double y);
 
     public int size() {
         return getChildren().size();
