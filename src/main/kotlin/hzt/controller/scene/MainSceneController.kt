@@ -42,6 +42,7 @@ import kotlin.streams.asSequence
 
 class MainSceneController(sceneManager: SceneManager, propertiesParser: PropertiesParser, clock: Clock) :
     SceneController(SceneManager.Scene.MAIN_SCENE.fxmlFileName, propertiesParser, sceneManager, clock) {
+
     @FXML
     private lateinit var sliderPane: AnchorPane
 
@@ -65,6 +66,9 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
 
     @FXML
     private lateinit var showAxisButton: ToggleButton
+
+    @FXML
+    private lateinit var pendulumCountSlider: Slider
 
     @FXML
     private lateinit var lowerPendulumLengthSlider: Slider
@@ -133,10 +137,10 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
 
     init {
         selectedDoublePendulum.addListener { _, _, n -> statisticsController.setPendulumName(n.name) }
-        selectedDoublePendulum.set(doublePendulums.peek())
+        selectedDoublePendulum.set(doublePendulums.peekLast())
         animationPane.children.add(subScene3D)
         statisticsTab.content = statisticsController.root
-        appearanceController = AppearanceController(this, doublePendulums, propertiesParser).also { appearanceTab.content = it.root }
+        appearanceController = AppearanceController(this, propertiesParser).also { appearanceTab.content = it.root }
     }
 
     public override fun setup() {
@@ -148,7 +152,7 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
         configureAppearanceController()
         configureDoublePendulums()
         changeSliderBindings(null, selectedDoublePendulum.get())
-        scene.addEventFilter(KeyEvent.KEY_TYPED) { e: KeyEvent -> this.wireFrameWhenZPressed(e) }
+        scene.addEventFilter(KeyEvent.KEY_TYPED, ::wireFrameWhenZPressed)
         MainSceneControllers.configureResetAllInstances(this, scene)
         subSceneRootMouseControlService.initMouseControl(animationPane)
 
@@ -172,10 +176,28 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
     }
 
     private fun buildDoublePendulums(): Deque<DoublePendulum> {
-        val nrOfPendulums = max(propertiesParser.parsedIntProp("number_of_pendulums", 1).toDouble(), 1.0).toInt()
-        return (1..nrOfPendulums)
-            .map { pendulumNr: Int -> createDoublePendulum(pendulumNr) }
-            .toCollection(ArrayDeque())
+        val initNrOfSliders = max(propertiesParser.parsedIntProp("init_number_of_pendulums", 1), 1)
+        pendulumCountSlider.value = initNrOfSliders.toDouble()
+        pendulumCountSlider.valueProperty().addListener { _, _, n ->
+            val target = n.toInt()
+            while (doublePendulums.size != target) {
+                val size = doublePendulums.size
+                if (size < target) {
+                    val pendulum = createDoublePendulum(size + 1)
+                    doublePendulums.push(pendulum)
+                    appearanceController.bindColorProperties(pendulum)
+                    configureDoublePendulum(pendulum, 0.0)
+                    subSceneRoot.children.add(pendulum)
+                } else {
+                    val pendulum = doublePendulums.pop()
+                    subSceneRoot.children.remove(pendulum)
+                }
+
+            }
+        }
+        return (1..initNrOfSliders)
+            .map(::createDoublePendulum)
+            .fold(ArrayDeque()) { c, t -> c.also { c.push(t) } }
     }
 
     private fun createDoublePendulum(pendulumNr: Int): DoublePendulum {
@@ -202,7 +224,7 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
     }
 
     private fun configureAppearanceController() {
-        appearanceController.configureColorPickers()
+        appearanceController.configureColorPickers(doublePendulums)
         appearanceController.configureStageControlButtons(sceneManager.stage)
     }
 
@@ -215,19 +237,19 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
         cameraPlatform.maxAccelerationProperty().bindBidirectional(cameraMaxAccelerationSlider.valueProperty())
     }
 
-    private fun configureSubScene(subScene: SubScene, animationPane: Pane?) {
-        subScene.widthProperty().bind(animationPane!!.widthProperty())
+    private fun configureSubScene(subScene: SubScene, animationPane: Pane) {
+        subScene.widthProperty().bind(animationPane.widthProperty())
         subScene.heightProperty().bind(animationPane.heightProperty())
         subScene.camera = cameraPlatform.camera
     }
 
     private fun wireFrameWhenZPressed(e: KeyEvent) {
         if ("z" == e.character) {
-            FxUtils.allDescendents(subSceneRoot, Shape3D::class.java).forEach { shape3D: Shape3D -> this.setDrawMode(shape3D) }
+            FxUtils.allDescendents(subSceneRoot, Shape3D::class.java).forEach(::setDrawMode)
         }
     }
 
-    fun setDrawMode(shape3D: Shape3D) {
+    private fun setDrawMode(shape3D: Shape3D) {
         if (!shape3D.drawModeProperty().isBound) {
             shape3D.drawMode = if (DrawMode.LINE == shape3D.drawMode) DrawMode.FILL else DrawMode.LINE
         }
@@ -341,7 +363,6 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
     fun resetButtonAction() {
         setInitValuesSliders()
         setParamsDoublePendulums()
-        doublePendulums.forEach { it.calculator.resetVAndAAngular() }
     }
 
     private fun setParamsDoublePendulums() {
@@ -356,7 +377,7 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
     }
 
     private fun initCameraTranslation(): Translate {
-        return Translate(0.0, 0.0, INIT_CAMERA_Z_PENDULUMS + selectedDoublePendulum.get().translateZ)
+        return Translate(0.0, 0.0, INIT_CAMERA_Z_PENDULUMS)
     }
 
     @FXML

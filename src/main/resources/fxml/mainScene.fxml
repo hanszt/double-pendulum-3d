@@ -134,8 +134,11 @@
                                     </padding>
                                     <Label text="Friction slider"/>
                                     <Slider fx:id="frictionSlider" max=".2" prefWidth="5000.0"/>
-                                    <Label text="trace length slider"/>
+                                    <Label text="Trace length slider"/>
                                     <Slider fx:id="maxTraceLengthSlider" max="1000" prefWidth="5000.0"
+                                            showTickLabels="true" showTickMarks="true"/>
+                                    <Label text="Pendulum count slider"/>
+                                    <Slider fx:id="pendulumCountSlider" min="1" prefWidth="5000.0"
                                             showTickLabels="true" showTickMarks="true"/>
                                 </VBox>
                             </HBox>

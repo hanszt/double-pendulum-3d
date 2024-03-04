@@ -1,48 +1,43 @@
-package hzt.controller.scene;
+package hzt.controller.scene
 
-import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.Collections
+import java.util.WeakHashMap
+import javafx.event.EventHandler
+import javafx.scene.Scene
+import javafx.scene.input.KeyEvent
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * A singleton list to hold all main scene controllers to be able to reset all instances
  */
-final class MainSceneControllers {
+internal object MainSceneControllers {
+    private val LOGGER: Logger = LoggerFactory.getLogger(MainSceneControllers::class.java)
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainSceneControllers.class);
-
-    private MainSceneControllers() {
+    fun configureResetAllInstances(mainSceneController: MainSceneController, scene: Scene) {
+        scene.addEventFilter(KeyEvent.KEY_TYPED, ::allInstancesKeyResponse)
+        Holder.mainSceneControllers.add(mainSceneController)
+        scene.window.onCloseRequest = EventHandler { Holder.mainSceneControllers.remove(mainSceneController) }
     }
 
-    private static class Holder {
+    private fun allInstancesKeyResponse(e: KeyEvent) {
+        if ("xx" == e.character) {
+            LOGGER.info("Resetting all main scene controllers... ({})", Holder.mainSceneControllers.size)
+            Holder.mainSceneControllers.forEach(MainSceneController::resetButtonAction)
+        }
+        if ("p" == e.character) {
+            LOGGER.info("Toggling pause button for all instances... ({})", Holder.mainSceneControllers.size)
+            Holder.mainSceneControllers.forEach(MainSceneController::togglePauseButton)
+        }
+    }
+
+    private object Holder {
         /**
          * Is only instantiated after Holder.mainSceneControllers is called for the first time (Lazy initialization)
-         * <p>
+         *
+         *
          * A weakHashMap is used to enable removal by garbage collector if the controller in the set is not used anymore
          */
-        @SuppressWarnings("StaticCollection")
-        private static final Set<MainSceneController> mainSceneControllers = Collections.newSetFromMap(new WeakHashMap<>());
-    }
-
-    static void configureResetAllInstances(MainSceneController mainSceneController, Scene scene) {
-        scene.addEventFilter(KeyEvent.KEY_TYPED, MainSceneControllers::allInstancesKeyResponse);
-        Holder.mainSceneControllers.add(mainSceneController);
-        scene.getWindow().setOnCloseRequest(o -> Holder.mainSceneControllers.remove(mainSceneController));
-    }
-
-    private static void allInstancesKeyResponse(KeyEvent e) {
-        if ("r".equals(e.getCharacter())) {
-            LOGGER.info("Resetting all main scene controllers... ({})", Holder.mainSceneControllers.size());
-            Holder.mainSceneControllers.forEach(MainSceneController::resetButtonAction);
-        }
-        if ("p".equals(e.getCharacter())) {
-            LOGGER.info("Toggling pause button for all instances... ({})", Holder.mainSceneControllers.size());
-            Holder.mainSceneControllers.forEach(MainSceneController::togglePauseButton);
-        }
+        val mainSceneControllers: MutableSet<MainSceneController> = Collections.newSetFromMap(WeakHashMap())
     }
 }

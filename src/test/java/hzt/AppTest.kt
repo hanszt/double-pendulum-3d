@@ -33,7 +33,7 @@ class AppTest {
         val subScene = robot.lookup<SubScene> { true }.queryAs<SubScene>()
         val nodes = subScene.root.childrenUnmodifiable
         nodes.forEach(::println)
-        val nrOfPendulums = propertiesParser.parsedIntProp("number_of_pendulums", 0)
+        val nrOfPendulums = propertiesParser.parsedIntProp("init_number_of_pendulums", 0)
 
         assertSoftly {
             nodes.count { it is DoublePendulum } shouldBe nrOfPendulums

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public final class StandardAboutService implements AboutService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StandardAboutService.class);
-    private static final String RELATIVE_TEXT_RESOURCE_DIR = "../../about";
+    private static final String RELATIVE_TEXT_RESOURCE_DIR = "/about";
 
     public Set<AboutText> loadContent() {
         LOGGER.info("Loading content...");

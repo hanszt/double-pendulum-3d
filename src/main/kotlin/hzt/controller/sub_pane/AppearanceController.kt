@@ -15,7 +15,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
-import java.util.Collections
 import java.util.Optional
 import java.util.function.Consumer
 import javafx.animation.Transition
@@ -36,7 +35,6 @@ import javafx.util.Duration
 
 class AppearanceController(
     private val mainSceneController: MainSceneController,
-    doublePendulums: Collection<DoublePendulum>,
     propertiesParser: PropertiesParser
 ) : FXMLController("appearancePane.fxml") {
     @FXML
@@ -65,7 +63,6 @@ class AppearanceController(
 
     private val themeService: ThemeService = StandardThemeService()
     private val backgroundService: BackgroundService = StandardBackgroundService()
-    private val doublePendulums: Collection<DoublePendulum> = Collections.unmodifiableCollection(doublePendulums)
     private val stageOpacity = propertiesParser.parsedDoubleProp("stage_opacity", 0.8)
 
 
@@ -73,15 +70,15 @@ class AppearanceController(
         configureComboBoxes()
     }
 
-    fun configureColorPickers() {
+    fun configureColorPickers(pendulums: Collection<DoublePendulum>) {
         backgroundColorPicker.value = INIT_BG_COLOR
         pendulumMassColorPicker.value = INIT_HINGE_COLOR
         pendulumColorPicker.value = INIT_ARM_COLOR
         traceColorPicker.value = INIT_TRACE_COLOR
-        doublePendulums.forEach(this::bindColorProperties)
+        pendulums.forEach(::bindColorProperties)
     }
 
-    private fun bindColorProperties(doublePendulum: DoublePendulum) {
+    fun bindColorProperties(doublePendulum: DoublePendulum) {
         doublePendulum.massColorProperty().bind(pendulumMassColorPicker.valueProperty())
         val armMaterial = doublePendulum.armMaterial
         armMaterial.diffuseColorProperty().bind(pendulumColorPicker.valueProperty())
@@ -134,9 +131,9 @@ class AppearanceController(
     @FXML
     private fun backgroundComboBoxAction() {
         Optional.of(backgroundCombobox.value.file)
-            .filter { file: File -> file.path.isNotBlank() }
-            .map { file: File -> toInputStream(file) }
-            .ifPresentOrElse({ inputStream: InputStream -> this.changeBackgroundImage(inputStream) }, { this.backgroundColorPickerAction() })
+            .filter { file -> file.path.isNotBlank() }
+            .map(::toInputStream)
+            .ifPresentOrElse(::changeBackgroundImage, ::backgroundColorPickerAction)
     }
 
     private fun changeBackgroundImage(inputStream: InputStream) {
