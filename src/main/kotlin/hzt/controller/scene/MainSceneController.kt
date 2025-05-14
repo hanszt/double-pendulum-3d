@@ -1,5 +1,6 @@
 package hzt.controller.scene
 
+import hzt.booleanBinding
 import hzt.controller.SceneManager
 import hzt.controller.sub_pane.AppearanceController
 import hzt.controller.sub_pane.StatisticsController
@@ -12,11 +13,6 @@ import hzt.service.inteface.MouseControlService
 import hzt.utils.FxUtils
 import hzt.utils.Integrator
 import hzt.utils.StringUtils
-import java.time.Clock
-import java.time.Duration
-import java.time.LocalTime
-import java.util.ArrayDeque
-import java.util.Deque
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
@@ -27,21 +23,26 @@ import javafx.geometry.Point3D
 import javafx.scene.Group
 import javafx.scene.SceneAntialiasing
 import javafx.scene.SubScene
-import javafx.scene.control.ComboBox
-import javafx.scene.control.Slider
-import javafx.scene.control.Tab
-import javafx.scene.control.ToggleButton
+import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.*
 import javafx.scene.shape.DrawMode
 import javafx.scene.shape.Shape3D
 import javafx.scene.transform.Translate
+import java.time.Clock
+import java.time.Duration
+import java.time.LocalTime
+import java.util.ArrayDeque
+import java.util.Deque
 import kotlin.math.max
 import kotlin.streams.asSequence
 
 class MainSceneController(sceneManager: SceneManager, propertiesParser: PropertiesParser, clock: Clock) :
     SceneController(SceneManager.Scene.MAIN_SCENE.fxmlFileName, propertiesParser, sceneManager, clock) {
+
+    @FXML
+    private lateinit var clearTraceButton: Button
 
     @FXML
     private lateinit var sliderPane: AnchorPane
@@ -151,21 +152,23 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
         configureComboBoxes()
         configureAppearanceController()
         configureDoublePendulums()
-        changeSliderBindings(null, selectedDoublePendulum.get())
+        changeSliderBindings(next = selectedDoublePendulum.get())
         scene.addEventFilter(KeyEvent.KEY_TYPED, ::wireFrameWhenZPressed)
         MainSceneControllers.configureResetAllInstances(this, scene)
         subSceneRootMouseControlService.initMouseControl(animationPane)
 
         subSceneRootMouseControlService.setOrientation(initWorldToCameraAngleX, initWorldToCameraAngleY)
         subSceneRoot.children.add(coordinateSystem3D)
-        doublePendulums.forEach { subSceneRoot.children.add(it) }
+        doublePendulums.forEach(subSceneRoot.children::add)
         coordinateSystem3D.visibleProperty().bind(showAxisButton.selectedProperty())
         pauseButton.selectedProperty()
             .addListener { _, _, isSelected -> pauseSimButtonAction(java.lang.Boolean.TRUE == isSelected) }
+        clearTraceButton.visibleProperty().bind(traceModeCombobox.valueProperty().booleanBinding { it != DoublePendulum.NO_TRACE })
         animationService.addLoopHandlersToTimelines(true, { animationService.run(doublePendulums, cameraPlatform) }, { updateStatisticsLoop() })
         FxUtils.allDescendents(sliderPane).asSequence()
             .filterIsInstance<Slider>()
-            .forEach { it.valueProperty().addListener { _, _, _ -> updatePendulumPositionsIfPaused() }
+            .forEach {
+                it.valueProperty().addListener { _, _, _ -> updatePendulumPositionsIfPaused() }
             }
     }
 
@@ -184,9 +187,11 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
                 val size = doublePendulums.size
                 if (size < target) {
                     val pendulum = createDoublePendulum(size + 1)
-                    doublePendulums.push(pendulum)
+                    val prev = doublePendulums.peek()
                     appearanceController.bindColorProperties(pendulum)
-                    configureDoublePendulum(pendulum, 0.0)
+                    pendulum.calculator.copyState(prev.calculator, deltaAngle1 * size)
+                    configureDoublePendulum(pendulum)
+                    doublePendulums.push(pendulum)
                     subSceneRoot.children.add(pendulum)
                 } else {
                     val pendulum = doublePendulums.pop()
@@ -216,10 +221,9 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
     }
 
     private fun configureDoublePendulums() {
-        var deltaAngle = 0.0
-        for (doublePendulum in doublePendulums) {
-            configureDoublePendulum(doublePendulum, deltaAngle)
-            deltaAngle += deltaAngle1
+        for ((index, doublePendulum) in doublePendulums.withIndex()) {
+            setDoublePendulumCalculatorParams(doublePendulum.calculator, index * deltaAngle1)
+            configureDoublePendulum(doublePendulum)
         }
     }
 
@@ -276,8 +280,7 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
         traceModeCombobox.value = finalInitTraceType
     }
 
-    private fun configureDoublePendulum(doublePendulum: DoublePendulum, deltaAngle: Double) {
-        setDoublePendulumCalculatorParams(doublePendulum.calculator, deltaAngle)
+    private fun configureDoublePendulum(doublePendulum: DoublePendulum) {
         bindMassesAndArmLengths(doublePendulum)
         doublePendulum.frictionProperty().bind(frictionSlider.valueProperty())
         doublePendulum.traceTypeProperty().bind(traceModeCombobox.valueProperty())
@@ -302,7 +305,7 @@ class MainSceneController(sceneManager: SceneManager, propertiesParser: Properti
         doublePendulum.lowerArmLengthProperty().bind(lowerPendulumLengthSlider.valueProperty())
     }
 
-    private fun changeSliderBindings(current: DoublePendulum?, next: DoublePendulum) {
+    private fun changeSliderBindings(current: DoublePendulum? = null, next: DoublePendulum) {
         if (current != null) {
             current.angle1Property().unbindBidirectional(angle1Slider.valueProperty())
             current.angle2Property().unbindBidirectional(angle2Slider.valueProperty())

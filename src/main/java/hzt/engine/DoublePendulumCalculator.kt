@@ -152,4 +152,13 @@ class DoublePendulumCalculator(
         aAngular1Property.set(0.0)
         aAngular2Property.set(0.0)
     }
+
+    fun copyState(calculator: DoublePendulumCalculator, deltaAngle1: Double = 0.0) {
+        angle1Property.set(calculator.angle1Property.get() + deltaAngle1)
+        angle2Property.set(calculator.angle2Property.get())
+        vAngular1Property.set(calculator.vAngular1Property.get())
+        vAngular2Property.set(calculator.vAngular2Property.get())
+        aAngular1Property.set(calculator.aAngular1Property.get())
+        aAngular2Property.set(calculator.aAngular2Property.get())
+    }
 }

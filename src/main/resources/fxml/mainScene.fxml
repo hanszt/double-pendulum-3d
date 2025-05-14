@@ -61,10 +61,10 @@
                                     </padding>
                                     <Button mnemonicParsing="false" onAction="#newInstance"
                                             prefWidth="1000.0" text="New instance"/>
-                                    <Button mnemonicParsing="false" onAction="#clearTraceButtonAction"
-                                            prefWidth="1000.0" text="Clear trace"/>
                                     <ToggleButton fx:id="showAxisButton" mnemonicParsing="false"
                                                   prefWidth="1000.0" text="Show axis"/>
+                                    <Button fx:id="clearTraceButton" mnemonicParsing="false" onAction="#clearTraceButtonAction"
+                                            prefWidth="1000.0" text="Clear trace"/>
                                 </VBox>
                             </HBox>
                         </VBox>

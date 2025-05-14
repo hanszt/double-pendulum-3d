@@ -70,9 +70,10 @@ public class AppManager {
         stage.setTitle(String.format("%s (%d)", TITLE, instance));
         stage.setMinWidth(minStageDimension.getWidth());
         stage.setMinHeight(minStageDimension.getHeight());
-        stage.onCloseRequestProperty().addListener((o, c, n) -> LOGGER.atInfo().setMessage(this::closingText).log());
+        stage.onCloseRequestProperty()
+                .addListener((o, c, n) -> LOGGER.atInfo().setMessage(this::closingText).log());
         Optional.ofNullable(getClass().getResourceAsStream("/images/icon.png"))
-        .ifPresent(inputStream -> stage.getIcons().add(new Image(inputStream)));
+                .ifPresent(inputStream -> stage.getIcons().add(new Image(inputStream)));
     }
 
     private String closingText() {

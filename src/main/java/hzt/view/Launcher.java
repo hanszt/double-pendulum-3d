@@ -19,7 +19,7 @@ public final class Launcher extends Application {
         new AppManager(
                 stage,
                 CashedPropertiesParser.withSource(Path.of("src/main/resources/app.properties")),
-                Clock.systemDefaultZone()
+                Clock.systemUTC()
         ).start();
     }
 
