@@ -10,10 +10,6 @@ import java.time.Clock;
 
 public final class Launcher extends Application {
 
-    public static void main(String... arguments) {
-        launch(arguments);
-    }
-
     @Override
     public void start(Stage stage) {
         new AppManager(

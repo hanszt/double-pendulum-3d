@@ -43,7 +43,9 @@ paper: [Thesis Kessels][Thesis_BTW_Kessels]
 
 ## Setup
 
-The project is set up in such a way that it should feel like a plug and play experience
+The project is set up in such a way that it should feel like a plug and play experience.
+
+Use `mvn javafx:run` to run the application.
 
 ---
 

@@ -182,7 +182,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${openjfx.plugin.version}</version>
                 <configuration>
-                    <mainClass>hzt.view.Launcher</mainClass>
+                    <mainClass>doublependulum3d/hzt.view.Launcher</mainClass>
                 </configuration>
             </plugin>
             <plugin>
