@@ -10,27 +10,27 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <coverage.target>50%</coverage.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>2.1.20</kotlin.version>
-        <kotlin-maven-plugin.jvmTarget>17</kotlin-maven-plugin.jvmTarget>
+        <kotlin.version>2.2.21</kotlin.version>
+        <kotlin-maven-plugin.jvmTarget>21</kotlin-maven-plugin.jvmTarget>
         <!--dependencies-->
-        <openjfx.version>21</openjfx.version>
+        <openjfx.version>25</openjfx.version>
         <openjfx.plugin.version>0.0.8</openjfx.plugin.version>
-        <log4j.version>2.20.0</log4j.version>
-        <slf4j.version>2.0.5</slf4j.version>
-        <annotations.version>24.0.1</annotations.version>
+        <log4j.version>2.23.1</log4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <annotations.version>24.1.0</annotations.version>
         <!--testing-->
-        <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <archunit.version>1.1.0</archunit.version>
+        <junit.jupiter.version>6.0.1</junit.jupiter.version>
+        <archunit.version>1.4.1</archunit.version>
         <testfx.version>4.0.16-alpha</testfx.version>
-        <kotest.version>5.7.0</kotest.version>
+        <kotest.version>5.9.0</kotest.version>
         <!--plugins-->
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
     </properties>
 
     <dependencies>
