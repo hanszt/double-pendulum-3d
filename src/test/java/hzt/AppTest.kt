@@ -1,7 +1,7 @@
 package hzt
 
 import hzt.controller.AppManager
-import hzt.model.CashedPropertiesParser
+import hzt.model.CachedPropertiesParser
 import hzt.model.CylinderCoordinateSystem3D
 import hzt.model.DoublePendulum
 import io.kotest.assertions.assertSoftly
@@ -21,7 +21,7 @@ import org.testfx.framework.junit5.Start
 @ExtendWith(ApplicationExtension::class)
 class AppTest {
 
-    private val propertiesParser = CashedPropertiesParser.withSource(Path.of("src/test/resources/app-test.properties"))
+    private val propertiesParser = CachedPropertiesParser.withSource(Path.of("src/test/resources/app-test.properties"))
 
     @Start
     fun setup(stage: Stage) {

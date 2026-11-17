@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public final class CashedPropertiesParser implements PropertiesParser {
+public final class CachedPropertiesParser implements PropertiesParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CashedPropertiesParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CachedPropertiesParser.class);
     private static final Map<Path, PropertiesParser> propertyParsers = new HashMap<>();
     private final Properties properties;
 
-    private CashedPropertiesParser(Properties properties) {
+    private CachedPropertiesParser(Properties properties) {
         this.properties = properties;
     }
 
@@ -26,8 +26,8 @@ public final class CashedPropertiesParser implements PropertiesParser {
         try {
             return Double.parseDouble(propertyVal);
         } catch (NumberFormatException e) {
-            LOGGER.warn(String.format("Property '%s' with value '%s' could not be parsed to a double... " +
-                    "Falling back to default: %f...", property, propertyVal, defaultVal), e);
+            LOGGER.warn("Property '{}' with value '{}' could not be parsed to a double... " +
+                    "Falling back to default: {}...", property, propertyVal, defaultVal, e);
             return defaultVal;
         }
     }
@@ -37,8 +37,8 @@ public final class CashedPropertiesParser implements PropertiesParser {
         try {
             return Integer.parseInt(propertyVal);
         } catch (NumberFormatException e) {
-            LOGGER.warn(String.format("Property '%s' with value '%s' could not be parsed to an int... " +
-                    "Falling back to default: %d...", property, propertyVal, defaultVal));
+            LOGGER.warn("Property '{}' with value '{}' could not be parsed to an int... " +
+                    "Falling back to default: {}...", property, propertyVal, defaultVal);
             return defaultVal;
         }
     }
@@ -58,7 +58,7 @@ public final class CashedPropertiesParser implements PropertiesParser {
         } catch (IOException e) {
             LOGGER.warn("{} not found...", path, e);
         }
-        final var newParser = new CashedPropertiesParser(properties);
+        final var newParser = new CachedPropertiesParser(properties);
         propertyParsers.put(path, newParser);
         return newParser;
     }

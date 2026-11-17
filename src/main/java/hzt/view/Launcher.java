@@ -1,7 +1,7 @@
 package hzt.view;
 
 import hzt.controller.AppManager;
-import hzt.model.CashedPropertiesParser;
+import hzt.model.CachedPropertiesParser;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -14,7 +14,7 @@ public final class Launcher extends Application {
     public void start(Stage stage) {
         new AppManager(
                 stage,
-                CashedPropertiesParser.withSource(Path.of("src/main/resources/app.properties")),
+                CachedPropertiesParser.withSource(Path.of("src/main/resources/app.properties")),
                 Clock.systemUTC()
         ).start();
     }
